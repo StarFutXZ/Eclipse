@@ -188,9 +188,9 @@ end
 
     -- Apply official PNGs even when an older NOIR version is hosted on the API.
 
-    if Library.AtlasBrandVersion ~= "png-rounded-v3" then
+    if Library.AtlasBrandVersion ~= "eclipse-image-v4" then
 
-        Library.AtlasBrandVersion = "png-rounded-v3"
+        Library.AtlasBrandVersion = "eclipse-image-v4"
 
         local root = Library.ScreenGui
 
@@ -208,9 +208,9 @@ end
 
         local function replace(holder, kind, z)
 
-            if holder:GetAttribute("AtlasPNGApplied") then return end
+            if holder:GetAttribute("EclipseImageAppliedV4") then return end
 
-            holder:SetAttribute("AtlasPNGApplied", true)
+            holder:SetAttribute("EclipseImageAppliedV4", true)
 
             protect(holder)
 
