@@ -166,7 +166,7 @@ local function AtlasBrandImage(parent, kind, zIndex)
     image.BackgroundTransparency = 1
     image.BorderSizePixel = 0
     image.Size = UDim2.fromScale(1, 1)
-    image.Image = "rbxassetid://126392512134203"
+    image.Image = "rbxassetid://136717109508110"
     image.ImageColor3 = Color3.new(1, 1, 1)
     image.ScaleType = Enum.ScaleType.Fit
     image.ZIndex = zIndex or parent.ZIndex
