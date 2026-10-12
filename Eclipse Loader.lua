@@ -2,31 +2,53 @@ local GameScripts = {
     [10768172922] = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/Sniper_Arena.lua"
 }
 
--- Aguarda até que o jogo e o GameId estejam totalmente carregados (evita falhas de início)
-local ScriptURL = nil
-repeat
-    ScriptURL = GameScripts[game.GameId]
-    if not ScriptURL and (game.GameId == nil or game.GameId == 0) then
-        task.wait(0.5) -- Espera meio segundo e tenta de novo se o ID ainda não carregou
-    else
-        break
-    end
-until game.GameId ~= 0 and game.GameId ~= nil
+-- Pega o link correspondente ao jogo
+local ScriptURL = GameScripts[game.GameId]
 
--- Se mesmo após carregar não encontrar o ID na lista
 if not ScriptURL then
-    warn("[Eclipse] Este jogo ainda não é suportado! GameId atual: " .. tostring(game.GameId))
+    warn("[Eclipse] Este jogo ainda não é suportado! GameId: " .. tostring(game.GameId))
     return
 end
 
-local Success, ErrorMessage = pcall(function()
-    local Source = game:HttpGet(ScriptURL)
-    local Execute = loadstring(Source)
+-- Função para descarregar o código com suporte a múltiplos executores
+local function descarregarCodigo(url)
+    local sucesso, resultado = pcall(function()
+        return game:HttpGet(url, true)
+    end)
     
-    assert(Execute, "Não foi possível carregar o script")
-    Execute()
-end)
+    if sucesso and resultado and #resultado > 0 then
+        return resultado
+    end
 
-if not Success then
-    warn("[Eclipse] Erro: " .. tostring(ErrorMessage))
+    -- Fallback para executores mobile que bloqueiam game:HttpGet
+    local req = (syn and syn.request) or (http and http.request) or request or http_request
+    if type(req) == "function" then
+        local resp = req({Url = url, Method = "GET"})
+        if resp and (resp.Body or resp.body) then
+            return resp.Body or resp.body
+        end
+    end
+    
+    return nil
 end
+
+-- Execução segura
+task.spawn(function()
+    local conteudoScript = descarregarCodigo(ScriptURL)
+    
+    if not conteudoScript then
+        warn("[Eclipse] Não foi possível baixar o script do GitHub.")
+        return
+    end
+
+    local Execute, ErroCompilacao = loadstring(conteudoScript)
+    if not Execute then
+        warn("[Eclipse] Erro de compilação: " .. tostring(ErroCompilacao))
+        return
+    end
+
+    local Sucesso, ErroExecucao = pcall(Execute)
+    if not Sucesso then
+        warn("[Eclipse] Erro ao executar: " .. tostring(ErroExecucao))
+    end
+end)
