@@ -1,6 +1,8 @@
 local GameScripts = {
     [9534705677] = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/Sniper_Arena.lua",
 
+    [6035872082] = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/Rivals.txt",
+
     [7326934954] = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/99%20Nights%20in%20the%20Forest.lua"
 }
 
