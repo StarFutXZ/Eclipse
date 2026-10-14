@@ -21,7 +21,7 @@ if not game:IsLoaded() then game.Loaded:Wait() end
 
 local K: { [string]: any } = { connections = {}, cleanups = {}, destroyed = false }
 getgenv().KiciaRebuild = K
-K.LithiumLogo = "rbxassetid://139452900510551"
+K.LithiumLogo = "rbxassetid://92189640536232"
 
 local Players = game:GetService("Players")
 local _ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -18019,7 +18019,7 @@ end
 local obj = setmetatable({
 _trove = v136,
 Title = arg.Title or "Eclipse",
-Icon = arg.Icon or "rbxassetid://139452900510551",
+Icon = arg.Icon or "rbxassetid://92189640536232",
 Directory = directory,
 ConfigVersion = arg.ConfigVersion or v86[63],
 Fonts = { Main = Default },
