@@ -1,568 +1,856 @@
--- ============================================================
--- WISNU HUB | 99 NIGHT — Obsidian Edition
--- ============================================================
-local Library     = loadstring(game:HttpGet("https://raw.githubusercontent.com/deividcomsono/Obsidian/main/Library.lua"))()
-local ThemeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/deividcomsono/Obsidian/main/addons/ThemeManager.lua"))()
-local SaveManager  = loadstring(game:HttpGet("https://raw.githubusercontent.com/deividcomsono/Obsidian/main/addons/SaveManager.lua"))()
-if not Library then return end
+local CLIENT_VERSION = "roblox-gui/1.8"
+local REQUEST_ATTEMPTS = 4
 
-local Players          = game:GetService("Players")
-local Workspace        = game:GetService("Workspace")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CoreGui          = game:GetService("CoreGui")
+assert(getgenv, "This loader needs getgenv to hand the key to the place script.")
+local shared = getgenv()
+local previous = shared.CookieHubLoaderState
+if type(previous) == "table" and (previous.state == "starting" or previous.state == "waiting_key") then
+    return -- A launch already owns initialization, including asynchronous startup.
+end
+local loaderState = { state = "starting" }
+shared.CookieHubLoaderState = loaderState
+if type(previous) == "table" and type(previous.retire) == "function" then
+    pcall(previous.retire)
+end
+-- Claim ownership before retiring a stale window: its exit animation can yield.
+if type(shared.CookieHubLoaderWindow) == "function" then
+    pcall(shared.CookieHubLoaderWindow)
+end
+local function releaseLoader()
+    if shared.CookieHubLoaderState == loaderState then shared.CookieHubLoaderState = nil end
+end
+
+-- Catch top-level setup failures as well as the explicit request/payload failures.
+local loaderOk, loaderErr = pcall(function()
+
+-- Retry transport exceptions/empty transport responses, with bounded backoff.
+-- HTTP error responses are returned normally, so rejected keys are not retried.
+local function requestWithRetry(send, valid, onRetry)
+    for attempt = 1, REQUEST_ATTEMPTS do
+        local ok, response = pcall(send)
+        if ok and valid(response) then return response end
+        if attempt < REQUEST_ATTEMPTS then
+            local delay = 2 ^ (attempt - 1)
+            if onRetry then onRetry(attempt + 1, delay) end
+            task.wait(delay)
+        end
+    end
+    error("HTTP request failed after 4 attempts. Check your connection and try again.", 0)
+end
+
+local function validHttpResponse(response)
+    return type(response) == "table" and (tonumber(response.StatusCode or response.Status or response.status_code) or 0) > 0
+end
+
+local WORKER_ORIGIN = "https://script-access-worker.script-access-worker.workers.dev"
+local PLACE_ID = tostring(game.PlaceId) -- the worker picks the script for this place
+local DISCORD_URL = "http://dsc.gg/cookie-hub-rblx"
+
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local PLAYER_ID = tostring(Players.LocalPlayer.UserId)
+local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
-local Lighting         = game:GetService("Lighting")
-local RunService       = game:GetService("RunService")
 
-local LocalPlayer   = Players.LocalPlayer
-local ItemsFolder   = Workspace:FindFirstChild("Items") or Workspace:WaitForChild("Items", 10)
-local RemoteEvents  = ReplicatedStorage:FindFirstChild("RemoteEvents") or ReplicatedStorage:WaitForChild("RemoteEvents", 10)
-local RemoteConsume = ReplicatedStorage:FindFirstChild("RequestConsumeItem")
-local TreesFolder   = Workspace:FindFirstChild("Map") and Workspace.Map:FindFirstChild("Foliage")
-local ScriptRunning = true
-local CAMPFIRE_POS  = Vector3.new(0, 19, 0)
-local MACHINE_POS   = Vector3.new(21, 16, -5)
+local requestFn = request or http_request or (syn and syn.request)
+assert(requestFn, "This loader needs an HTTP request API.")
+assert(loadstring, "This loader needs loadstring enabled.")
+getgenv().CookieHubDebugLog = nil -- discard the previous diagnostic build's buffer
 
--- ============================================================
--- HELPER FUNCTIONS
--- ============================================================
-local function getRootPart()
-    return LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+local function installationId()
+    -- Keep this stable if your executor exposes a persistent identifier. This sample
+    -- intentionally does not claim that Roblox client values are hardware identity.
+    return getgenv().ScriptAccessInstallationId or ("roblox-" .. Players.LocalPlayer.UserId)
 end
 
-local function findValidPart(obj)
-    if not obj then return nil end
-    if obj:IsA("BasePart") then return obj end
-    if obj:IsA("Model") and obj.PrimaryPart then return obj.PrimaryPart end
-    for _, child in ipairs(obj:GetDescendants()) do
-        if child:IsA("BasePart") or child:IsA("MeshPart") then return child end
+local post
+local reportedFailures = {}
+local analyticsQueues = {}
+local analyticsStopped = {}
+local function analyticsAvailable(analytics)
+    return type(analytics) == "table" and type(analytics.session_id) == "string" and type(analytics.session_token) == "string" and not analyticsStopped[analytics.session_id]
+end
+local function reportEvent(analytics, event, text)
+    if not analyticsAvailable(analytics) then return end
+    local queue = analyticsQueues[analytics.session_id]
+    if not queue then
+        queue = { events = {}, running = false }
+        analyticsQueues[analytics.session_id] = queue
     end
-end
-
-local function getItemPosition(item)
-    if not item or not item:IsDescendantOf(workspace) then return nil end
-    if item:IsA("Model") then return item:GetPivot().Position
-    elseif item:IsA("BasePart") then return item.Position
-    else local p = findValidPart(item); return p and p.Position end
-end
-
-local function resetVelocity(item)
-    pcall(function()
-        local parts = item:IsA("BasePart") and {item} or item:GetDescendants()
-        for _, p in ipairs(parts) do
-            if p:IsA("BasePart") then
-                p.AssemblyLinearVelocity  = Vector3.zero
-                p.AssemblyAngularVelocity = Vector3.zero
-            end
+    -- Keep terminal lifecycle events even if a slow connection accumulates
+    -- heartbeats. The queue holds at most 32 pending events plus one in flight.
+    if #queue.events >= 32 then
+        if event == "heartbeat" then return end
+        local removeIndex = 1
+        for index, pendingEvent in ipairs(queue.events) do
+            if pendingEvent.event == "heartbeat" then removeIndex = index; break end
         end
-    end)
-end
-
-local function setItemCFrame(item, pos)
-    pcall(function()
-        if item:IsA("BasePart") then item.CFrame = CFrame.new(pos)
-        elseif item:IsA("Model") then item:PivotTo(CFrame.new(pos)) end
-    end)
-end
-
-local WEAPON_BLACKLIST = {
-    ["Pistol"]=true,["Revolver"]=true,["Rifle"]=true,["Chainsaw"]=true,
-    ["Spear"]=true,["Old Axe"]=true,["Good Axe"]=true,["Strong Axe"]=true,
-    ["Shotgun"]=true,["Knife"]=true,["Rifle Ammo"]=true,["Revolver Ammo"]=true,
-    ["Old Flashlight"]=true,["MedKit"]=true,["Bandage"]=true,
-}
-
-local function reliableDragItemToPos(item, pos)
-    if not item or not item:IsDescendantOf(workspace) then return end
-    -- Jangan drag senjata/medic
-    if WEAPON_BLACKLIST[item.Name] then return end
-    pcall(function()
-        local dragStart = RemoteEvents:FindFirstChild("RequestStartDraggingItem")
-        local dragStop  = RemoteEvents:FindFirstChild("StopDraggingItem")
-        if dragStart then dragStart:FireServer(item) end
-        -- Pakai MoveTo (confirmed dari Lutosys opensrc)
-        if item:IsA("Model") then
-            item:MoveTo(pos)
-        elseif item:IsA("BasePart") then
-            item.CFrame = CFrame.new(pos)
-        end
-        task.wait(0.05)
-        if dragStop then dragStop:FireServer(item) end
-    end)
-end
-
-local function teleportTo(pos)
-    local hrp = getRootPart()
-    if hrp then pcall(function() hrp.CFrame = CFrame.new(pos + Vector3.new(0,3,0)) end) end
-end
-
-local function getLostChildPart(index)
-    local ok, result = pcall(function()
-        local path = string.format("Map.Landmarks.Jail Cellar%d.Dino", index)
-        local cur = workspace
-        for part in path:gmatch("[^%.]+") do
-            cur = cur:FindFirstChild(part)
-            if not cur then return nil end
-        end
-        return cur
-    end)
-    return ok and result and findValidPart(result)
-end
-
--- ============================================================
--- TREE UTILITY
--- ============================================================
-local TreeUtility = {}
-TreeUtility.ToolDamageObject = RemoteEvents and RemoteEvents.ToolDamageObject
-TreeUtility.HoldingAxe = function()
-    local ok, r = pcall(function()
-        for _, m in ipairs(LocalPlayer.Character:GetChildren()) do
-            if m:IsA("Model") and m:GetAttribute("ToolName") and m:GetAttribute("ToolName"):find("Axe") then
-                return m:FindFirstChild("OriginalItem").Value
-            end
-        end
-    end)
-    return ok and r
-end
-TreeUtility.CanChop = function(_, tree)
-    if not tostring(tree):find("Big") then return true end
-    for _, t in pairs(LocalPlayer.Inventory:GetChildren()) do
-        if t:GetAttribute("ToolName") and t:GetAttribute("ToolName"):find("Chainsaw") then return true end
+        table.remove(queue.events, removeIndex)
     end
-    return false
-end
-TreeUtility.GetTreesInRadius = function(self, radius)
-    local res = {}
-    local hrp = getRootPart(); if not hrp then return res end
-    local folder = TreesFolder or Workspace:FindFirstChild("Foliage") or Workspace:FindFirstChild("Trees")
-    if not folder then return res end
-    for _, tree in ipairs(folder:GetChildren()) do
-        if tree:IsA("Model") and tree:FindFirstChild("Trunk") and self:CanChop(tree) then
-            local trunk = tree:FindFirstChild("Trunk")
-            local dist = (trunk.Position - hrp.Position).Magnitude
-            if dist < radius and (tree:GetAttribute("Health") or 10) > 0 then
-                table.insert(res, {Tree=tree, Trunk=trunk, Distance=dist})
-            end
-        end
-    end
-    table.sort(res, function(a,b) return a.Distance < b.Distance end)
-    return res
-end
-TreeUtility.ChopTree = function(self, tree, trunk)
-    local _, r = pcall(function()
-        local hrp = getRootPart(); if not hrp then return end
-        local axe = self.HoldingAxe(); if not axe then return end
-        local EH = require(LocalPlayer.PlayerScripts.Client.EnemyHandler)
-        return self.ToolDamageObject:InvokeServer(tree, axe, EH.GetHitRegId(), hrp.CFrame, true)
-    end)
-    return r
-end
-
--- ============================================================
--- STATE
--- ============================================================
-local State = {
-    autoEat = false, autoCook = false, autoEatThreshold = 70,
-    autoGrindItems = {}, autoFuelItems = {},
-    killAura = false, auraRadius = 350,
-    treeAura = false, treeAuraRadius = 80,
-    espMobs = false, espItems = false, espTrees = false,
-    fullbright = false,
-    walkSpeed = 16, infiniteJump = false,
-    showFPS = false,
-}
-
-local toolPriority = {"Chainsaw","Strong Axe","Good Axe","Spear","Old Axe"}
-local toolIds      = {["Chainsaw"]="647",["Strong Axe"]="116",["Good Axe"]="112",["Spear"]="196",["Old Axe"]="1"}
-local rawFoodsToCook = {"Morsel","Steak"}
-local autoEatFoods   = {"Cooked Steak","Cooked Morsel","Berry","Carrot","Apple"}
-
-local function getBestSpoofTool()
-    for _, name in ipairs(toolPriority) do
-        for _, loc in ipairs({LocalPlayer.Inventory, LocalPlayer.Backpack, LocalPlayer.Character}) do
-            if loc then
-                local t = loc:FindFirstChild(name)
-                if t then return t, toolIds[name].."_"..tostring(LocalPlayer.UserId) end
-            end
-        end
-    end
-end
-
--- ============================================================
--- ESP
--- ============================================================
-local espFolder = Instance.new("Folder"); espFolder.Name = "WisnuESP"; espFolder.Parent = CoreGui
-local function createESP(inst, name, color)
-    local part = findValidPart(inst); if not part then return end
-    local hl = Instance.new("Highlight", espFolder)
-    hl.Adornee = inst; hl.FillColor = color; hl.OutlineColor = Color3.new(1,1,1)
-    hl.FillTransparency = 0.6; hl.OutlineTransparency = 0
-    local bg = Instance.new("BillboardGui", espFolder)
-    bg.Adornee = part; bg.Size = UDim2.new(0,120,0,25); bg.AlwaysOnTop = true; bg.StudsOffset = Vector3.new(0,3,0)
-    local txt = Instance.new("TextLabel", bg)
-    txt.Size = UDim2.new(1,0,1,0); txt.BackgroundTransparency = 1
-    txt.TextColor3 = color; txt.TextStrokeTransparency = 0.2
-    txt.Font = Enum.Font.GothamBold; txt.TextScaled = true
+    table.insert(queue.events, { id = HttpService:GenerateGUID(false), event = event, text = text })
+    if queue.running then return end
+    queue.running = true
+    -- One background worker preserves success -> heartbeat -> unload order,
+    -- including when a reload happens before the success request completes.
     task.spawn(function()
-        while bg.Parent and inst.Parent do
-            local hrp = getRootPart()
-            if hrp then txt.Text = string.format("%s [%dm]", name, math.floor((part.Position - hrp.Position).Magnitude)) end
-            task.wait(0.5)
+        while #queue.events > 0 do
+            local pendingEvent = table.remove(queue.events, 1)
+            local ok, status = pcall(post, "/v1/analytics/events", {
+                session_id = analytics.session_id,
+                session_token = analytics.session_token,
+                events = { pendingEvent },
+            })
+            -- Expired or revoked telemetry credentials must not send recurring
+            -- requests for the rest of an otherwise healthy game session.
+            if ok and (status == 401 or status == 403) then
+                analyticsStopped[analytics.session_id] = true
+                table.clear(queue.events)
+                break
+            end
         end
-        hl:Destroy(); bg:Destroy()
+        queue.running = false
+        analyticsQueues[analytics.session_id] = nil
     end)
 end
-local function refreshESP()
-    espFolder:ClearAllChildren()
-    if State.espMobs then
-        local chars = Workspace:FindFirstChild("Characters")
-        if chars then for _, m in ipairs(chars:GetChildren()) do createESP(m, m.Name, Color3.fromRGB(255,50,50)) end end
-    end
-    if State.espItems then
-        for _, item in ipairs(ItemsFolder:GetChildren()) do createESP(item, item.Name, Color3.fromRGB(50,255,50)) end
-    end
+local function reportLoadFailure(analytics, reason)
+    if type(analytics) ~= "table" or type(analytics.session_id) ~= "string" or type(analytics.session_token) ~= "string" then return end
+    if reportedFailures[analytics.session_id] then return end
+    reportedFailures[analytics.session_id] = true
+    reportEvent(analytics, "load_failed", reason)
 end
 
--- Tree ESP
-local treeESPList = {}
-local function updateTreeESP(tree)
-    if not treeESPList[tree] then
-        local part = tree:FindFirstChild("Trunk") or findValidPart(tree); if not part then return end
-        local bb = Instance.new("BillboardGui"); bb.Name="TreeESP"; bb.Size=UDim2.fromScale(4,1)
-        bb.StudsOffset=Vector3.new(0,3,0); bb.AlwaysOnTop=true; bb.Parent=CoreGui; bb.Adornee=part
-        local lbl = Instance.new("TextLabel",bb); lbl.Size=UDim2.fromScale(1,1)
-        lbl.BackgroundTransparency=1; lbl.TextScaled=true; lbl.Font=Enum.Font.GothamBold; lbl.TextStrokeTransparency=0
-        treeESPList[tree] = {gui=bb,label=lbl}
+-- Observe asynchronous payload startup without polling or blocking the loader.
+-- Keep state in a backing table so every assignment (including ready -> unloaded)
+-- reaches the observer, rather than only the first write to a Lua table field.
+local function startupTracker(analytics)
+    local values = { state = "starting" }
+    local observer, failureReported, successReported, unloadReported, retired
+    local function retire()
+        retired = true
+        if successReported and not unloadReported and values.analyticsManaged ~= true then
+            unloadReported = true
+            reportEvent(analytics, "unload")
+        end
     end
-    local hp = tree:GetAttribute("Health")
-    if not hp or hp <= 0 then treeESPList[tree].gui:Destroy(); treeESPList[tree]=nil; return end
-    treeESPList[tree].label.Text = "HP: "..hp
-    treeESPList[tree].label.TextColor3 = hp>5 and Color3.fromRGB(0,255,0) or hp>2 and Color3.fromRGB(255,170,0) or Color3.fromRGB(255,0,0)
+    loaderState.retire = retire
+    local function heartbeat()
+        if retired or values.state ~= "ready" or values.analyticsManaged == true or shared.CookieHubLoaderState ~= loaderState or not analyticsAvailable(analytics) then return end
+        reportEvent(analytics, "heartbeat")
+        task.delay(60, heartbeat)
+    end
+    local function changed()
+        if values.state == "failed" then
+            releaseLoader()
+            if not failureReported then
+                failureReported = true
+                reportLoadFailure(analytics, "initialization_failed")
+            end
+        elseif values.state == "unloaded" then
+            retire()
+            releaseLoader()
+        elseif values.state == "ready" and shared.CookieHubLoaderState == loaderState then
+            loaderState.state = "ready"
+            -- New payloads own their telemetry; older places still get CCU and
+            -- successful-run counts through this loader lifecycle fallback.
+            if not successReported and values.analyticsManaged ~= true and analyticsAvailable(analytics) then
+                successReported = true
+                reportEvent(analytics, "load_success")
+                task.delay(60, heartbeat)
+            end
+        end
+        if observer then observer(values.state, values.reason) end
+    end
+    local state = setmetatable({}, {
+        __index = values,
+        __newindex = function(_, key, value)
+            values[key] = value
+            if key == "state" then changed() end
+        end,
+    })
+    return state, function(callback) observer = callback; changed() end
 end
 
--- ============================================================
--- FPS/PING
--- ============================================================
-if CoreGui:FindFirstChild("WISNU_FPS") then CoreGui.WISNU_FPS:Destroy() end
-local fpsGui = Instance.new("ScreenGui"); fpsGui.Name="WISNU_FPS"; fpsGui.Parent=CoreGui
-fpsGui.ResetOnSpawn=false; fpsGui.IgnoreGuiInset=true
-local fpsFrame = Instance.new("Frame",fpsGui); fpsFrame.Size=UDim2.new(0,160,0,28)
-fpsFrame.Position=UDim2.new(0,10,0,10); fpsFrame.BackgroundColor3=Color3.fromRGB(0,0,0)
-fpsFrame.BackgroundTransparency=0.4; fpsFrame.Visible=false
-Instance.new("UICorner",fpsFrame).CornerRadius=UDim.new(0,4)
-local fpsTxt = Instance.new("TextLabel",fpsFrame); fpsTxt.Size=UDim2.new(1,0,1,0)
-fpsTxt.BackgroundTransparency=1; fpsTxt.TextColor3=Color3.fromRGB(0,255,128)
-fpsTxt.Font=Enum.Font.GothamBold; fpsTxt.TextSize=12; fpsTxt.Text=" FPS:0  Ping:0ms"
-local _fc,_ft=0,0
-RunService.RenderStepped:Connect(function(dt)
-    if not State.showFPS then return end
-    _fc+=1; _ft+=dt
-    if _ft>=1 then
-        local p=0; pcall(function() p=LocalPlayer:GetNetworkPing()*1000 end)
-        fpsTxt.Text=string.format(" FPS:%d  Ping:%.0fms",_fc,p); _fc=0; _ft=0
+post = function(path, payload, onRetry)
+    local encoded = HttpService:JSONEncode(payload)
+    local requestId = "loader-" .. HttpService:GenerateGUID(false)
+    local response = requestWithRetry(function() return requestFn({
+        Url = WORKER_ORIGIN .. path,
+        Method = "POST",
+        Headers = { ["Content-Type"] = "application/json", ["X-Request-ID"] = requestId },
+        -- Executors are inconsistent: Synapse-style APIs use Body, while some
+        -- request shims only inspect lowercase body. Supplying both is harmless.
+        Body = encoded,
+        body = encoded,
+    }) end, validHttpResponse, onRetry)
+    local statusCode = tonumber(response.StatusCode or response.Status or response.status_code) or 0
+    local raw = response.Body or response.body or ""
+    local decoded, body = pcall(HttpService.JSONDecode, HttpService, raw)
+    if not decoded or type(body) ~= "table" then
+        return statusCode, { error = "The service returned an unreadable response." }, raw
+    end
+    return statusCode, body, raw
+end
+
+-- Report once when this loader starts, without delaying the GUI or key checks.
+task.spawn(function()
+    pcall(post, "/v1/client/start", { place_id = PLACE_ID, player_id = PLAYER_ID, client_version = CLIENT_VERSION })
+end)
+
+-- ============================================================================
+-- Look & feel
+-- ============================================================================
+-- Ask the server before constructing any key UI. Only the server's current
+-- per-place policy can grant keyless access; a local flag cannot unlock a game.
+local probeOk, probeCode, probe = pcall(post, "/v1/scripts/load/" .. HttpService:UrlEncode(PLACE_ID), {
+    place_id = PLACE_ID,
+    player_id = PLAYER_ID,
+    client_version = CLIENT_VERSION,
+})
+if not probeOk then error(tostring(probeCode), 0) end
+if probeCode == 404 and probe.reason == "unsupported_place" then
+    local function create(class, props)
+        local object = Instance.new(class)
+        local parent = props.Parent
+        for key, value in pairs(props) do
+            if key ~= "Parent" then object[key] = value end
+        end
+        object.Parent = parent
+        return object
+    end
+    local screen = create("ScreenGui", {
+        Name = "CookieHubUnsupportedGame", ResetOnSpawn = false,
+        ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+        Parent = Players.LocalPlayer:WaitForChild("PlayerGui"),
+    })
+    local card = create("Frame", {
+        AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5),
+        Size = UDim2.new(1, -32, 0, 238), BackgroundColor3 = Color3.fromRGB(22, 24, 36),
+        BorderSizePixel = 0, Parent = screen,
+    })
+    create("UISizeConstraint", { MaxSize = Vector2.new(420, 238), Parent = card })
+    create("UICorner", { CornerRadius = UDim.new(0, 16), Parent = card })
+    create("TextLabel", {
+        Position = UDim2.fromOffset(22, 20), Size = UDim2.new(1, -44, 0, 20),
+        BackgroundTransparency = 1, Text = "COOKIE HUB", Font = Enum.Font.GothamBold,
+        TextSize = 13, TextColor3 = Color3.fromRGB(240, 160, 60), Parent = card,
+    })
+    create("TextLabel", {
+        Position = UDim2.fromOffset(22, 52), Size = UDim2.new(1, -44, 0, 30),
+        BackgroundTransparency = 1, Text = "Unsupported game", Font = Enum.Font.GothamBold,
+        TextSize = 22, TextColor3 = Color3.fromRGB(240, 242, 250), Parent = card,
+    })
+    create("TextLabel", {
+        Position = UDim2.fromOffset(22, 92), Size = UDim2.new(1, -44, 0, 76),
+        BackgroundTransparency = 1, TextWrapped = true, Font = Enum.Font.Gotham,
+        Text = "Cookie Hub has no published script for this game yet.\nPlace ID: " .. PLACE_ID,
+        TextSize = 15, TextColor3 = Color3.fromRGB(137, 145, 172), Parent = card,
+    })
+    local dismiss = create("TextButton", {
+        Position = UDim2.fromOffset(22, 182), Size = UDim2.new(1, -44, 0, 36),
+        BackgroundColor3 = Color3.fromRGB(240, 160, 60), Text = "Got it",
+        Font = Enum.Font.GothamBold, TextSize = 14, TextColor3 = Color3.fromRGB(38, 24, 6), Parent = card,
+    })
+    create("UICorner", { CornerRadius = UDim.new(0, 8), Parent = dismiss })
+    local function closeNotice()
+        screen:Destroy()
+        if shared.CookieHubLoaderWindow == closeNotice then shared.CookieHubLoaderWindow = nil end
+    end
+    shared.CookieHubLoaderWindow = closeNotice
+    dismiss.MouseButton1Click:Connect(closeNotice)
+    releaseLoader()
+    return
+end
+if probeCode == 200 and probe.authorized == true and probe.keyless == true and type(probe.source) == "string" then
+    local compiled, payload, compileErr = pcall(loadstring, probe.source, "=CookieHub/Place/" .. PLACE_ID)
+    if not compiled or type(payload) ~= "function" then
+        reportLoadFailure(probe.analytics, "compile_failed")
+        error("Downloaded script could not compile: " .. tostring(compiled and compileErr or payload), 0)
+    end
+    local startupState = startupTracker(probe.analytics)
+    -- A non-secret label supports existing payloads that require a nonempty Key.
+    -- Their /v1/validate recheck still uses the server's actual keyless setting.
+    getgenv().ScriptAccess = { Key = "keyless", Keyless = true, Fingerprint = installationId(), PlayerId = PLAYER_ID, BuildChannel = probe.build_channel or "production", StartupState = startupState, Analytics = probe.analytics }
+    local ran, runErr = pcall(payload)
+    getgenv().ScriptAccess = nil
+    if not ran then
+        reportLoadFailure(probe.analytics, "runtime_failed")
+        error("Script failed: " .. tostring(runErr), 0)
+    end
+    if startupState.state == "failed" then error(startupState.reason or "Place script stopped during initialization.", 0) end
+    return
+end
+if probeCode ~= 403 or probe.reason ~= "key_required" then
+    error(tostring(probe.error or probe.reason or "Script was unavailable."), 0)
+end
+loaderState.state = "waiting_key"
+
+-- Executor workspace storage, scoped to this Roblox account and place. A saved
+-- key still goes through the server's normal verification on every launch.
+local KEY_FOLDER = "cookie-hub"
+local KEY_FILE = KEY_FOLDER .. "/key-" .. tostring(Players.LocalPlayer.UserId) .. "-" .. PLACE_ID .. ".txt"
+local function readSavedKey()
+    if type(readfile) ~= "function" then return nil end
+    local ok, value = pcall(readfile, KEY_FILE)
+    if not ok or type(value) ~= "string" then return nil end
+    local key = value:match("^%s*(.-)%s*$")
+    return key ~= "" and key or nil
+end
+
+local savedKey = readSavedKey()
+
+local function saveKey(key)
+    if type(writefile) ~= "function" then return false end
+    -- Existing folders may make makefolder throw; the write determines success.
+    if type(makefolder) == "function" then pcall(makefolder, KEY_FOLDER) end
+    local ok = pcall(writefile, KEY_FILE, key)
+    if ok then savedKey = key end
+    return ok
+end
+
+local function clearSavedKey(key)
+    if key ~= savedKey then return end
+    savedKey = nil
+    if type(delfile) == "function" and pcall(delfile, KEY_FILE) then return end
+    -- Some executors expose writefile without delfile. An empty file is ignored.
+    if type(writefile) == "function" then pcall(writefile, KEY_FILE, "") end
+end
+
+local InvalidKeyReasons = {
+    key_not_found = true,
+    key_revoked = true,
+    key_expired = true,
+    fingerprint_mismatch = true,
+    fingerprint_already_claimed = true,
+}
+
+local Theme = {
+    Card = Color3.fromRGB(22, 24, 36),
+    CardDark = Color3.fromRGB(15, 16, 25),
+    Field = Color3.fromRGB(12, 14, 22),
+    Button = Color3.fromRGB(31, 35, 52),
+    ButtonHover = Color3.fromRGB(42, 47, 69),
+    Stroke = Color3.fromRGB(52, 57, 80),
+    Accent = Color3.fromRGB(240, 160, 60),
+    AccentHover = Color3.fromRGB(252, 182, 96),
+    AccentText = Color3.fromRGB(38, 24, 6),
+    Text = Color3.fromRGB(240, 242, 250),
+    Muted = Color3.fromRGB(137, 145, 172),
+    Success = Color3.fromRGB(74, 222, 128),
+    Error = Color3.fromRGB(248, 113, 113),
+}
+
+local function create(class, props, children)
+    local object = Instance.new(class)
+    local parent
+    for key, value in pairs(props) do
+        if key == "Parent" then
+            parent = value
+        else
+            object[key] = value
+        end
+    end
+    for _, child in ipairs(children or {}) do
+        child.Parent = object
+    end
+    object.Parent = parent
+    return object
+end
+
+local function corner(radius)
+    return create("UICorner", { CornerRadius = UDim.new(0, radius) })
+end
+
+local function stroke(color, transparency)
+    return create("UIStroke", {
+        Color = color,
+        Thickness = 1,
+        Transparency = transparency or 0,
+        ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+    })
+end
+
+local function tween(object, seconds, goal)
+    TweenService:Create(object, TweenInfo.new(seconds, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), goal):Play()
+end
+
+local busy = false -- true while a verification is in flight
+
+local function hoverable(button, normal, hover, enabled)
+    button.MouseEnter:Connect(function()
+        if not enabled or enabled() then tween(button, 0.12, { BackgroundColor3 = hover }) end
+    end)
+    button.MouseLeave:Connect(function()
+        if not enabled or enabled() then tween(button, 0.12, { BackgroundColor3 = normal }) end
+    end)
+end
+
+-- ============================================================================
+-- Window
+-- ============================================================================
+local playerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local screen = create("ScreenGui", {
+    Name = "ScriptAccess",
+    ResetOnSpawn = false,
+    ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+    Parent = playerGui,
+})
+
+local scale = create("UIScale", { Scale = 0.94 })
+
+local card = create("CanvasGroup", {
+    Name = "Card",
+    AnchorPoint = Vector2.new(0.5, 0.5),
+    Position = UDim2.fromScale(0.5, 0.5),
+    Size = UDim2.fromOffset(420, 326),
+    BackgroundColor3 = Theme.Card,
+    GroupTransparency = 1,
+    Parent = screen,
+}, {
+    corner(16),
+    stroke(Theme.Stroke, 0.25),
+    scale,
+})
+
+-- Background gradient lives on its own frame: a UIGradient placed directly on the
+-- CanvasGroup would multiply the colour of every child (text, buttons, icons) too.
+create("Frame", {
+    Name = "Background",
+    Size = UDim2.fromScale(1, 1),
+    BackgroundColor3 = Color3.new(1, 1, 1),
+    BorderSizePixel = 0,
+    ZIndex = 0,
+    Parent = card,
+}, {
+    create("UIGradient", {
+        Rotation = 90,
+        Color = ColorSequence.new(Theme.Card, Theme.CardDark),
+    }),
+})
+
+-- Header (also the drag handle)
+local header = create("Frame", {
+    Name = "Header",
+    Size = UDim2.new(1, 0, 0, 78),
+    BackgroundTransparency = 1,
+    Active = true,
+    Parent = card,
+})
+
+create("Frame", {
+    Name = "Badge",
+    Position = UDim2.fromOffset(20, 17),
+    Size = UDim2.fromOffset(46, 46),
+    BackgroundColor3 = Theme.Accent,
+    BackgroundTransparency = 0.82,
+    Parent = header,
+}, {
+    corner(12),
+    stroke(Theme.Accent, 0.6),
+    create("TextLabel", {
+        Size = UDim2.fromScale(1, 1),
+        BackgroundTransparency = 1,
+        Text = "🍪",
+        TextSize = 26,
+        Font = Enum.Font.GothamBold,
+        TextColor3 = Theme.Text,
+    }),
+})
+
+create("TextLabel", {
+    Position = UDim2.fromOffset(78, 17),
+    Size = UDim2.new(1, -130, 0, 26),
+    BackgroundTransparency = 1,
+    Text = "Cookie Hub",
+    TextColor3 = Theme.Text,
+    Font = Enum.Font.GothamBold,
+    TextSize = 21,
+    TextXAlignment = Enum.TextXAlignment.Left,
+    Parent = header,
+})
+
+local subtitle = create("TextLabel", {
+    Position = UDim2.fromOffset(78, 43),
+    Size = UDim2.new(1, -130, 0, 18),
+    BackgroundTransparency = 1,
+    Text = "Place " .. PLACE_ID,
+    TextColor3 = Theme.Muted,
+    Font = Enum.Font.Gotham,
+    TextSize = 13,
+    TextTruncate = Enum.TextTruncate.AtEnd,
+    TextXAlignment = Enum.TextXAlignment.Left,
+    Parent = header,
+})
+
+-- Show the name of the game we are in (falls back to the place id if the lookup fails)
+task.spawn(function()
+    local ok, info = pcall(function()
+        return game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId)
+    end)
+    if ok and type(info) == "table" and type(info.Name) == "string" and info.Name ~= "" and subtitle.Parent then
+        subtitle.Text = info.Name
     end
 end)
 
--- ============================================================
--- BACKGROUND LOOPS
--- ============================================================
--- Kill Aura
-task.spawn(function()
-    while ScriptRunning do
-        if State.killAura then
-            local hrp = getRootPart()
-            local tool, dmgID = getBestSpoofTool()
-            if hrp and tool and dmgID then
-                pcall(function() RemoteEvents.EquipItemHandle:FireServer("FireAllClients", tool) end)
-                for _, folder in ipairs({Workspace:FindFirstChild("Characters"), Workspace}) do
-                    if folder then
-                        for _, mob in ipairs(folder:GetChildren()) do
-                            local hum = mob:FindFirstChildOfClass("Humanoid")
-                            if hum and hum.Health > 0 and mob ~= LocalPlayer.Character then
-                                local mobHrp = mob:FindFirstChild("HumanoidRootPart") or findValidPart(mob)
-                                if mobHrp and (mobHrp.Position - hrp.Position).Magnitude <= State.auraRadius then
-                                    task.spawn(function() pcall(function() RemoteEvents.ToolDamageObject:InvokeServer(mob, tool, dmgID, mobHrp.CFrame) end) end)
-                                end
-                            end
-                        end
-                    end
+local closeButton = create("TextButton", {
+    Name = "Close",
+    AnchorPoint = Vector2.new(1, 0),
+    Position = UDim2.new(1, -16, 0, 20),
+    Size = UDim2.fromOffset(28, 28),
+    BackgroundColor3 = Theme.Button,
+    BackgroundTransparency = 1,
+    AutoButtonColor = false,
+    Text = "X",
+    TextColor3 = Theme.Muted,
+    Font = Enum.Font.GothamBold,
+    TextSize = 14,
+    Parent = header,
+}, { corner(8) })
+
+closeButton.MouseEnter:Connect(function()
+    tween(closeButton, 0.12, { BackgroundTransparency = 0, TextColor3 = Theme.Error })
+end)
+closeButton.MouseLeave:Connect(function()
+    tween(closeButton, 0.12, { BackgroundTransparency = 1, TextColor3 = Theme.Muted })
+end)
+
+create("Frame", {
+    Position = UDim2.fromOffset(20, 78),
+    Size = UDim2.new(1, -40, 0, 1),
+    BackgroundColor3 = Theme.Stroke,
+    BackgroundTransparency = 0.4,
+    BorderSizePixel = 0,
+    Parent = card,
+})
+
+-- Key field
+create("TextLabel", {
+    Position = UDim2.fromOffset(22, 96),
+    Size = UDim2.new(1, -44, 0, 14),
+    BackgroundTransparency = 1,
+    Text = "ACCESS KEY",
+    TextColor3 = Theme.Muted,
+    Font = Enum.Font.GothamBold,
+    TextSize = 11,
+    TextXAlignment = Enum.TextXAlignment.Left,
+    Parent = card,
+})
+
+local keyStroke = stroke(Theme.Stroke, 0.2)
+local keyBox = create("TextBox", {
+    Name = "Key",
+    Position = UDim2.fromOffset(20, 116),
+    Size = UDim2.new(1, -40, 0, 44),
+    BackgroundColor3 = Theme.Field,
+    PlaceholderText = "Paste your access key",
+    PlaceholderColor3 = Color3.fromRGB(92, 100, 128),
+    Text = savedKey or "",
+    TextColor3 = Theme.Text,
+    Font = Enum.Font.GothamMedium,
+    TextSize = 14,
+    TextXAlignment = Enum.TextXAlignment.Left,
+    ClearTextOnFocus = false,
+    Parent = card,
+}, {
+    corner(10),
+    keyStroke,
+    create("UIPadding", { PaddingLeft = UDim.new(0, 14), PaddingRight = UDim.new(0, 14) }),
+})
+
+keyBox.Focused:Connect(function()
+    tween(keyStroke, 0.15, { Color = Theme.Accent })
+end)
+
+-- Buttons
+local function makeButton(text, position, size, background, textColor)
+    return create("TextButton", {
+        Position = position,
+        Size = size,
+        BackgroundColor3 = background,
+        AutoButtonColor = false,
+        Text = text,
+        TextColor3 = textColor,
+        Font = Enum.Font.GothamBold,
+        TextSize = 14,
+        Parent = card,
+    }, { corner(10) })
+end
+
+local getKey = makeButton("Get key", UDim2.fromOffset(20, 174), UDim2.fromOffset(122, 44), Theme.Button, Theme.Text)
+create("UIStroke", { Color = Theme.Stroke, Thickness = 1, Transparency = 0.25, Parent = getKey })
+hoverable(getKey, Theme.Button, Theme.ButtonHover)
+
+local verify = makeButton("Verify & load", UDim2.fromOffset(154, 174), UDim2.new(1, -174, 0, 44), Theme.Accent, Theme.AccentText)
+hoverable(verify, Theme.Accent, Theme.AccentHover, function() return not busy end)
+
+-- Status line
+local statusDot = create("Frame", {
+    Position = UDim2.fromOffset(22, 245),
+    Size = UDim2.fromOffset(8, 8),
+    BackgroundColor3 = Theme.Muted,
+    BorderSizePixel = 0,
+    Parent = card,
+}, { corner(4) })
+
+local statusLabel = create("TextLabel", {
+    Position = UDim2.fromOffset(38, 234),
+    Size = UDim2.new(1, -60, 0, 32),
+    BackgroundTransparency = 1,
+    Text = "Enter your key to continue.",
+    TextColor3 = Theme.Muted,
+    Font = Enum.Font.Gotham,
+    TextSize = 13,
+    TextWrapped = true,
+    TextTruncate = Enum.TextTruncate.AtEnd,
+    TextXAlignment = Enum.TextXAlignment.Left,
+    TextYAlignment = Enum.TextYAlignment.Center,
+    Parent = card,
+})
+
+local StatusColors = {
+    info = Theme.Muted,
+    working = Theme.Accent,
+    ok = Theme.Success,
+    error = Theme.Error,
+}
+
+local function setStatus(text, kind)
+    local color = StatusColors[kind or "info"]
+    statusLabel.Text = text
+    statusLabel.TextColor3 = (kind == "info" or kind == nil) and Theme.Muted or color
+    tween(statusDot, 0.15, { BackgroundColor3 = color })
+end
+
+-- Footer: Discord invite (click to copy)
+create("Frame", {
+    Position = UDim2.fromOffset(20, 276),
+    Size = UDim2.new(1, -40, 0, 1),
+    BackgroundColor3 = Theme.Stroke,
+    BackgroundTransparency = 0.4,
+    BorderSizePixel = 0,
+    Parent = card,
+})
+
+local discordButton = create("TextButton", {
+    Name = "Discord",
+    Position = UDim2.fromOffset(20, 284),
+    Size = UDim2.new(1, -40, 0, 30),
+    BackgroundColor3 = Theme.Button,
+    BackgroundTransparency = 1,
+    AutoButtonColor = false,
+    Text = "💬  Join our Discord  ·  dsc.gg/cookie-hub-rblx",
+    TextColor3 = Theme.Muted,
+    Font = Enum.Font.GothamMedium,
+    TextSize = 12,
+    Parent = card,
+}, { corner(8) })
+
+discordButton.MouseEnter:Connect(function()
+    tween(discordButton, 0.12, { BackgroundTransparency = 0, TextColor3 = Theme.Text })
+end)
+discordButton.MouseLeave:Connect(function()
+    tween(discordButton, 0.12, { BackgroundTransparency = 1, TextColor3 = Theme.Muted })
+end)
+
+-- ============================================================================
+-- Behaviour
+-- ============================================================================
+local connections = {}
+
+local function closeWindow(preserveStartup)
+    if not preserveStartup then
+        loaderState.cancelled = true
+        releaseLoader()
+    end
+    if shared.CookieHubLoaderWindow == closeWindow then shared.CookieHubLoaderWindow = nil end
+    if not screen.Parent then return end
+    for _, connection in ipairs(connections) do
+        connection:Disconnect()
+    end
+    table.clear(connections)
+    tween(card, 0.18, { GroupTransparency = 1 })
+    tween(scale, 0.18, { Scale = 0.94 })
+    task.wait(0.2)
+    screen:Destroy()
+end
+
+shared.CookieHubLoaderWindow = closeWindow
+closeButton.MouseButton1Click:Connect(function() closeWindow() end)
+
+-- Drag the card by its header (mouse and touch)
+do
+    local dragging, dragStart, startPosition = false, nil, nil
+
+    header.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPosition = card.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
                 end
-            end
+            end)
         end
-        task.wait(0.1)
-    end
-end)
+    end)
 
--- Tree Aura
-task.spawn(function()
-    while true do
-        if State.treeAura then
-            for _, info in ipairs(TreeUtility:GetTreesInRadius(State.treeAuraRadius)) do
-                if info.Tree:IsDescendantOf(workspace) then TreeUtility:ChopTree(info.Tree, info.Trunk); task.wait(0.1) end
-            end
+    table.insert(connections, UserInputService.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - dragStart
+            card.Position = UDim2.new(
+                startPosition.X.Scale, startPosition.X.Offset + delta.X,
+                startPosition.Y.Scale, startPosition.Y.Offset + delta.Y)
         end
-        task.wait(0.3)
-    end
-end)
+    end))
+end
 
--- Tree ESP refresh
-task.spawn(function()
-    while true do
-        if State.espTrees and TreesFolder then
-            for _, t in ipairs(TreesFolder:GetChildren()) do
-                if t.Name == "Small Tree" then updateTreeESP(t) end
-            end
-        end
-        task.wait(0.5)
-    end
-end)
-
--- Auto Eat
-task.spawn(function()
-    while ScriptRunning do
-        if State.autoEat then
-            local char = LocalPlayer.Character
-            local hum = char and char:FindFirstChildOfClass("Humanoid")
-            if hum and hum.Health < hum.MaxHealth * (State.autoEatThreshold/100) then
-                local hrp = getRootPart()
-                local best, bestDist = nil, math.huge
-                for _, item in ipairs(ItemsFolder:GetChildren()) do
-                    if table.find(autoEatFoods, item.Name) and item:IsDescendantOf(workspace) then
-                        local pos = getItemPosition(item)
-                        if pos and hrp then
-                            local d = (pos - hrp.Position).Magnitude
-                            if d < bestDist then bestDist = d; best = item end
-                        end
-                    end
-                end
-                if best then
-                    if hrp then reliableDragItemToPos(best, hrp.Position + Vector3.new(0,2,0)); task.wait(0.2) end
-                    if RemoteConsume then pcall(function() RemoteConsume:InvokeServer(best) end) end
-                end
-            end
-        end
-        task.wait(1)
-    end
-end)
-
--- Auto Grind/Cook/Fuel
-local processingItems = {}
-task.spawn(function()
-    while ScriptRunning do
-        local hrp = getRootPart()
-        if hrp then
-            for _, item in ipairs(ItemsFolder:GetDescendants()) do
-                if item and item:IsDescendantOf(workspace) and (item:IsA("Model") or item:IsA("Tool") or item:IsA("BasePart")) then
-                    local id = tostring(item)
-                    if not processingItems[id] then
-                        local shouldGrind = State.autoGrindItems[item.Name]
-                        local shouldFuel  = State.autoFuelItems[item.Name]
-                        local shouldCook  = State.autoCook and table.find(rawFoodsToCook, item.Name)
-                        if shouldGrind or shouldFuel or shouldCook then
-                            local targetPos = shouldGrind and MACHINE_POS or CAMPFIRE_POS
-                            local pos = getItemPosition(item)
-                            if pos and (pos - hrp.Position).Magnitude <= 1000 and (pos - targetPos).Magnitude >= 12 then
-                                processingItems[id] = true
-                                task.spawn(function() reliableDragItemToPos(item, targetPos); task.wait(1); processingItems[id] = nil end)
-                            end
-                        end
-                    end
-                end
-            end
-        end
-        task.wait(0.5)
-    end
-end)
-
--- Walk speed + inf jump
-RunService.RenderStepped:Connect(function()
-    local char = LocalPlayer.Character; if not char then return end
-    local hum = char:FindFirstChildOfClass("Humanoid"); if not hum then return end
-    hum.WalkSpeed = State.walkSpeed
-end)
-UserInputService.JumpRequest:Connect(function()
-    if State.infiniteJump then
-        local c = LocalPlayer.Character; local h = c and c:FindFirstChildOfClass("Humanoid")
-        if h then h:ChangeState(Enum.HumanoidStateType.Jumping) end
-    end
-end)
-
--- Day/Night notification
-local wasNight = nil
-Lighting:GetPropertyChangedSignal("ClockTime"):Connect(function()
-    local t = Lighting.ClockTime; local isNight = t >= 18 or t < 6
-    if wasNight ~= nil and isNight ~= wasNight then
-        Library:Notify({Title = isNight and "Night Time" or "Day Time", Description = isNight and "Malam — hati hati mob!" or "Siang — aman!", Duration = 4})
-    end
-    wasNight = isNight
-end)
-wasNight = Lighting.ClockTime >= 18 or Lighting.ClockTime < 6
-
--- F5 toggle tree aura
-UserInputService.InputBegan:Connect(function(input, gp)
-    if gp then return end
-    if input.KeyCode == Enum.KeyCode.F5 then
-        State.treeAura = not State.treeAura
-        Library:Notify({Title="Tree Aura", Description=State.treeAura and "ON" or "OFF", Duration=2})
-    end
-end)
-
--- Fullbright connection
-local fullbrightConn = nil
-local function setFullbright(v)
-    if fullbrightConn then fullbrightConn:Disconnect(); fullbrightConn = nil end
-    if v then
-        Lighting.Brightness = 2; Lighting.ClockTime = 14; Lighting.GlobalShadows = false
-        fullbrightConn = RunService.RenderStepped:Connect(function()
-            Lighting.Brightness = 2; Lighting.ClockTime = 14; Lighting.GlobalShadows = false
-        end)
+discordButton.MouseButton1Click:Connect(function()
+    if setclipboard and pcall(setclipboard, DISCORD_URL) then
+        setStatus("Discord invite copied. Paste it into your browser to join.", "ok")
     else
-        Lighting.Brightness = 1; Lighting.ClockTime = 12; Lighting.GlobalShadows = true
+        setStatus("Clipboard unavailable. Join here: " .. DISCORD_URL, "info")
+    end
+end)
+
+getKey.MouseButton1Click:Connect(function()
+    local target = WORKER_ORIGIN .. "/games/" .. HttpService:UrlEncode(PLACE_ID)
+    if setclipboard and pcall(setclipboard, target) then
+        setStatus("Key link copied. Open it in your browser to get your key.", "ok")
+    else
+        setStatus("Clipboard unavailable. Open this link: " .. target, "info")
+    end
+end)
+
+local function setBusy(state)
+    busy = state
+    if not state then releaseLoader() end
+    verify.Text = state and "Checking…" or "Verify & load"
+    tween(verify, 0.12, { BackgroundColor3 = state and Theme.ButtonHover or Theme.Accent })
+    verify.TextColor3 = state and Theme.Muted or Theme.AccentText
+end
+
+local function verifyAndLoad()
+    if busy or not screen.Parent then return end
+    local active = shared.CookieHubLoaderState
+    if active and active ~= loaderState and (active.state == "starting" or active.state == "waiting_key") then return end
+
+    local key = keyBox.Text:match("^%s*(.-)%s*$")
+    if key == "" then
+        setStatus("Enter your access key first.", "error")
+        return
+    end
+
+    shared.CookieHubLoaderState = loaderState
+    loaderState.state = "starting"
+    loaderState.cancelled = false
+    setBusy(true)
+    setStatus("Checking key…", "working")
+
+    local ok, code, tokenResult = pcall(post, "/v1/token", {
+        key = key,
+        fingerprint = installationId(),
+        place_id = PLACE_ID,
+        player_id = PLAYER_ID,
+        client_version = CLIENT_VERSION,
+    }, function(attempt)
+        setStatus("Connection interrupted. Retrying verification (" .. attempt .. "/4)…", "working")
+    end)
+    if loaderState.cancelled or not screen.Parent then return end
+    if not ok or type(tokenResult) ~= "table" or code ~= 200 or not tokenResult.authorized or type(tokenResult.token) ~= "string" then
+        if ok and code == 403 and type(tokenResult) == "table" and InvalidKeyReasons[tokenResult.reason] then
+            clearSavedKey(key)
+            if keyBox.Text:match("^%s*(.-)%s*$") == key then keyBox.Text = "" end
+        end
+        local reason = type(tokenResult) == "table" and (tokenResult.error or tokenResult.reason) or nil
+        setStatus(tostring(reason or (ok and "Key was not accepted.") or code), "error")
+        setBusy(false)
+        return
+    end
+
+    -- Save only after acceptance, even if the subsequent script download fails.
+    local saved = saveKey(key)
+    setStatus(saved and "Key accepted. Downloading script…" or "Key accepted. Saving unavailable; downloading…", "working")
+
+    -- Send the short-lived token in JSON: this executor drops Body when Authorization is set.
+    local loadedRequest, loadCode, result = pcall(post, "/v1/scripts/load/" .. HttpService:UrlEncode(PLACE_ID), { token = tokenResult.token, player_id = PLAYER_ID, client_version = CLIENT_VERSION }, function(attempt)
+        setStatus("Connection interrupted. Retrying script download (" .. attempt .. "/4)…", "working")
+    end)
+    if loaderState.cancelled or not screen.Parent then return end
+    if not loadedRequest or type(result) ~= "table" or loadCode ~= 200 or not result.authorized or type(result.source) ~= "string" then
+        local reason = loadedRequest and type(result) == "table" and (result.error or result.reason or "Script was unavailable.") or tostring(loadCode)
+        setStatus(tostring(reason), "error")
+        setBusy(false)
+        return
+    end
+
+    local compiled, payload, compileErr = pcall(loadstring, result.source, "=CookieHub/Place/" .. PLACE_ID)
+    if not compiled or type(payload) ~= "function" then
+        reportLoadFailure(result.analytics, "compile_failed")
+        setStatus("Downloaded script could not compile: " .. tostring(compiled and compileErr or payload), "error")
+        setBusy(false)
+        return
+    end
+
+    setStatus("Verified. Loading Cookie Hub…", "ok")
+
+    -- One-time handoff: the payload reads and clears this immediately, then
+    -- re-validates the key itself. We clear it again afterwards in case it never ran.
+    local startupState, observeStartup = startupTracker(result.analytics)
+    getgenv().ScriptAccess = { Key = key, Fingerprint = installationId(), PlayerId = PLAYER_ID, BuildChannel = result.build_channel or "production", StartupState = startupState, Analytics = result.analytics }
+    local ran, runErr = pcall(payload)
+    getgenv().ScriptAccess = nil
+
+    if not ran then
+        reportLoadFailure(result.analytics, "runtime_failed")
+        setStatus("Script failed: " .. tostring(runErr), "error")
+        setBusy(false)
+        return
+    end
+
+    observeStartup(function(state, reason)
+        if loaderState.cancelled or not screen.Parent then return end
+        if state == "failed" or state == "unloaded" then
+            setStatus(reason or "Place script stopped during initialization.", "error")
+            setBusy(false)
+        elseif state == "ready" then
+            closeWindow(true)
+        end
+    end)
+end
+
+local function tryVerifyAndLoad()
+    local ok, failure = pcall(verifyAndLoad)
+    if not ok then
+        shared.ScriptAccess = nil
+        releaseLoader()
+        if screen.Parent then
+            setStatus("Loader failed: " .. tostring(failure), "error")
+            setBusy(false)
+        end
     end
 end
 
--- ============================================================
--- WINDOW
--- ============================================================
-local Window = Library:CreateWindow({
-    Title    = "WISNU HUB",
-    Footer   = "99 Night v5.32",
-    AutoShow = true,
-    Center   = true,
-    MobileButtonsSide = "Right",
-})
-local Tabs = {
-    Main     = Window:AddTab({Name="Main",    Icon="home"}),
-    Aura     = Window:AddTab({Name="Aura",    Icon="zap"}),
-    Tree     = Window:AddTab({Name="Tree",    Icon="activity"}),
-    ItemTP   = Window:AddTab({Name="Item TP", Icon="package"}),
-    TeleTP   = Window:AddTab({Name="Teleport",Icon="map-pin"}),
-    Visual   = Window:AddTab({Name="Visual",  Icon="eye"}),
-    Player   = Window:AddTab({Name="Player",  Icon="user"}),
-    Misc     = Window:AddTab({Name="Misc",    Icon="tool"}),
-    Config   = Window:AddTab({Name="Config",  Icon="settings"}),
-}
-local function N(t,d,dur) Library:Notify({Title=t,Description=d,Duration=dur or 3}) end
+verify.MouseButton1Click:Connect(tryVerifyAndLoad)
+keyBox.FocusLost:Connect(function(enterPressed)
+    tween(keyStroke, 0.15, { Color = Theme.Stroke })
+    if enterPressed then
+        tryVerifyAndLoad()
+    end
+end)
 
--- ── MAIN ─────────────────────────────────────────────────────
-local grpFarm = Tabs.Main:AddLeftGroupbox("Auto Farm")
-grpFarm:AddToggle("AutoEat",  {Text="Auto Eat",  Default=false, Tooltip="Makan saat HP < threshold", Callback=function(v) State.autoEat=v end})
-grpFarm:AddToggle("AutoCook", {Text="Auto Cook", Default=false, Tooltip="Masak makanan mentah di Campfire", Callback=function(v) State.autoCook=v end})
-grpFarm:AddSlider("EatThresh",{Text="Eat HP Threshold", Min=10, Max=95, Default=70, Rounding=0, Callback=function(v) State.autoEatThreshold=v end})
-grpFarm:AddDropdown("AutoGrind",{Text="Auto Grind Items", Multi=true,
-    Values={"UFO Junk","UFO Component","Old Car Engine","Broken Fan","Old Microwave","Bolt","Log","Cultist Gem","Sheet Metal","Old Radio","Tyre","Washing Machine","Gem of the Forest Fragment","Broken Microwave"},
-    Callback=function(v) State.autoGrindItems={}; for k,s in pairs(v) do if s then State.autoGrindItems[k]=true end end
-})
-grpFarm:AddDropdown("AutoFuel",{Text="Auto Fuel Items", Multi=true,
-    Values={"Log","Coal","Fuel Canister","Oil Barrel","Biofuel"},
-    Callback=function(v) State.autoFuelItems={}; for k,s in pairs(v) do if s then State.autoFuelItems[k]=true end end
-})
+-- Intro animation
+tween(card, 0.25, { GroupTransparency = 0 })
+tween(scale, 0.25, { Scale = 1 })
 
--- ── AURA ─────────────────────────────────────────────────────
-local grpKill = Tabs.Aura:AddLeftGroupbox("Kill Aura")
-grpKill:AddToggle("KillAura", {Text="Kill Aura", Default=false, Callback=function(v) State.killAura=v end})
-grpKill:AddInput("AuraRadius",{Text="Radius", Default="350", Numeric=true, Finished=true, Callback=function(v) State.auraRadius=tonumber(v) or 350 end})
-
--- ── TREE AURA ─────────────────────────────────────────────────
-local grpTree = Tabs.Tree:AddLeftGroupbox("Tree Aura")
-grpTree:AddToggle("TreeAura", {Text="Tree Aura (F5)", Default=false, Callback=function(v) State.treeAura=v end})
-grpTree:AddInput("TreeRadius",{Text="Radius", Default="80", Numeric=true, Finished=true, Callback=function(v) State.treeAuraRadius=tonumber(v) or 80 end})
-grpTree:AddButton({Text="Chop All (1x)", Callback=function()
-    local trees = TreeUtility:GetTreesInRadius(State.treeAuraRadius)
-    local n = 0
-    for _, info in ipairs(trees) do TreeUtility:ChopTree(info.Tree, info.Trunk); n+=1; task.wait(0.05) end
-    N("Tree Aura", "Chopped "..n.." trees", 3)
-end})
-
--- ── ITEM TP ───────────────────────────────────────────────────
-local grpItemTP = Tabs.ItemTP:AddLeftGroupbox("Item Teleport")
-local itemCategories = {
-    Food       = {"Berry","Carrot","Cake","Apple","Steak","Morsel","Cooked Steak","Cooked Morsel","Pumpkin","Ribs"},
-    Equipment  = {"Pistol","Revolver","Rifle","Chainsaw","Old Flashlight","Rifle Ammo","Revolver Ammo","Spear"},
-    Medic      = {"MedKit","Bandage"},
-    Armor      = {"Iron Body","Leather Body"},
-    Fuel       = {"Log","Coal","Fuel Canister","Oil Barrel","Biofuel","Chair","Metal Chair"},
-    Junk       = {"UFO Junk","UFO Component","Old Car Engine","Broken Fan","Old Microwave","Bolt","Sheet Metal","Old Radio","Tyre","Washing Machine","Broken Microwave","Mossy Coin"},
-}
-local selectedItem = {}
-for catName, listItems in pairs(itemCategories) do
-    selectedItem[catName] = listItems[1]
-    grpItemTP:AddDropdown("TP_"..catName, {Text=catName, Values=listItems, Default=1, Callback=function(v) selectedItem[catName]=v end})
-    local cn = catName
-    grpItemTP:AddButton({Text="Bring "..cn, Callback=function()
-        local hrp = getRootPart(); if not hrp then return end
-        local sel = selectedItem[cn]; local list = {}
-        for _, item in ipairs(ItemsFolder:GetDescendants()) do
-            if item.Name == sel and (item:IsA("Model") or item:IsA("Tool") or item:IsA("BasePart")) then
-                local pos = getItemPosition(item)
-                if pos then table.insert(list, {item=item, dist=(pos-hrp.Position).Magnitude}) end
-            end
-        end
-        table.sort(list, function(a,b) return a.dist < b.dist end)
-        local base = hrp.Position + Vector3.new(0,2,0)
-        for i, d in ipairs(list) do
-            local tp = base + Vector3.new((i-1)%3*1.5, math.floor((i-1)/3)*1.5, 0)
-            task.spawn(function() reliableDragItemToPos(d.item, tp) end)
-        end
-        N("Item TP", "Brought "..#list.."x "..sel, 2)
-    end})
+if savedKey then
+    setStatus("Checking saved key…", "working")
+    task.spawn(tryVerifyAndLoad)
+elseif type(readfile) ~= "function" or type(writefile) ~= "function" then
+    setStatus("Enter your key. This executor cannot save keys between sessions.", "info")
 end
-
--- ── TELEPORT ─────────────────────────────────────────────────
-local grpTP = Tabs.TeleTP:AddLeftGroupbox("Teleport")
-grpTP:AddButton({Text="TP to Campfire", Callback=function() teleportTo(CAMPFIRE_POS) end})
-for i = 1, 4 do
-    local idx = i
-    grpTP:AddButton({Text="Lost Child "..idx, Callback=function()
-        local part = getLostChildPart(idx)
-        if part then teleportTo(part.Position); N("Teleport","Lost Child "..idx.." — OK",2)
-        else N("Error","Lost Child "..idx.." not found",2) end
-    end})
+end)
+if not loaderOk then
+    releaseLoader()
+    shared.ScriptAccess = nil
+    error(loaderErr, 0)
 end
-
--- ── VISUAL ───────────────────────────────────────────────────
-local grpESP = Tabs.Visual:AddLeftGroupbox("ESP")
-grpESP:AddToggle("ESPMobs",  {Text="ESP Mobs",  Default=false, Callback=function(v) State.espMobs=v;  refreshESP() end})
-grpESP:AddToggle("ESPItems", {Text="ESP Items", Default=false, Callback=function(v) State.espItems=v; refreshESP() end})
-grpESP:AddToggle("ESPTrees", {Text="ESP Trees (HP)", Default=false, Callback=function(v)
-    State.espTrees = v
-    if not v then for _, e in pairs(treeESPList) do pcall(function() e.gui:Destroy() end) end; treeESPList = {} end
-end})
-
-local grpViz = Tabs.Visual:AddRightGroupbox("Performance")
-grpViz:AddToggle("ShowFPS",   {Text="FPS & Ping", Default=false, Callback=function(v) State.showFPS=v; fpsFrame.Visible=v end})
-grpViz:AddToggle("Fullbright",{Text="Fullbright", Default=false, Callback=function(v) State.fullbright=v; setFullbright(v) end})
-grpViz:AddButton({Text="Reduce Map (Potato)", Callback=function()
-    pcall(function()
-        for _, obj in ipairs(Workspace:GetDescendants()) do
-            if obj:IsA("BasePart") then obj.Material=Enum.Material.SmoothPlastic; obj.Reflectance=0
-            elseif obj:IsA("Texture") or obj:IsA("Decal") then obj:Destroy()
-            elseif obj:IsA("ParticleEmitter") or obj:IsA("Fire") or obj:IsA("Smoke") or obj:IsA("Sparkles") then obj:Destroy()
-            elseif obj:IsA("PostEffect") then obj.Enabled=false
-            end
-        end
-        for _, e in ipairs(Lighting:GetChildren()) do
-            if e:IsA("PostEffect") or e:IsA("Atmosphere") or e:IsA("Sky") then e:Destroy() end
-        end
-        Lighting.GlobalShadows = false; Lighting.FogEnd = 999999
-    end)
-    N("Reduce Map", "Potato mode active!", 3)
-end})
-
--- ── PLAYER ───────────────────────────────────────────────────
-local grpPlayer = Tabs.Player:AddLeftGroupbox("Player")
-grpPlayer:AddSlider("WalkSpeed",   {Text="Walk Speed", Min=0, Max=200, Default=16, Rounding=0, Callback=function(v) State.walkSpeed=v end})
-grpPlayer:AddToggle("InfiniteJump",{Text="Infinite Jump", Default=false, Callback=function(v) State.infiniteJump=v end})
-
--- ── MISC ─────────────────────────────────────────────────────
-local grpMisc = Tabs.Misc:AddLeftGroupbox("Misc")
-grpMisc:AddToggle("FPS_Misc", {Text="FPS & Ping", Default=false, Callback=function(v) State.showFPS=v; fpsFrame.Visible=v end})
-
--- ── CONFIG ───────────────────────────────────────────────────
-ThemeManager:SetLibrary(Library)
-SaveManager:SetLibrary(Library)
-SaveManager:SetFolder("WisnuHub_99Night")
-SaveManager:BuildConfigSection(Tabs.Config)
-ThemeManager:ApplyToTab(Tabs.Config)
-
-N("WISNU HUB", "99 Night loaded!", 3)
