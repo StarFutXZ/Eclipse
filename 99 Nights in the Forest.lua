@@ -448,10 +448,11 @@ create("Frame", {
     corner(12),
     stroke(Theme.Accent, 0.6),
     create("ImageLabel", {
-        Name = "Logo",
+        Name = "EclipseLogo",
         Size = UDim2.fromScale(1, 1),
         BackgroundTransparency = 1,
         Image = "rbxassetid://139452900510551",
+        ImageColor3 = Color3.fromRGB(255, 255, 255),
         ScaleType = Enum.ScaleType.Fit,
     }),
 })
@@ -790,7 +791,7 @@ local function verifyAndLoad()
         return
     end
 
-    setStatus("Verified. Loading Eclipse…", "ok")
+    setStatus("Verified. Loading Cookie Hub…", "ok")
 
     -- One-time handoff: the payload reads and clears this immediately, then
     -- re-validates the key itself. We clear it again afterwards in case it never ran.
