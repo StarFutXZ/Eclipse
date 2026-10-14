@@ -447,12 +447,13 @@ create("Frame", {
 }, {
     corner(12),
     stroke(Theme.Accent, 0.6),
-    create("ImageLabel", {
-        Name = "Logo",
+    create("TextLabel", {
         Size = UDim2.fromScale(1, 1),
         BackgroundTransparency = 1,
-        Image = "rbxassetid://139452900510551",
-        ScaleType = Enum.ScaleType.Fit,
+        Text = "🍪",
+        TextSize = 26,
+        Font = Enum.Font.GothamBold,
+        TextColor3 = Theme.Text,
     }),
 })
 
@@ -460,7 +461,7 @@ create("TextLabel", {
     Position = UDim2.fromOffset(78, 17),
     Size = UDim2.new(1, -130, 0, 26),
     BackgroundTransparency = 1,
-    Text = "Eclipse",
+    Text = "Cookie Hub",
     TextColor3 = Theme.Text,
     Font = Enum.Font.GothamBold,
     TextSize = 21,
