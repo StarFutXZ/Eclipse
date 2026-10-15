@@ -10,7 +10,7 @@ loadstring(game:HttpGet(BaseURL .. "/Module/Library/GUI/LoadAll.lua"))()
 
 Window = WindUI:CreateWindow({
     Title = "Eclipse| Dead Rail (Game)",
-    Icon = "rbxassetid://90474669177545",
+    Icon = BaseURL .. "/icon.png",
     Author = "Made By Pnsdg",
     Folder = "Darahub/DeadRail-Game",
     Size = UDim2.fromOffset(580, 490),
