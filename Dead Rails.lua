@@ -9,8 +9,8 @@ WindUI = loadstring(game:HttpGet(BaseURL .. "/Module/Library/GUI/WindUI-Moded/ma
 loadstring(game:HttpGet(BaseURL .. "/Module/Library/GUI/LoadAll.lua"))()
 
 Window = WindUI:CreateWindow({
-    Title = "Darahub | Dead Rail (Game)",
-    Icon = BaseURL .. "/icon.png",
+    Title = "Eclipse| Dead Rail (Game)",
+    Icon = "rbxassetid://90474669177545",
     Author = "Made By Pnsdg",
     Folder = "Darahub/DeadRail-Game",
     Size = UDim2.fromOffset(580, 490),
@@ -2257,4 +2257,4 @@ ThemeDropdown = Tabs.Settings:Dropdown({ Title = "Select Theme", Flag = "ThemeDr
 TransparencySlider = Tabs.Settings:Slider({ Title = "Window Transparency", Step = 0.01, Flag = "TransparencySlider", Value = { Min = 0, Max = 1, Default = WindUI.TransparencyValue },
     Callback = function(v) WindUI.TransparencyValue = tonumber(v); Window:ToggleTransparency(tonumber(v) > 0) end })
 
-if cameraSensitivityUI then cameraSensitivityUI() end
+if cameraSensitivityUI then cameraSensitivityUI() endd
