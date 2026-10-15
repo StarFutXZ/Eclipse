@@ -3,7 +3,7 @@ local GameScripts = {
 
     [6035872082] = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/Rivals.lua",
 
-    [7018190066] = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/Dead%20Rails.lua",
+    [7018190066] = "https://github.com/StarFutXZ/Eclipse/blob/main/Dead%20Rails.lua",
 
     [7326934954] = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/99%20Nights%20in%20the%20Forest.lua"
 }
