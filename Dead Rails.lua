@@ -9,9 +9,9 @@ WindUI = loadstring(game:HttpGet(BaseURL .. "/Module/Library/GUI/WindUI-Moded/ma
 loadstring(game:HttpGet(BaseURL .. "/Module/Library/GUI/LoadAll.lua"))()
 
 Window = WindUI:CreateWindow({
-    Title = "Darahub | Dead Rail (Game)",
+    Title = "Eclipse | Dead Rail (Game)",
     Icon = BaseURL .. "/icon.png",
-    Author = "Made By Pnsdg",
+    Author = "Made By Andryx",
     Folder = "Darahub/DeadRail-Game",
     Size = UDim2.fromOffset(580, 490),
     Theme = "Dark", HidePanelBackground = false, NewElements = true, Acrylic = false,
