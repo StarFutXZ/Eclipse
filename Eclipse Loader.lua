@@ -3,7 +3,7 @@ local GameScripts = {
 
     [6035872082] = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/Rivals.lua",
 
-    [7018190066] = "loadstring(game:HttpGet("https://darahub.pages.dev/api/script/Darahub-DeadRail/Lobby.lua"))()",
+    [7018190066] = "https://darahub.pages.dev/api/script/Darahub-DeadRail/Lobby.lua",
 
     [7326934954] = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/99%20Nights%20in%20the%20Forest.lua"
 }
