@@ -3,7 +3,7 @@ local GameScripts = {
 
     [6035872082] = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/Rivals.lua",
 
-    [6035872082] = "https://raw.githubusercontent.com/tienkhanh1/Chilli-Hub-Script/refs/heads/main/StealAnEgg",
+    [10563114921] = "https://raw.githubusercontent.com/tienkhanh1/Chilli-Hub-Script/refs/heads/main/StealAnEgg",
 
     [66654135] = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/Murder%20Mystery%202.lua",
 
