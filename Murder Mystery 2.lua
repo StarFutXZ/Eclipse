@@ -53,7 +53,7 @@ do
 	local Confirmed = false;
 	WindUI:Popup({
 		Title = gradient("Murder Mystery 2", Color3.fromHex("#eb1010"), Color3.fromHex("#1023eb")),
-		Icon = "rbxassetid://90474669177545",
+		Icon = "rbxassetid://72462144048455",
 		Content = gradient("This script made by", Color3.fromHex("#10eb3c"), Color3.fromHex("#67c97a"))   .. gradient(" By_Andryx", Color3.fromHex("#001e80"), Color3.fromHex("#16f2d9")) ,
 		Buttons = {
 			{
@@ -79,7 +79,7 @@ do
 
 	local Window = WindUI:CreateWindow({
 		Title = gradient("Murder Mystery 2 [SUMMER UPDATE]", Color3.fromHex("#001e80"), Color3.fromHex("#ffea00")),
-		Icon = "rbxassetid://90474669177545",
+		Icon = "rbxassetid://72462144048455",
 		Author = gradient("By_Andryx", Color3.fromHex("#1bf2b2"), Color3.fromHex("#1bcbf2")),
 		Folder = "MM2WindUI",
 		Size = UDim2.fromOffset(350, 400),
@@ -92,7 +92,7 @@ do
 
 	Window:EditOpenButton({
 		Title = "Open Daddy's UI",
-		Icon = "rbxassetid://90474669177545",
+		Icon = "rbxassetid://72462144048455",
 		CornerRadius = UDim.new(2, 6),
 		StrokeThickness = 2,
 		Color = ColorSequence.new(Color3.fromHex("1E213D"), Color3.fromHex("1F75FE")),
@@ -196,9 +196,9 @@ do
 	-- ==========================================
 	Tabs.MainTab:Section({ Title = gradient("Welcome", Color3.fromHex("#FFD700"), Color3.fromHex("#FFA500")) });
 	Tabs.MainTab:Paragraph({
-		Title = "MM2 Script v1.2.2",
+		Title = "MM2 Script v1.2.1",
 		Desc = "Welcome to By_Andryx Murder Mystery 2 Script!\n\nPress Ctrl+M to toggle the script on/off.\nAll features are organized by role tabs.",
-		Image = "rbxassetid://90474669177545", ImageSize = 48
+		Image = "rbxassetid://72462144048455", ImageSize = 48
 	});
 	Tabs.MainTab:Section({ Title = gradient("Quick Actions", Color3.fromHex("#00ff40"), Color3.fromHex("#008f11")) });
 	Tabs.MainTab:Button({ Title = "Teleport to Lobby", Callback = TeleportToLobby });
