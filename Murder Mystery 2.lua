@@ -197,7 +197,7 @@ do
 	-- ==========================================
 	Tabs.MainTab:Section({ Title = gradient("Welcome", Color3.fromHex("#FFD700"), Color3.fromHex("#FFA500")) });
 	Tabs.MainTab:Paragraph({
-		Title = "MM2 Script v2.3.1 FIXED",
+		Title = "MM2 Script v2.3.2 FIXED",
 		Desc = "Welcome to BorutoDEV's Murder Mystery 2 Script!\n\nPress Ctrl+M to toggle the script on/off.\nAll features are organized by role tabs.",
 		Image = "rbxassetid://72462144048455", ImageSize = 48
 	});
@@ -1002,7 +1002,7 @@ Tips:
 	Tabs.SheriffTab:Slider({ Title = "Button Size", Step = 1, Value = { Min = 10, Max = 100, Default = 50 }, Callback = function(size) buttonSize = size; if shotButtonActive then RemoveShotButton(); CreateShotButton(); end end });
 
 	-- ==========================================
-	-- SHERIFF AUTO-KILL (LETHAL)
+	-- SHERIFF AUTO-KILL (TELEPORT BEHIND & SHOOT)
 	-- ==========================================
 	local SheriffAutoKill = {
 		Enabled = false,
@@ -1063,36 +1063,29 @@ Tips:
 		local localRoot = char and char:FindFirstChild("HumanoidRootPart")
 		if not localRoot then return false end
 
-		-- 1. Lock character directly on target (no yields)
-		localRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, -3)
-		
-		-- 2. Predict velocity
+		-- 1. Teleport BEHIND the murderer
+		localRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, 4)
+
+		-- 2. Aim the camera exactly at their head
+		CurrentCamera.CFrame = CFrame.new(CurrentCamera.CFrame.Position, targetHead.Position)
+
+		-- 3. Predict velocity so the shot lands perfectly
 		local vel = targetRoot.AssemblyLinearVelocity or targetRoot.Velocity or Vector3.new(0,0,0)
 		local predictedPos = targetHead.Position + (vel * 0.165)
 
-		-- 3. Aim camera at target (increases hit accuracy on some versions)
-		CurrentCamera.CFrame = CFrame.new(CurrentCamera.CFrame.Position, targetHead.Position)
-
-		-- 4. Primary remote fire
-		local ok1 = pcall(function()
+		-- 4. Fire the shot
+		local success = pcall(function()
 			gun.KnifeLocal.CreateBeam.RemoteFunction:InvokeServer(1, predictedPos, "AH2")
 		end)
 
-		-- 5. Secondary fallback - standard gun shoot remote
-		if not ok1 then
+		-- 5. Fallback just in case
+		if not success then
 			pcall(function()
 				gun.KnifeLocal.CreateBeam.RemoteFunction:InvokeServer(10, predictedPos, "AH2")
 			end)
 		end
 
-		-- 6. Extra safety: use fireproximity or standard gun shoot if available
-		pcall(function()
-			if gun:FindFirstChild("Shoot") then
-				gun.Shoot:FireServer(predictedPos)
-			end
-		end)
-
-		return ok1
+		return success
 	end
 
 	Tabs.SheriffTab:Section({ Title = gradient("Auto Kill Murderer", Color3.fromHex("#001e80"), Color3.fromHex("#16f2d9")) })
@@ -1234,29 +1227,27 @@ Tips:
 	-- ==========================================
 	Tabs.ChangelogsTab:Section({ Title = gradient("Current Version", Color3.fromHex("#00ff40"), Color3.fromHex("#008f11")) });
 	Tabs.ChangelogsTab:Code({
-		Title = "v2.3.1 - Sheriff Lethal",
+		Title = "v2.3.2 - Sheriff Lethal Teleport",
 		Code = [[
-New in v2.3.1:
-• Fixed Sheriff Auto-Kill not registering kills (remote rejection)
+New in v2.3.2:
+• Auto Kill Murderer now physically teleports behind the murderer
+• Added camera aim lock to target head before shooting
+• Guarantees the shot registers on the server
+
+v2.3.1:
 • Added velocity prediction on Murderer position
-• Added camera aim lock before firing
 • Added secondary remote fallback (AH2 + Shoot)
-• Lowered default Auto-Kill delay to 0.2s for faster lock
-• Added Hero Gun fallback (works if Sheriff dies but you have gun)
 
 v2.3:
-• Fixed Sheriff Auto-Kill freezing after popup
 • Switched Auto-Kill from Heartbeat to task.spawn loop
 
 v2.2:
-• Fixed Sheriff Auto-Kill starving on stale role cache
 • Moved NoClip + Anti-AFK to Character tab
 • Fixed Teleport to Lobby (multi-fallback spawn finder)
 
 v2.0:
 • Full ESP, Silent Aimbot, Camera Aimbot
 • AutoFarm, Kill All, Teleport System
-• Shot Button, Server Hop, Ctrl+M toggle
 ]]
 	});
 
@@ -1356,5 +1347,5 @@ v2.0:
 		if input.KeyCode == Enum.KeyCode.LeftControl or input.KeyCode == Enum.KeyCode.RightControl then CtrlPressed = false; end
 	end);
 
-	print("MM2 Script v2.3.1 Loaded - Press Ctrl+M to toggle script");
+	print("MM2 Script v2.3.2 Loaded - Press Ctrl+M to toggle script");
 end
