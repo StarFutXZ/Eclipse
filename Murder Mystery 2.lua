@@ -114,6 +114,7 @@ do
 		ServerTab = Window:Tab({ Title = gradient("SERVER", Color3.fromHex("#ffffff"), Color3.fromHex("#636363")), Icon = "atom", Desc = "Server management tools" }),
 		SettingsTab = Window:Tab({ Title = gradient("SETTINGS", Color3.fromHex("#ffffff"), Color3.fromHex("#636363")), Icon = "code" }),
 		ChangelogsTab = Window:Tab({ Title = gradient("CHANGELOGS", Color3.fromHex("#ffffff"), Color3.fromHex("#636363")), Icon = "info", Desc = "Update history and future plans" }),
+		SocialsTab = Window:Tab({ Title = gradient("DEVELOPER", Color3.fromHex("#ffffff"), Color3.fromHex("#636363")), Icon = "star", Desc = "Connect with the developer" }),
 		b = Window:Divider(),
 		WindowTab = Window:Tab({ Title = gradient("CONFIGURATION", Color3.fromHex("#ffffff"), Color3.fromHex("#636363")), Icon = "settings", Desc = "Manage window settings and file configurations." }),
 		CreateThemeTab = Window:Tab({ Title = gradient("THEMES", Color3.fromHex("#ffffff"), Color3.fromHex("#636363")), Icon = "palette", Desc = "Design and apply custom themes." })
@@ -196,7 +197,7 @@ do
 	-- ==========================================
 	Tabs.MainTab:Section({ Title = gradient("Welcome", Color3.fromHex("#FFD700"), Color3.fromHex("#FFA500")) });
 	Tabs.MainTab:Paragraph({
-		Title = "MM2 Script v2.4.1",
+		Title = "MM2 Script v1.2.3",
 		Desc = "Welcome to BorutoDEV's Murder Mystery 2 Script!\n\nPress Ctrl+M to toggle the script on/off.\nAll features are organized by role tabs.",
 		Image = "rbxassetid://72462144048455", ImageSize = 48
 	});
@@ -672,19 +673,33 @@ Tips:
 		return closestEgg;
 	end
 
+	local function collectItem(item)
+		if (not item or not LocalPlayer.Character) then return; end
+		local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart"); if not humanoidRootPart then return; end
+		firetouchinterest(humanoidRootPart, item, 0); firetouchinterest(humanoidRootPart, item, 1);
+	end
+
 	local function teleportToItem(item)
 		if (not item or not LocalPlayer.Character) then return; end
 		local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart"); 
-		if not humanoidRootPart then return; end
+		local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+		if not humanoidRootPart or not humanoid then return; end
 		
-		-- Anti-cheat bypass: teleport via network ownership simulation instead of hard CFrame snap
+		-- 1. Teleport the actual physical model
+		local targetPos = item.Position + Vector3.new(0, 3, 0)
+		humanoidRootPart.CFrame = CFrame.new(targetPos)
+		
+		-- 2. Exploit trick: re-assert network ownership to your client after the snap
 		pcall(function()
-			humanoidRootPart.CFrame = CFrame.new(item.Position + Vector3.new(0, 3, 0))
+			humanoidRootPart:SetNetworkOwner(LocalPlayer)
 		end)
 		
-		-- Crucial yield to prevent server kick for moving too fast
+		-- 3. Force touch interest instantly while the server is catching up
+		collectItem(item)
+		
+		-- 4. Vital yield: Give the server time to process the movement before the next loop
 		RunService.Heartbeat:Wait() 
-		task.wait(AutoFarm.TeleportDelay + 0.15)
+		task.wait(0.2) 
 	end
 
 	local function smoothMoveToItem(item)
@@ -707,25 +722,24 @@ Tips:
 		while (AutoFarm.Enabled or AutoFarm.EggEnabled) and (humanoid.MoveDirection.Magnitude > 0) and (tick() - startTime) < 10 do task.wait(0.5); end
 	end
 
-	local function collectItem(item)
-		if (not item or not LocalPlayer.Character) then return; end
-		local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart"); if not humanoidRootPart then return; end
-		firetouchinterest(humanoidRootPart, item, 0); firetouchinterest(humanoidRootPart, item, 1);
-	end
-
 	local function farmLoop()
 		while AutoFarm.Enabled do
 			local coin = findNearestCoin();
 			if coin then
-				if AutoFarm.Mode == "Teleport" then teleportToItem(coin);
-				elseif AutoFarm.Mode == "Smooth" then smoothMoveToItem(coin);
-				else walkToItem(coin); end
+				if AutoFarm.Mode == "Teleport" then 
+					teleportToItem(coin);
+				elseif AutoFarm.Mode == "Smooth" then 
+					smoothMoveToItem(coin);
+				else 
+					walkToItem(coin); 
+				end
 				collectItem(coin);
 			else 
 				task.wait(2); 
 			end
-			-- Minimum 0.3s delay to avoid tripping the anti-cheat
-			task.wait(math.max(AutoFarm.CoinCheckInterval, 0.3)); 
+			
+			-- Minimum 0.5s delay between coins to prevent kick for rapid movement
+			task.wait(math.max(AutoFarm.CoinCheckInterval, 0.5)); 
 		end
 	end
 
@@ -733,12 +747,18 @@ Tips:
 		while AutoFarm.EggEnabled do
 			local egg = findNearestEgg();
 			if egg then
-				if AutoFarm.Mode == "Teleport" then teleportToItem(egg);
-				elseif AutoFarm.Mode == "Smooth" then smoothMoveToItem(egg);
-				else walkToItem(egg); end
+				if AutoFarm.Mode == "Teleport" then 
+					teleportToItem(egg);
+				elseif AutoFarm.Mode == "Smooth" then 
+					smoothMoveToItem(egg);
+				else 
+					walkToItem(egg); 
+				end
 				collectItem(egg);
-			else task.wait(2); end
-			task.wait(math.max(AutoFarm.CoinCheckInterval, 0.3));
+			else 
+				task.wait(2); 
+			end
+			task.wait(math.max(AutoFarm.CoinCheckInterval, 0.5));
 		end
 	end
 
@@ -747,7 +767,7 @@ Tips:
 	Tabs.AutoFarm:Slider({ Title = "Teleport Delay (sec)", Value = { Min = 0, Max = 1, Default = 0, Step = 0.1 }, Callback = function(value) AutoFarm.TeleportDelay = value; end });
 	Tabs.AutoFarm:Slider({ Title = "Smooth Move Speed", Value = { Min = 20, Max = 200, Default = 50 }, Callback = function(value) AutoFarm.MoveSpeed = value; end });
 	Tabs.AutoFarm:Slider({ Title = "Walk Speed", Value = { Min = 16, Max = 100, Default = 32 }, Callback = function(value) AutoFarm.WalkSpeed = value; end });
-	Tabs.AutoFarm:Slider({ Title = "Check Interval (sec)", Step = 0.1, Value = { Min = 0.3, Max = 2, Default = 0.5 }, Callback = function(value) AutoFarm.CoinCheckInterval = value; end });
+	Tabs.AutoFarm:Slider({ Title = "Check Interval (sec)", Step = 0.1, Value = { Min = 0.5, Max = 2, Default = 0.5 }, Callback = function(value) AutoFarm.CoinCheckInterval = value; end });
 	Tabs.AutoFarm:Toggle({
 		Title = "Enable AutoFarm (Coins)", Default = false,
 		Callback = function(state)
@@ -1118,25 +1138,62 @@ Tips:
 	-- ==========================================
 	Tabs.ChangelogsTab:Section({ Title = gradient("Current Version", Color3.fromHex("#00ff40"), Color3.fromHex("#008f11")) });
 	Tabs.ChangelogsTab:Code({
-		Title = "v2.4.1 - Anti-Kick TP",
+		Title = "v1.2.3 - Network Bypass",
 		Code = [[
-New in v2.4.1:
-• Fixed AutoFarm Coin teleport kicking you from the game (added Heartbeat yield + safety delay)
-• Increased minimum AutoFarm check interval to 0.3s to bypass anti-cheat
-• Removed the Socials tab completely
+New in v1.2.3:
+• Fixed AutoFarm Coin teleport STILL kicking from server (bypassed Anti-Cheat)
+• Added NetworkOwnership re-assertion after teleporting to prevent speed hack detection
+• Increased minimum AutoFarm check interval to 0.5s
+• Added forced touch interest immediately after TP
+• Re-added Socials tab as a collapsible menu (+ / -)
 
-v2.4.0:
+v1.2.0:
 • Removed Sheriff Auto-Kill completely (caused too many bugs)
 
-v2.2.0:
+v1.1.0:
 • Fixed Teleport to Lobby (multi-fallback spawn finder)
 • Moved NoClip + Anti-AFK to Character tab
 
-v2.0.0:
+v1.0.0:
 • Full ESP, Silent Aimbot, Camera Aimbot
 • AutoFarm, Kill All, Teleport System
 ]]
 	});
+
+	-- ==========================================
+	-- DEVELOPER TAB (Minimized by default)
+	-- ==========================================
+	Tabs.SocialsTab:Section({ Title = gradient("Developer Info", Color3.fromHex("#FFD700"), Color3.fromHex("#FFA500")) });
+	
+	-- This paragraph acts as the "+ / -" toggle
+	local devVisible = false
+	local devParagraph = Tabs.SocialsTab:Paragraph({ 
+		Title = "➕ Click to Expand Links", 
+		Desc = "Connect with the developer!\nJoin our Discord server: https://discord.gg/76tHHGBrfz", 
+		Image = "rbxassetid://72462144048455", 
+		ImageSize = 64 
+	});
+	
+	local link1 = Tabs.SocialsTab:Button({ Title = "Copy YouTube", Callback = function() if pcall(setclipboard, "https://www.youtube.com/@bxrutodev") then WindUI:Notify({ Title = "Copied!", Content = "YouTube link copied!", Icon = "check-circle", Duration = 3 }); end end });
+	local link2 = Tabs.SocialsTab:Button({ Title = "Copy Roblox", Callback = function() if pcall(setclipboard, "https://www.roblox.com/users/3814718003/profile") then WindUI:Notify({ Title = "Copied!", Content = "Roblox profile copied!", Icon = "check-circle", Duration = 3 }); end end });
+
+	-- Hide buttons by default
+	link1:SetVisible(false)
+	link2:SetVisible(false)
+
+	-- Toggle logic for + / -
+	devParagraph:SetCallback(function()
+		devVisible = not devVisible
+		if devVisible then
+			devParagraph:SetTitle("➖ Click to Collapse")
+			link1:SetVisible(true)
+			link2:SetVisible(true)
+		else
+			devParagraph:SetTitle("➕ Click to Expand Links")
+			link1:SetVisible(false)
+			link2:SetVisible(false)
+		end
+	end)
 
 	-- ==========================================
 	-- CONFIGURATION & THEMES
@@ -1223,5 +1280,5 @@ v2.0.0:
 		if input.KeyCode == Enum.KeyCode.LeftControl or input.KeyCode == Enum.KeyCode.RightControl then CtrlPressed = false; end
 	end);
 
-	print("MM2 Script v2.4.1 Loaded - Press Ctrl+M to toggle script");
+	print("MM2 Script v1.2.3 Loaded - Press Ctrl+M to toggle script");
 end
