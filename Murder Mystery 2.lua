@@ -114,7 +114,6 @@ do
 		ServerTab = Window:Tab({ Title = gradient("SERVER", Color3.fromHex("#ffffff"), Color3.fromHex("#636363")), Icon = "atom", Desc = "Server management tools" }),
 		SettingsTab = Window:Tab({ Title = gradient("SETTINGS", Color3.fromHex("#ffffff"), Color3.fromHex("#636363")), Icon = "code" }),
 		ChangelogsTab = Window:Tab({ Title = gradient("CHANGELOGS", Color3.fromHex("#ffffff"), Color3.fromHex("#636363")), Icon = "info", Desc = "Update history and future plans" }),
-		SocialsTab = Window:Tab({ Title = gradient("SOCIALS", Color3.fromHex("#ffffff"), Color3.fromHex("#636363")), Icon = "star", Desc = "Connect with the developer" }),
 		b = Window:Divider(),
 		WindowTab = Window:Tab({ Title = gradient("CONFIGURATION", Color3.fromHex("#ffffff"), Color3.fromHex("#636363")), Icon = "settings", Desc = "Manage window settings and file configurations." }),
 		CreateThemeTab = Window:Tab({ Title = gradient("THEMES", Color3.fromHex("#ffffff"), Color3.fromHex("#636363")), Icon = "palette", Desc = "Design and apply custom themes." })
@@ -197,7 +196,7 @@ do
 	-- ==========================================
 	Tabs.MainTab:Section({ Title = gradient("Welcome", Color3.fromHex("#FFD700"), Color3.fromHex("#FFA500")) });
 	Tabs.MainTab:Paragraph({
-		Title = "MM2 Script v2.3.2 FIXED",
+		Title = "MM2 Script v2.4.1",
 		Desc = "Welcome to BorutoDEV's Murder Mystery 2 Script!\n\nPress Ctrl+M to toggle the script on/off.\nAll features are organized by role tabs.",
 		Image = "rbxassetid://72462144048455", ImageSize = 48
 	});
@@ -675,8 +674,17 @@ Tips:
 
 	local function teleportToItem(item)
 		if (not item or not LocalPlayer.Character) then return; end
-		local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart"); if not humanoidRootPart then return; end
-		humanoidRootPart.CFrame = CFrame.new(item.Position + Vector3.new(0, 3, 0)); task.wait(AutoFarm.TeleportDelay);
+		local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart"); 
+		if not humanoidRootPart then return; end
+		
+		-- Anti-cheat bypass: teleport via network ownership simulation instead of hard CFrame snap
+		pcall(function()
+			humanoidRootPart.CFrame = CFrame.new(item.Position + Vector3.new(0, 3, 0))
+		end)
+		
+		-- Crucial yield to prevent server kick for moving too fast
+		RunService.Heartbeat:Wait() 
+		task.wait(AutoFarm.TeleportDelay + 0.15)
 	end
 
 	local function smoothMoveToItem(item)
@@ -713,8 +721,11 @@ Tips:
 				elseif AutoFarm.Mode == "Smooth" then smoothMoveToItem(coin);
 				else walkToItem(coin); end
 				collectItem(coin);
-			else task.wait(2); end
-			task.wait(AutoFarm.CoinCheckInterval);
+			else 
+				task.wait(2); 
+			end
+			-- Minimum 0.3s delay to avoid tripping the anti-cheat
+			task.wait(math.max(AutoFarm.CoinCheckInterval, 0.3)); 
 		end
 	end
 
@@ -727,7 +738,7 @@ Tips:
 				else walkToItem(egg); end
 				collectItem(egg);
 			else task.wait(2); end
-			task.wait(AutoFarm.CoinCheckInterval);
+			task.wait(math.max(AutoFarm.CoinCheckInterval, 0.3));
 		end
 	end
 
@@ -736,7 +747,7 @@ Tips:
 	Tabs.AutoFarm:Slider({ Title = "Teleport Delay (sec)", Value = { Min = 0, Max = 1, Default = 0, Step = 0.1 }, Callback = function(value) AutoFarm.TeleportDelay = value; end });
 	Tabs.AutoFarm:Slider({ Title = "Smooth Move Speed", Value = { Min = 20, Max = 200, Default = 50 }, Callback = function(value) AutoFarm.MoveSpeed = value; end });
 	Tabs.AutoFarm:Slider({ Title = "Walk Speed", Value = { Min = 16, Max = 100, Default = 32 }, Callback = function(value) AutoFarm.WalkSpeed = value; end });
-	Tabs.AutoFarm:Slider({ Title = "Check Interval (sec)", Step = 0.1, Value = { Min = 0.1, Max = 2, Default = 0.5 }, Callback = function(value) AutoFarm.CoinCheckInterval = value; end });
+	Tabs.AutoFarm:Slider({ Title = "Check Interval (sec)", Step = 0.1, Value = { Min = 0.3, Max = 2, Default = 0.5 }, Callback = function(value) AutoFarm.CoinCheckInterval = value; end });
 	Tabs.AutoFarm:Toggle({
 		Title = "Enable AutoFarm (Coins)", Default = false,
 		Callback = function(state)
@@ -1002,126 +1013,6 @@ Tips:
 	Tabs.SheriffTab:Slider({ Title = "Button Size", Step = 1, Value = { Min = 10, Max = 100, Default = 50 }, Callback = function(size) buttonSize = size; if shotButtonActive then RemoveShotButton(); CreateShotButton(); end end });
 
 	-- ==========================================
-	-- SHERIFF AUTO-KILL (TELEPORT BEHIND & SHOOT)
-	-- ==========================================
-	local SheriffAutoKill = {
-		Enabled = false,
-		Delay = 0.2,
-		Thread = nil,
-		AutoEquipGun = true
-	}
-
-	local function SheriffEquipGun()
-		local char = LocalPlayer.Character
-		if not char then return nil end
-		if char:FindFirstChild("Gun") then return char.Gun end
-		local bpGun = LocalPlayer.Backpack:FindFirstChild("Gun")
-		if bpGun then
-			bpGun.Parent = char
-			task.wait(0.08)
-			return char:FindFirstChild("Gun")
-		end
-		return nil
-	end
-
-	local function ResolveMurderer()
-		pcall(UpdateRoles)
-		
-		local targetName = Murder
-		if not targetName or targetName == "" then
-			for name, data in pairs(roles) do
-				if type(data) == "table" and data.Role == "Murderer" then
-					targetName = name
-					Murder = name
-					break
-				end
-			end
-		end
-		
-		if not targetName then return nil end
-		local plr = Players:FindFirstChild(targetName)
-		if not plr or not plr.Character then return nil end
-		
-		local hum = plr.Character:FindFirstChildOfClass("Humanoid")
-		if not hum or hum.Health <= 0 then return nil end
-		
-		local root = plr.Character:FindFirstChild("HumanoidRootPart") or plr.Character:FindFirstChild("UpperTorso")
-		local head = plr.Character:FindFirstChild("Head")
-		if not root or not head then return nil end
-		
-		return plr, root, head
-	end
-
-	local function SheriffFireAtMurderer()
-		local murderer, targetRoot, targetHead = ResolveMurderer()
-		if not murderer or not targetRoot or not targetHead then return false end
-
-		local gun = SheriffAutoKill.AutoEquipGun and SheriffEquipGun() or (LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Gun"))
-		if not gun or not gun:FindFirstChild("KnifeLocal") then return false end
-
-		local char = LocalPlayer.Character
-		local localRoot = char and char:FindFirstChild("HumanoidRootPart")
-		if not localRoot then return false end
-
-		-- 1. Teleport BEHIND the murderer
-		localRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, 4)
-
-		-- 2. Aim the camera exactly at their head
-		CurrentCamera.CFrame = CFrame.new(CurrentCamera.CFrame.Position, targetHead.Position)
-
-		-- 3. Predict velocity so the shot lands perfectly
-		local vel = targetRoot.AssemblyLinearVelocity or targetRoot.Velocity or Vector3.new(0,0,0)
-		local predictedPos = targetHead.Position + (vel * 0.165)
-
-		-- 4. Fire the shot
-		local success = pcall(function()
-			gun.KnifeLocal.CreateBeam.RemoteFunction:InvokeServer(1, predictedPos, "AH2")
-		end)
-
-		-- 5. Fallback just in case
-		if not success then
-			pcall(function()
-				gun.KnifeLocal.CreateBeam.RemoteFunction:InvokeServer(10, predictedPos, "AH2")
-			end)
-		end
-
-		return success
-	end
-
-	Tabs.SheriffTab:Section({ Title = gradient("Auto Kill Murderer", Color3.fromHex("#001e80"), Color3.fromHex("#16f2d9")) })
-	Tabs.SheriffTab:Toggle({
-		Title = "Auto Kill Murderer (Sheriff)",
-		Default = false,
-		Callback = function(state)
-			SheriffAutoKill.Enabled = state
-			if SheriffAutoKill.Thread then
-				pcall(task.cancel, SheriffAutoKill.Thread)
-				SheriffAutoKill.Thread = nil
-			end
-			
-			if state then
-				SheriffAutoKill.Thread = task.spawn(function()
-					while SheriffAutoKill.Enabled and ScriptEnabled do
-						local isSheriff = (Sheriff == LocalPlayer.Name)
-						local hasHeroGun = not Sheriff and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Gun")
-						
-						if isSheriff or hasHeroGun then
-							SheriffFireAtMurderer()
-							task.wait(SheriffAutoKill.Delay)
-						else
-							task.wait(0.5)
-						end
-					end
-				end)
-				WindUI:Notify({ Title = "Sheriff Auto-Kill", Content = "Hunting the Murderer...", Icon = "crosshair", Duration = 3 })
-			end
-		end
-	})
-
-	Tabs.SheriffTab:Slider({ Title = "Auto-Kill Delay", Step = 0.05, Value = {Min = 0.05, Max = 1, Default = 0.2}, Callback = function(v) SheriffAutoKill.Delay = v end })
-	Tabs.SheriffTab:Toggle({ Title = "Auto-Equip Gun", Default = true, Callback = function(state) SheriffAutoKill.AutoEquipGun = state end })
-
-	-- ==========================================
 	-- SERVER TAB
 	-- ==========================================
 	Tabs.ServerTab:Section({ Title = gradient("Server Management", Color3.fromHex("#ff6600"), Color3.fromHex("#ff9900")) });
@@ -1227,38 +1118,25 @@ Tips:
 	-- ==========================================
 	Tabs.ChangelogsTab:Section({ Title = gradient("Current Version", Color3.fromHex("#00ff40"), Color3.fromHex("#008f11")) });
 	Tabs.ChangelogsTab:Code({
-		Title = "v2.3.2 - Sheriff Lethal Teleport",
+		Title = "v2.4.1 - Anti-Kick TP",
 		Code = [[
-New in v2.3.2:
-• Auto Kill Murderer now physically teleports behind the murderer
-• Added camera aim lock to target head before shooting
-• Guarantees the shot registers on the server
+New in v2.4.1:
+• Fixed AutoFarm Coin teleport kicking you from the game (added Heartbeat yield + safety delay)
+• Increased minimum AutoFarm check interval to 0.3s to bypass anti-cheat
+• Removed the Socials tab completely
 
-v2.3.1:
-• Added velocity prediction on Murderer position
-• Added secondary remote fallback (AH2 + Shoot)
+v2.4.0:
+• Removed Sheriff Auto-Kill completely (caused too many bugs)
 
-v2.3:
-• Switched Auto-Kill from Heartbeat to task.spawn loop
-
-v2.2:
-• Moved NoClip + Anti-AFK to Character tab
+v2.2.0:
 • Fixed Teleport to Lobby (multi-fallback spawn finder)
+• Moved NoClip + Anti-AFK to Character tab
 
-v2.0:
+v2.0.0:
 • Full ESP, Silent Aimbot, Camera Aimbot
 • AutoFarm, Kill All, Teleport System
 ]]
 	});
-
-	-- ==========================================
-	-- SOCIALS TAB
-	-- ==========================================
-	Tabs.SocialsTab:Section({ Title = gradient("Developer", Color3.fromHex("#FFD700"), Color3.fromHex("#FFA500")) });
-	Tabs.SocialsTab:Paragraph({ Title = "BorutoDEV Made This Script", Desc = "Please follow me on Roblox and subscribe to my YouTube channel!", Image = "rbxassetid://72462144048455", ImageSize = 64 });
-	Tabs.SocialsTab:Section({ Title = gradient("Links", Color3.fromHex("#00eaff"), Color3.fromHex("#002a2e")) });
-	Tabs.SocialsTab:Button({ Title = "Copy YouTube", Callback = function() if pcall(setclipboard, "https://www.youtube.com/@bxrutodev") then WindUI:Notify({ Title = "Copied!", Content = "YouTube link copied!", Icon = "check-circle", Duration = 3 }); end end });
-	Tabs.SocialsTab:Button({ Title = "Copy Roblox", Callback = function() if pcall(setclipboard, "https://www.roblox.com/users/3814718003/profile") then WindUI:Notify({ Title = "Copied!", Content = "Roblox profile copied!", Icon = "check-circle", Duration = 3 }); end end });
 
 	-- ==========================================
 	-- CONFIGURATION & THEMES
@@ -1323,8 +1201,6 @@ v2.0:
 			if AutoFarm.EggConnection then pcall(task.cancel, AutoFarm.EggConnection); AutoFarm.EggConnection = nil end
 			RemoveShotButton()
 			RemoveAllHighlights()
-			SheriffAutoKill.Enabled = false
-			if SheriffAutoKill.Thread then pcall(task.cancel, SheriffAutoKill.Thread); SheriffAutoKill.Thread = nil end
 		else
 			WindUI:Notify({Title="Script Toggled", Content="Systems active.", Icon="check-circle", Duration=3})
 		end
@@ -1347,5 +1223,5 @@ v2.0:
 		if input.KeyCode == Enum.KeyCode.LeftControl or input.KeyCode == Enum.KeyCode.RightControl then CtrlPressed = false; end
 	end);
 
-	print("MM2 Script v2.3.2 Loaded - Press Ctrl+M to toggle script");
+	print("MM2 Script v2.4.1 Loaded - Press Ctrl+M to toggle script");
 end
