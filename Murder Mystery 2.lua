@@ -53,8 +53,8 @@ do
 	local Confirmed = false;
 	WindUI:Popup({
 		Title = gradient("Murder Mystery 2", Color3.fromHex("#eb1010"), Color3.fromHex("#1023eb")),
-		Icon = "rbxassetid://72462144048455",
-		Content = gradient("This script made by", Color3.fromHex("#10eb3c"), Color3.fromHex("#67c97a"))   .. gradient(" BorutoDEV", Color3.fromHex("#001e80"), Color3.fromHex("#16f2d9")) ,
+		Icon = "rbxassetid://90474669177545",
+		Content = gradient("This script made by", Color3.fromHex("#10eb3c"), Color3.fromHex("#67c97a"))   .. gradient(" By_Andryx", Color3.fromHex("#001e80"), Color3.fromHex("#16f2d9")) ,
 		Buttons = {
 			{
 				Title = gradient("Cancel", Color3.fromHex("#e80909"), Color3.fromHex("#630404")),
@@ -79,8 +79,8 @@ do
 
 	local Window = WindUI:CreateWindow({
 		Title = gradient("Murder Mystery 2 [SUMMER UPDATE]", Color3.fromHex("#001e80"), Color3.fromHex("#ffea00")),
-		Icon = "rbxassetid://72462144048455",
-		Author = gradient("BorutoDEV", Color3.fromHex("#1bf2b2"), Color3.fromHex("#1bcbf2")),
+		Icon = "rbxassetid://90474669177545",
+		Author = gradient("By_Andryx", Color3.fromHex("#1bf2b2"), Color3.fromHex("#1bcbf2")),
 		Folder = "MM2WindUI",
 		Size = UDim2.fromOffset(350, 400),
 		Transparent = true,
@@ -92,7 +92,7 @@ do
 
 	Window:EditOpenButton({
 		Title = "Open Daddy's UI",
-		Icon = "rbxassetid://72462144048455",
+		Icon = "rbxassetid://90474669177545",
 		CornerRadius = UDim.new(2, 6),
 		StrokeThickness = 2,
 		Color = ColorSequence.new(Color3.fromHex("1E213D"), Color3.fromHex("1F75FE")),
@@ -196,9 +196,9 @@ do
 	-- ==========================================
 	Tabs.MainTab:Section({ Title = gradient("Welcome", Color3.fromHex("#FFD700"), Color3.fromHex("#FFA500")) });
 	Tabs.MainTab:Paragraph({
-		Title = "MM2 Script v1.2.4",
-		Desc = "Welcome to BorutoDEV's Murder Mystery 2 Script!\n\nPress Ctrl+M to toggle the script on/off.\nAll features are organized by role tabs.",
-		Image = "rbxassetid://72462144048455", ImageSize = 48
+		Title = "MM2 Script v1.2.2",
+		Desc = "Welcome to By_Andryx Murder Mystery 2 Script!\n\nPress Ctrl+M to toggle the script on/off.\nAll features are organized by role tabs.",
+		Image = "rbxassetid://90474669177545", ImageSize = 48
 	});
 	Tabs.MainTab:Section({ Title = gradient("Quick Actions", Color3.fromHex("#00ff40"), Color3.fromHex("#008f11")) });
 	Tabs.MainTab:Button({ Title = "Teleport to Lobby", Callback = TeleportToLobby });
@@ -1108,26 +1108,45 @@ Tips:
 	-- ==========================================
 	Tabs.ChangelogsTab:Section({ Title = gradient("Current Version", Color3.fromHex("#00ff40"), Color3.fromHex("#008f11")) });
 	Tabs.ChangelogsTab:Code({
-		Title = "v1.2.4 - Cleanup",
+		Title = "v1.2.1 - Cleanup",
 		Code = [[
-New in v1.2.4:
-• Removed the Developer (Socials) tab completely
-• Removed 'Teleport' from AutoFarm to prevent anti-cheat kicks
-• AutoFarm now only uses Smooth and Walk modes
 
-v1.2.3:
-• Fixed AutoFarm Coin teleport kicking from server
+New in v1.2.1:
++ AutoFarm now only uses Smooth and Walk modes for safe movement
+- Removed the Developer (Socials) tab completely
+- Removed 'Teleport' from AutoFarm to prevent anti-cheat kicks
+
 
 v1.2.0:
-• Removed Sheriff Auto-Kill completely (caused too many bugs)
++ Cleaned up all related Auto-Kill code, loops, and UI elements
++ Script is now faster, lighter, and more stable without the heavy Auto-Kill loop
+- Removed Sheriff Auto-Kill completely (caused too many bugs and unregistered kills)
 
 v1.1.0:
-• Fixed Teleport to Lobby (multi-fallback spawn finder)
-• Moved NoClip + Anti-AFK to Character tab
++ Moved NoClip to Character tab
++ Moved Anti-AFK to Character tab
++ Fixed Teleport to Lobby (multi-fallback spawn finder)
++ Improved lobby detection across all MM2 map variants
++ Cleaned up Settings tab (Hitbox + Toggle only)
 
 v1.0.0:
-• Full ESP, Silent Aimbot, Camera Aimbot
-• AutoFarm, Kill All, Teleport System
++ Fixed connection tracking and cleanup
++ Fixed master Ctrl+M toggle state
++ Added Murderer Evasion System
++ Added Predictive Gun Dodging
++ Full ESP (Murderer, Sheriff, Innocent, GunDrop)
++ Drawing ESP (Name, Box, Tracers)
++ Silent Aimbot (Hold Right Click)
++ Smooth Camera Aimbot (Spectate & Lock)
++ AutoFarm (Coins, Beach Balls, Eggs)
++ Teleport System
++ Kill All (Murderer)
++ Auto Grab Gun & Shoot
++ Shot Button for Mobile
++ Murderer Detection Alerts
++ Auto Report System
++ Server Hop & Fast API Management
++ Theme Customization
 ]]
 	});
 
@@ -1216,5 +1235,5 @@ v1.0.0:
 		if input.KeyCode == Enum.KeyCode.LeftControl or input.KeyCode == Enum.KeyCode.RightControl then CtrlPressed = false; end
 	end);
 
-	print("MM2 Script v1.2.4 Loaded - Press Ctrl+M to toggle script");
+	print("MM2 Script v1.2.1 Loaded - Press Ctrl+M to toggle script");
 end
