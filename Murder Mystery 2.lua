@@ -197,7 +197,7 @@ do
 	-- ==========================================
 	Tabs.MainTab:Section({ Title = gradient("Welcome", Color3.fromHex("#FFD700"), Color3.fromHex("#FFA500")) });
 	Tabs.MainTab:Paragraph({
-		Title = "MM2 Script v2.3 FIXED",
+		Title = "MM2 Script v2.3.1 FIXED",
 		Desc = "Welcome to BorutoDEV's Murder Mystery 2 Script!\n\nPress Ctrl+M to toggle the script on/off.\nAll features are organized by role tabs.",
 		Image = "rbxassetid://72462144048455", ImageSize = 48
 	});
@@ -1002,11 +1002,11 @@ Tips:
 	Tabs.SheriffTab:Slider({ Title = "Button Size", Step = 1, Value = { Min = 10, Max = 100, Default = 50 }, Callback = function(size) buttonSize = size; if shotButtonActive then RemoveShotButton(); CreateShotButton(); end end });
 
 	-- ==========================================
-	-- SHERIFF AUTO-KILL (FIXED)
+	-- SHERIFF AUTO-KILL (LETHAL)
 	-- ==========================================
 	local SheriffAutoKill = {
 		Enabled = false,
-		Delay = 0.4,
+		Delay = 0.2,
 		Thread = nil,
 		AutoEquipGun = true
 	}
@@ -1026,44 +1026,76 @@ Tips:
 
 	local function ResolveMurderer()
 		pcall(UpdateRoles)
-		if not Murder then
+		
+		local targetName = Murder
+		if not targetName or targetName == "" then
 			for name, data in pairs(roles) do
 				if type(data) == "table" and data.Role == "Murderer" then
+					targetName = name
 					Murder = name
 					break
 				end
 			end
 		end
-		if not Murder then return nil end
-		local plr = Players:FindFirstChild(Murder)
+		
+		if not targetName then return nil end
+		local plr = Players:FindFirstChild(targetName)
 		if not plr or not plr.Character then return nil end
+		
 		local hum = plr.Character:FindFirstChildOfClass("Humanoid")
 		if not hum or hum.Health <= 0 then return nil end
+		
 		local root = plr.Character:FindFirstChild("HumanoidRootPart") or plr.Character:FindFirstChild("UpperTorso")
-		if not root then return nil end
-		return plr, root
+		local head = plr.Character:FindFirstChild("Head")
+		if not root or not head then return nil end
+		
+		return plr, root, head
 	end
 
 	local function SheriffFireAtMurderer()
-		local murderer, targetRoot = ResolveMurderer()
-		if not murderer or not targetRoot then return false end
+		local murderer, targetRoot, targetHead = ResolveMurderer()
+		if not murderer or not targetRoot or not targetHead then return false end
 
 		local gun = SheriffAutoKill.AutoEquipGun and SheriffEquipGun() or (LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Gun"))
 		if not gun or not gun:FindFirstChild("KnifeLocal") then return false end
 
 		local char = LocalPlayer.Character
 		local localRoot = char and char:FindFirstChild("HumanoidRootPart")
-		if localRoot then
-			localRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, -6)
+		if not localRoot then return false end
+
+		-- 1. Lock character directly on target (no yields)
+		localRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, -3)
+		
+		-- 2. Predict velocity
+		local vel = targetRoot.AssemblyLinearVelocity or targetRoot.Velocity or Vector3.new(0,0,0)
+		local predictedPos = targetHead.Position + (vel * 0.165)
+
+		-- 3. Aim camera at target (increases hit accuracy on some versions)
+		CurrentCamera.CFrame = CFrame.new(CurrentCamera.CFrame.Position, targetHead.Position)
+
+		-- 4. Primary remote fire
+		local ok1 = pcall(function()
+			gun.KnifeLocal.CreateBeam.RemoteFunction:InvokeServer(1, predictedPos, "AH2")
+		end)
+
+		-- 5. Secondary fallback - standard gun shoot remote
+		if not ok1 then
+			pcall(function()
+				gun.KnifeLocal.CreateBeam.RemoteFunction:InvokeServer(10, predictedPos, "AH2")
+			end)
 		end
 
-		return pcall(function()
-			gun.KnifeLocal.CreateBeam.RemoteFunction:InvokeServer(1, targetRoot.Position, "AH2")
+		-- 6. Extra safety: use fireproximity or standard gun shoot if available
+		pcall(function()
+			if gun:FindFirstChild("Shoot") then
+				gun.Shoot:FireServer(predictedPos)
+			end
 		end)
+
+		return ok1
 	end
 
 	Tabs.SheriffTab:Section({ Title = gradient("Auto Kill Murderer", Color3.fromHex("#001e80"), Color3.fromHex("#16f2d9")) })
-
 	Tabs.SheriffTab:Toggle({
 		Title = "Auto Kill Murderer (Sheriff)",
 		Default = false,
@@ -1077,10 +1109,12 @@ Tips:
 			if state then
 				SheriffAutoKill.Thread = task.spawn(function()
 					while SheriffAutoKill.Enabled and ScriptEnabled do
-						if Sheriff == LocalPlayer.Name or Sheriff == nil then
-							local ok = SheriffFireAtMurderer()
-							if ok then task.wait(SheriffAutoKill.Delay)
-							else task.wait(0.2) end
+						local isSheriff = (Sheriff == LocalPlayer.Name)
+						local hasHeroGun = not Sheriff and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Gun")
+						
+						if isSheriff or hasHeroGun then
+							SheriffFireAtMurderer()
+							task.wait(SheriffAutoKill.Delay)
 						else
 							task.wait(0.5)
 						end
@@ -1091,7 +1125,7 @@ Tips:
 		end
 	})
 
-	Tabs.SheriffTab:Slider({ Title = "Auto-Kill Delay", Step = 0.05, Value = {Min = 0.1, Max = 2, Default = 0.4}, Callback = function(v) SheriffAutoKill.Delay = v end })
+	Tabs.SheriffTab:Slider({ Title = "Auto-Kill Delay", Step = 0.05, Value = {Min = 0.05, Max = 1, Default = 0.2}, Callback = function(v) SheriffAutoKill.Delay = v end })
 	Tabs.SheriffTab:Toggle({ Title = "Auto-Equip Gun", Default = true, Callback = function(state) SheriffAutoKill.AutoEquipGun = state end })
 
 	-- ==========================================
@@ -1200,21 +1234,26 @@ Tips:
 	-- ==========================================
 	Tabs.ChangelogsTab:Section({ Title = gradient("Current Version", Color3.fromHex("#00ff40"), Color3.fromHex("#008f11")) });
 	Tabs.ChangelogsTab:Code({
-		Title = "v2.3 - Sheriff Fix + Loop Unfreeze",
+		Title = "v2.3.1 - Sheriff Lethal",
 		Code = [[
-New in v2.3:
-• Fixed Sheriff Auto-Kill freezing after "Hunting Murderer..." popup
-• Switched Auto-Kill from Heartbeat to task.spawn loop (no more yields)
-• Added per-tick role refresh for instant Murderer detection
+New in v2.3.1:
+• Fixed Sheriff Auto-Kill not registering kills (remote rejection)
+• Added velocity prediction on Murderer position
+• Added camera aim lock before firing
+• Added secondary remote fallback (AH2 + Shoot)
+• Lowered default Auto-Kill delay to 0.2s for faster lock
+• Added Hero Gun fallback (works if Sheriff dies but you have gun)
+
+v2.3:
+• Fixed Sheriff Auto-Kill freezing after popup
+• Switched Auto-Kill from Heartbeat to task.spawn loop
 
 v2.2:
 • Fixed Sheriff Auto-Kill starving on stale role cache
-• Added ResolveMurderer() fallback scan
-• Moved NoClip to Character tab
-• Moved Anti-AFK to Character tab
+• Moved NoClip + Anti-AFK to Character tab
 • Fixed Teleport to Lobby (multi-fallback spawn finder)
 
-v2.0-2.1:
+v2.0:
 • Full ESP, Silent Aimbot, Camera Aimbot
 • AutoFarm, Kill All, Teleport System
 • Shot Button, Server Hop, Ctrl+M toggle
@@ -1317,5 +1356,5 @@ v2.0-2.1:
 		if input.KeyCode == Enum.KeyCode.LeftControl or input.KeyCode == Enum.KeyCode.RightControl then CtrlPressed = false; end
 	end);
 
-	print("MM2 Script v2.3 Loaded - Press Ctrl+M to toggle script");
+	print("MM2 Script v2.3.1 Loaded - Press Ctrl+M to toggle script");
 end
