@@ -2468,4 +2468,4 @@ local function updateChams()
     end
 
     for _, pl in ipairs(Players:GetPlayers()) do
-        if pl ~
+        if pl
