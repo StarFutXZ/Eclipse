@@ -1,3730 +1,2571 @@
--- Deobfuscated By Ron
-
-local chilliGithubFastManualDefaultsRu, v, v2, defaultTab, esp, Misc, Server, v3, Players, RunService
-local Workspace, Lighting, CoreGui, HttpService, ReplicatedStorage, UserInputService, TeleportService, TextService, Stats, localPlayer
-local v4, fn, obj, tbl, v5, flag, fn2, tbl2, fn3, v6
-local v7, v8
-
+-- https://discord.gg/JD4s8wrvVH
+local ChilliLibrary
 do
-	local v9, ContextActionService, v10, v11
-
-	do
-		local Helper, ProximityPromptService, TweenService, v12, str, n, flag2, flag3, flag4, n2
-		local flag5, n3, flag6, n4, RagdollController, UserInputService2, connection, flag7, n5, n6
-		local prompt, tbl3, n7, folder, bindableEvent, fn4, fn5, fn6, fn7, fn8
-		local fn9, prompt2, fn10, fn11, fn12, str2, fn13, fn14, screenGui, fn15
-		local fn16, fn17, fn18, fn19, screenGui2, frame, textLabel, textLabel2, frame2
-
-		do
-			local value = rawget(_G, "__ChilliGithubFastManualDefaultsRun")
-
-			if type(value) == "table" then
-				local window = value.Window
-
-				if type(window) == "table" and window._destroyed ~= true then
-					pcall(function()
-						window:Open()
-					end)
-
-					return
-				end
-
-				local now = tonumber(value.StartedAt) or os.clock()
-				if value.Status == "loading" and os.clock() - now < 30 then
-					return
-				end
-			end
-
-			chilliGithubFastManualDefaultsRu = { Status = "loading", StartedAt = os.clock() }
-			_G.__ChilliGithubFastManualDefaultsRun = chilliGithubFastManualDefaultsRu
-
-			local function fn20()
-				local response = game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/refs/heads/main/Chilli%20Library")
-				local chunk, v13 = loadstring(response)
-				assert(chunk, v13)
-				local v14 = chunk()
-				assert(type(v14) == "function", "Chilli Library bootstrap is invalid.")
-				local v15 = table.create(45)
-				local n8 = 1
-
-				for i_ = 1, 90, 2 do
-					v15[n8] = string.char(bit32.bxor(tonumber(string.sub("306908100841206d474f00185f26635b2101387507010810127d7d477a473b6f435a0916573165562900226c00", i_, i_ + 1), 16), string.byte("s9K!2vQ#", (n8 - 1) % 8 + 1)))
-					n8 += 1
-				end
-
-				return v14(table.concat(v15))
-			end
-
-			v = fn20()
-			assert(type(v) == "table" and type(v.CreateWindow) == "function" and type(v.Finalize) == "function", "Chilli Library returned an invalid API.")
-			chilliGithubFastManualDefaultsRu.Library = v
-
-			v.ManualQuickDefaults = {
-				PinnedFeatures = {
-					"Stealer > Auto Steal Brainrot > Auto Steal",
-					"Helper > Movement & Combat > Float",
-					"Helper > Movement & Combat > Auto Hit Nearest Player",
-					"Player > Jump Boost > Auto Jump",
-					"Player > Jump Boost > Limit Jump Height",
-					"Player > Invisibility > Invisible",
-					"Server > Server > Kick",
-					"Helper > Unlock Base > Auto Unlock Base",
-					"Helper > Unlock Base > Unlock Floor 3",
-					"Helper > Unlock Base > Unlock Floor 2",
-					"Helper > Unlock Base > Unlock Floor 1",
-					"Player > Respawn > Fast Reset",
-					"Player > Speed Boost > Tool Speed Boost",
-					"Stealer > Auto Steal Brainrot > Drop Brainrot",
-					"Helper > Helper > Instant Clone Swap",
-					"Player > Speed Boost > Adjust Auto Speed",
-					"Player > Invisibility > Auto Invisible On Steal",
-					"Player > Invisibility > Rotation",
-					"Player > Invisibility > Auto Rotation",
-					"Player > Invisibility > Depth",
-					"Player > Invisibility > Lagback Detect",
-					"Player > Invisibility > Auto Fix Lagback",
-				},
-				Keybinds = {
-					["Player > Respawn > Fast Reset"] = "X",
-					["Player > Jump Boost > Limit Jump Height"] = "N",
-					["Player > Speed Boost > Tool Speed Boost"] = "Q",
-					["Player > Jump Boost > Auto Jump"] = "V",
-					["Player > Invisibility > Invisible"] = "U",
-					["Helper > Movement & Combat > Float"] = "B",
-					["Helper > Movement & Combat > Auto Hit Nearest Player"] = "G",
-					["Stealer > Auto Steal Brainrot > Drop Brainrot"] = "R",
-					["Server > Server > Kick"] = "J",
-					["Helper > Helper > Instant Clone Swap"] = "F",
-					["__ChilliDefaultKeyInstalled::Player > Speed Boost > Tool Speed Boost"] = true,
-					["__ChilliDefaultKeyInstalled::Player > Invisibility > Invisible"] = true,
-				},
-				PinGroups = {
-					["Player > Respawn > Fast Reset"] = 5,
-					["Helper > Movement & Combat > Auto Hit Nearest Player"] = 1,
-					["Helper > Unlock Base > Unlock Floor 3"] = 4,
-					["Helper > Helper > Instant Clone Swap"] = 5,
-					["Player > Speed Boost > Adjust Speed"] = 2,
-					["Player > Jump Boost > Jump Height"] = 1,
-					["Player > Invisibility > Auto Rotation"] = 2,
-					["Helper > Unlock Base > Auto Unlock Base"] = 4,
-					["Helper > Aimbot > Auto Paintball"] = 3,
-					["Helper > Unlock Base > Unlock Floor 1"] = 4,
-					["Player > Speed Boost > Adjust Auto Speed"] = 2,
-					["Player > Invisibility > Lagback Detect"] = 2,
-					["Player > Invisibility > Auto Invisible On Steal"] = 2,
-					["Player > Invisibility > Invisible"] = 2,
-					["Player > Invisibility > Auto Fix Lagback"] = 2,
-					["Player > Speed Boost > Tool Speed Boost"] = 1,
-					["Player > Invisibility > Depth"] = 2,
-					["Stealer > Auto Kick > Auto Kick on Steal"] = 5,
-					["Helper > Helper > Anti Body Swap"] = 5,
-					["Player > Invisibility > Rotation"] = 2,
-					["Helper > Unlock Base > Unlock Floor 2"] = 4,
-					["Stealer > Auto Steal Brainrot > Drop Brainrot"] = 5,
-					["Server > Server > Kick"] = 5,
-				},
-				LeftCenterHidden = true,
-			}
-
-			v2 = v:CreateWindow({ Name = "Chilli Hub", DefaultTab = "Main" })
-			chilliGithubFastManualDefaultsRu.Window = v2
-			defaultTab = v2:GetDefaultTab()
-			local v13
-
-			do
-				local Stealer = v2:CreateTab("Stealer")
-				Helper = v2:CreateTab("Helper")
-				v9 = v2:CreateTab({ Name = "Player", SectionsExpanded = false })
-				esp = v2:CreateTab("ESP")
-				Misc = v2:CreateTab("Misc")
-				Server = v2:CreateTab("Server")
-				v3 = v2:CreateTab("AP&TP")
-				Players = game:GetService("Players")
-				RunService = game:GetService("RunService")
-				Workspace = game:GetService("Workspace")
-				Lighting = game:GetService("Lighting")
-				CoreGui = game:GetService("CoreGui")
-				HttpService = game:GetService("HttpService")
-				ReplicatedStorage = game:GetService("ReplicatedStorage")
-				UserInputService = game:GetService("UserInputService")
-				ContextActionService = game:GetService("ContextActionService")
-				TeleportService = game:GetService("TeleportService")
-				ProximityPromptService = game:GetService("ProximityPromptService")
-				TextService = game:GetService("TextService")
-				TweenService = game:GetService("TweenService")
-				Stats = game:GetService("Stats")
-				localPlayer = Players.LocalPlayer
-				local str3 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-				v4 = Random.new()
-
-				fn = function()
-					local v14 = table.create(64)
-					local str4 = HttpService:GenerateGUID(false):gsub("-", "")
-
-					for i_ = 1, #str4 do
-						v14[#v14 + 1] = str4:sub(i_, i_)
-					end
-
-					for i_ = 1, 32 do
-						local v15 = v4:NextInteger(1, #str3)
-						v14[#v14 + 1] = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"):sub(v15, v15)
-					end
-
-					for i_ = #v14, 2, -1 do
-						local v15 = v4:NextInteger(1, i_)
-						local v16 = v14[i_]
-						v14[i_] = v14[v15]
-						v14[v15] = v16
-					end
-
-					return table.concat(v14)
-				end
-
-				obj = setmetatable({}, { __mode = "k" })
-				tbl = {}
-				v12 = Stealer:CreateSection({ Name = "Auto Steal Brainrot", Expanded = true })
-				v13 = Stealer:CreateSection({ Name = "Auto Kick", Expanded = true })
-			end
-
-			do
-				local flag8 = false
-				local flag9 = true
-				local flag10 = false
-				local n8 = 0
-				local n9 = 1000000
-				local v14 = nil
-				local n10 = -math.huge
-				local tbl4 = {}
-				local obj2 = setmetatable({}, { __mode = "k" })
-				local tbl5 = {}
-
-				pcall(function()
-					local Animals = require(ReplicatedStorage.Datas.Animals)
-
-					if type(Animals) == "table" then
-						tbl5 = Animals
-					end
-				end)
-
-				local function fn21(arg)
-					local match, v15 = tostring(arg or ""):gsub("[%$,/s]", ""):gsub("%s+", ""):match("^([%d%.]+)([KkMmBbTt]?)$")
-					if not match then
-						return nil
-					end
-					local num = tonumber(match)
-					if not num then
-						return nil
-					end
-					return num * (({ K = 1000, M = 1000000, B = 1e9, T = 1e12 })[string.upper(v15)] or 1)
-				end
-
-				local function fn22(arg)
-					local v15 = tbl5[tostring(arg or "")]
-					return type(v15) == "table" and tonumber(v15.Generation) or 0
-				end
-
-				local function fn23()
-					local tbl6 = {}
-					local debris = Workspace:FindFirstChild("Debris")
-					if not debris then
-						return tbl6
-					end
-
-					for _, child in ipairs(debris:GetChildren()) do
-						if child:IsA("BasePart") and child.Name == "FastOverheadTemplate" then
-							local animalOverhead = child:FindFirstChild("AnimalOverhead")
-							local displayName = animalOverhead and animalOverhead:FindFirstChild("DisplayName")
-							animalOverhead = animalOverhead and animalOverhead:FindFirstChild("Generation")
-
-							if displayName and animalOverhead and displayName:IsA("TextLabel") and animalOverhead:IsA("TextLabel") then
-								local v15 = fn21(animalOverhead.Text)
-
-								if v15 then
-									local str3 = tostring(displayName.Text)
-									tbl6[str3] = tbl6[str3] or {}
-									tbl6[str3][#tbl6[str3] + 1] = { Position = child.Position, Generation = v15 }
-								end
-							end
-						end
-					end
-
-					return tbl6
-				end
-
-				local function fn24(arg, arg2, arg3)
-					local generation = fn22(arg)
-					if not arg2 then
-						return generation
-					end
-					local v15, v16, v17 = ipairs((arg3 or fn23())[tostring(arg or "")] or {})
-					local n11 = 14
-
-					for _, v18 in v15, v16, v17 do
-						local magnitude = (v18.Position - arg2).Magnitude
-
-						if magnitude < n11 then
-							generation = v18.Generation
-							n11 = magnitude
-						end
-					end
-
-					return generation
-				end
-
-				local function fn25()
-					local v15 = Workspace:FindFirstChild(localPlayer.Name)
-					if not v15 or not v15:IsA("Model") then
-						return nil
-					end
-					return v15:FindFirstChild("HumanoidRootPart") or v15:FindFirstChild("__HITBOX")
-				end
-
-				local chilliAutoKickOnStealRuntime = CoreGui:FindFirstChild("__ChilliAutoKickOnStealRuntime")
-
-				if chilliAutoKickOnStealRuntime then
-					local cleanup = chilliAutoKickOnStealRuntime:FindFirstChild("Cleanup")
-
-					if cleanup and cleanup:IsA("BindableEvent") then
-						pcall(function()
-							cleanup:Fire()
-						end)
-					end
-
-					pcall(function()
-						chilliAutoKickOnStealRuntime:Destroy()
-					end)
-				end
-
-				local folder2 = Instance.new("Folder")
-				folder2.Name = "__ChilliAutoKickOnStealRuntime"
-				folder2.Archivable = false
-				folder2.Parent = CoreGui
-				local bindableEvent2 = Instance.new("BindableEvent")
-				bindableEvent2.Name = "Cleanup"
-				bindableEvent2.Parent = folder2
-
-				local function fn26()
-					for _, v15 in ipairs(tbl4) do
-						if v15.Connected then
-							v15:Disconnect()
-						end
-					end
-
-					table.clear(tbl4)
-					table.clear(obj2)
-				end
-
-				local fn27 = nil
-
-				fn27 = function(arg, arg2, arg3)
-					local kind = typeof(arg)
-
-					if kind == "string" then
-						local v15 = string.lower(arg)
-						if string.find(v15, "you stole", 1, true) or string.find(v15, "successfully stole", 1, true) then
-							return arg
-						end
-						return nil
-					end
-
-					if kind ~= "table" or arg3 >= 3 or arg2[arg] then
-						return nil
-					end
-					arg2[arg] = true
-
-					for k, v15 in pairs(arg) do
-						local v16 = fn27(k, arg2, arg3 + 1) or fn27(v15, arg2, arg3 + 1)
-						if v16 then
-							return v16
-						end
-					end
-
-					return nil
-				end
-
-				local function fn28(...)
-					if not flag8 then
-						return
-					end
-					local v15 = table.pack(...)
-					local tbl6 = {}
-
-					for i_ = 1, v15.n do
-						local v16 = fn27(v15[i_], tbl6, 0)
-
-						if v16 then
-							local v17 = string.match(v16, ">([^<>]-)</font>")
-							local v18 = fn25()
-							if fn24(v17, v18 and v18.Position) < n9 then
-								return
-							end
-							local flag11 = v17 and v17 ~= ""
-							local str3 = "\nAUTO KICK ACTIVATED"
-
-							if flag11 then
-								str3 = "\nAUTO KICK ACTIVATED" .. "\nYou stole: " .. v17
-							end
-
-							flag8 = false
-							localPlayer:Kick(str3)
-							return
-						end
-					end
-				end
-
-				local function fn29(descendant)
-					if not flag8 or not descendant:IsA("RemoteEvent") or obj2[descendant] then
-						return
-					end
-					obj2[descendant] = true
-					tbl4[#tbl4 + 1] = descendant.OnClientEvent:Connect(fn28)
-				end
-
-				local function fn30()
-					flag8 = false
-					fn26()
-				end
-
-				local function fn31()
-					fn30()
-					flag8 = true
-					local packages = ReplicatedStorage:FindFirstChild("Packages")
-					packages = packages and packages:FindFirstChild("Net")
-					if not packages then
-						flag8 = false
-						return
-					end
-
-					for _, descendant in ipairs(packages:GetDescendants()) do
-						fn29(descendant)
-					end
-
-					fn29(packages)
-					tbl4[#tbl4 + 1] = packages.DescendantAdded:Connect(fn29)
-				end
-
-				local function fn32()
-					flag9 = false
-					flag10 = false
-					n8 += 1
-					fn30()
-				end
-
-				bindableEvent2.Event:Connect(fn32)
-				folder2.Destroying:Connect(fn32)
-
-				v13:CreateToggle({
-					Name = "Auto Kick on Steal",
-					Default = false,
-					Callback = function(arg)
-						if arg then
-							fn31()
-						else
-							fn30()
-						end
-					end,
-				})
-
-				local tbl6 = {
-					["K/s"] = { Min = 0, Max = 1000, Mult = 1000 },
-					["M/s"] = { Min = 0, Max = 1000, Mult = 1000000 },
-					["B/s"] = { Min = 1, Max = 10, Mult = 1e9 },
-				}
-
-				local v15 = nil
-				local n11 = 1
-				local str3 = "M/s"
-
-				local function fn33(arg, arg2)
-					if arg ~= nil then
-						n11 = math.floor(tonumber(arg) or n11)
-					end
-
-					if arg2 ~= nil then
-						str3 = tostring(arg2)
-					elseif v15 and v15.GetUnit then
-						local unit = v15:GetUnit()
-
-						if unit and unit ~= "" then
-							str3 = tostring(unit)
-						end
-					end
-
-					n9 = n11 * (tbl6[str3] or tbl6["M/s"]).Mult
-					v14 = nil
-					n10 = -math.huge
-				end
-
-				local function fn34(arg)
-					str3 = tostring(arg)
-					local ms = tbl6[str3] or tbl6["M/s"]
-
-					if v15 and v15.SetRange then
-						v15:SetRange(ms.Min, ms.Max)
-						local min = v15:Get() or ms.Min
-						local min2 = ms.Min
-						local max = ms.Max
-						local n12 = math.clamp(math.floor(min + 0.5), min2, max)
-
-						if n12 ~= min then
-							v15:Set(n12)
-						else
-							fn33(n12, str3)
-						end
-					else
-						fn33(nil, str3)
-					end
-				end
-
-				v15 = v13:CreateSlider({
-					Name = "Auto Kick Min Value",
-					Note = "Only kicks for Brainrots at or above this generation value.",
-					Min = 0,
-					Max = 1000,
-					Default = 10,
-					AllowDecimals = false,
-					Increment = 1,
-					Unit = {
-						Default = "M/s",
-						Selector = true,
-						Options = { "K/s", "M/s", "B/s" },
-						ColorEnabled = true,
-						Colors = {
-							Number = Color3.fromRGB(255, 255, 255),
-							Suffix = Color3.fromRGB(58, 255, 55),
-						},
-						Callback = function(arg)
-							fn34(arg)
-						end,
-					},
-					Quick = false,
-					Callback = function(arg)
-						fn33(arg, nil)
-					end,
-				})
-			end
-
-			str = "Steal"
-			local n8
-			n8 = 2
-			n = 0.25
-			flag2 = true
-			flag3 = false
-			flag4 = false
-			n2 = 1000000
-			flag5 = false
-			n3 = 20
-			flag6 = false
-			n4 = 0
-			RagdollController = nil
-
-			pcall(function()
-				RagdollController = require(game:GetService("ReplicatedStorage").Controllers.RagdollController)
-			end)
-
-			UserInputService2 = game:GetService("UserInputService")
-
-			connection = UserInputService2.InputBegan:Connect(function(input, gameProcessed)
-				if not gameProcessed and input.KeyCode == Enum.KeyCode.Backspace then
-					n4 = os.clock()
-				end
-			end)
-
-			flag7 = false
-			n5 = 0
-			local n9
-			n9 = 0
-			n6 = -math.huge
-			prompt = nil
-			tbl3 = {}
-			n7 = -math.huge
-			local fn21
-
-			do
-				local tbl4 = {}
-				local chilliAutoGetRuntime = CoreGui:FindFirstChild("__ChilliAutoGetRuntime")
-
-				if chilliAutoGetRuntime then
-					local cleanup = chilliAutoGetRuntime:FindFirstChild("Cleanup")
-
-					if cleanup and cleanup:IsA("BindableEvent") then
-						pcall(function()
-							cleanup:Fire()
-						end)
-					end
-
-					pcall(function()
-						chilliAutoGetRuntime:Destroy()
-					end)
-				end
-
-				folder = Instance.new("Folder")
-				folder.Name = "__ChilliAutoGetRuntime"
-				folder.Archivable = false
-				folder.Parent = CoreGui
-				bindableEvent = Instance.new("BindableEvent")
-				bindableEvent.Name = "Cleanup"
-				bindableEvent.Parent = folder
-
-				fn4 = function(arg)
-					tbl4[#tbl4 + 1] = arg
-					return arg
-				end
-
-				local n10 = 10
-				local obj2 = setmetatable({}, { __mode = "k" })
-
-				fn21 = function(arg, arg2)
-					if not arg or not arg.Parent or not arg.Visible then
-						return false
-					end
-					local absolutePosition = arg.AbsolutePosition
-					local absoluteSize = arg.AbsoluteSize
-					return arg2.X >= absolutePosition.X and arg2.X <= absolutePosition.X + absoluteSize.X and arg2.Y >= absolutePosition.Y and arg2.Y <= absolutePosition.Y + absoluteSize.Y
-				end
-
-				fn4(UserInputService2.InputChanged:Connect(function(input)
-					local v14 = obj2[input]
-					if not v14 then
-						return
-					end
-					local vector2 = Vector2.new(input.Position.X, input.Position.Y)
-					v14.Position = vector2
-
-					if (vector2 - v14.Start).Magnitude > n10 then
-						v14.Cancelled = true
-					end
-				end))
-
-				fn4(UserInputService2.InputEnded:Connect(function(input)
-					local v14 = obj2[input]
-					if not v14 then
-						return
-					end
-					local vector2 = Vector2.new(input.Position.X, input.Position.Y)
-					v14.Position = vector2
-
-					if (vector2 - v14.Start).Magnitude > n10 or not fn21(v14.Button, vector2) then
-						v14.Cancelled = true
-					end
-
-					task.delay(0.2, function()
-						if obj2[input] == v14 then
-							obj2[input] = nil
-						end
-					end)
-				end))
-
-				fn5 = function(arg, arg2)
-					fn4(arg.InputBegan:Connect(function(input)
-						if input.UserInputType ~= Enum.UserInputType.Touch or input.UserInputState ~= Enum.UserInputState.Begin then
-							return
-						end
-						local vector2 = Vector2.new(input.Position.X, input.Position.Y)
-
-						if fn21(arg, vector2) then
-							obj2[input] = { Button = arg, Start = vector2, Position = vector2, Cancelled = false }
-						end
-					end))
-
-					return fn4(arg.Activated:Connect(function(inputObject)
-						if inputObject and inputObject.UserInputType == Enum.UserInputType.Touch then
-							local v14 = obj2[inputObject]
-							if not v14 or v14.Button ~= arg or v14.Cancelled or not fn21(arg, v14.Position) then
-								return
-							end
-						end
-
-						arg2()
-					end))
-				end
-
-				fn6 = function()
-					for _, v14 in ipairs(tbl4) do
-						if v14.Connected then
-							v14:Disconnect()
-						end
-					end
-
-					table.clear(tbl4)
-				end
-			end
-
-			local v14, v15, fn22, fn23, fn24
-
-			do
-				local v16 = nil
-				v14 = nil
-				v15 = nil
-				local datas = ReplicatedStorage:FindFirstChild("Datas")
-
-				if datas then
-					local animals = datas:FindFirstChild("Animals")
-
-					if animals and animals:IsA("ModuleScript") then
-						local ok, result = pcall(require, animals)
-
-						if ok and type(result) == "table" then
-							v16 = result
-						end
-					end
-
-					local mutations = datas:FindFirstChild("Mutations")
-
-					if mutations and mutations:IsA("ModuleScript") then
-						local ok, result = pcall(require, mutations)
-
-						if ok and type(result) == "table" then
-							v14 = result
-						end
-					end
-
-					local traits = datas:FindFirstChild("Traits")
-
-					if traits and traits:IsA("ModuleScript") then
-						local ok, result = pcall(require, traits)
-
-						if ok and type(result) == "table" then
-							v15 = result
-						end
-					end
-				end
-
-				fn22 = function(arg)
-					return string.lower(tostring(arg or ""))
-				end
-
-				fn23 = function(arg)
-					arg = arg and arg.Parent
-
-					while arg and arg ~= Workspace do
-						if arg:IsA("BasePart") and arg.Name == "Spawn" then
-							return arg
-						end
-						arg = arg.Parent
-					end
-
-					return nil
-				end
-
-				fn24 = function(arg)
-					if not v16 or not arg or arg == "" then
-						return 0
-					end
-					local v17 = v16[arg]
-					if type(v17) ~= "table" then
-						return 0
-					end
-					return tonumber(v17.Generation) or 0
-				end
-			end
-
-			local brainrotNameTiers
-			brainrotNameTiers = {}
-			local tbl4
-			tbl4 = { Limit = 1000000 }
-
-			do
-				local colorSequence = ColorSequence.new
-				local tbl5 = {}
-				local v16 = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 231, 158))
-				local v17 = ColorSequenceKeypoint.new(0.4, Color3.fromRGB(255, 196, 66))
-				local new = ColorSequenceKeypoint.new
-				local color = Color3.fromRGB
-				tbl5[1] = v16
-				tbl5[2] = v17
-
-				do
-					local values = table.pack(new(1, color(214, 142, 12)))
-					table.move(values, 1, values.n, 3, tbl5)
-				end
-
-				tbl4.Text = colorSequence(tbl5)
-			end
-
-			do
-				local colorSequence = ColorSequence.new
-				local tbl5 = {}
-				local v16 = ColorSequenceKeypoint.new(0, Color3.fromRGB(122, 76, 0))
-				local v17 = ColorSequenceKeypoint.new(0.55, Color3.fromRGB(62, 38, 0))
-				local new = ColorSequenceKeypoint.new
-				local color = Color3.fromRGB
-				tbl5[1] = v16
-				tbl5[2] = v17
-
-				do
-					local values = table.pack(new(1, color(20, 12, 0)))
-					table.move(values, 1, values.n, 3, tbl5)
-				end
-
-				tbl4.Stroke = colorSequence(tbl5)
-			end
-
-			local tbl5
-			tbl5 = { Limit = 10000000 }
-
-			do
-				local colorSequence = ColorSequence.new
-				local tbl6 = {}
-				local v16 = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 198, 132))
-				local v17 = ColorSequenceKeypoint.new(0.4, Color3.fromRGB(255, 146, 40))
-				local new = ColorSequenceKeypoint.new
-				local color = Color3.fromRGB
-				tbl6[1] = v16
-				tbl6[2] = v17
-
-				do
-					local values = table.pack(new(1, color(206, 92, 0)))
-					table.move(values, 1, values.n, 3, tbl6)
-				end
-
-				tbl5.Text = colorSequence(tbl6)
-			end
-
-			do
-				local colorSequence = ColorSequence.new
-				local tbl6 = {}
-				local v16 = ColorSequenceKeypoint.new(0, Color3.fromRGB(112, 54, 0))
-				local v17 = ColorSequenceKeypoint.new(0.55, Color3.fromRGB(56, 27, 0))
-				local new = ColorSequenceKeypoint.new
-				local color = Color3.fromRGB
-				tbl6[1] = v16
-				tbl6[2] = v17
-
-				do
-					local values = table.pack(new(1, color(18, 8, 0)))
-					table.move(values, 1, values.n, 3, tbl6)
-				end
-
-				tbl5.Stroke = colorSequence(tbl6)
-			end
-
-			do
-				local tbl6 = { Limit = 100000000 }
-				local colorSequence = ColorSequence.new
-				local tbl7 = {}
-				local v16 = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 168, 140))
-				local v17 = ColorSequenceKeypoint.new(0.4, Color3.fromRGB(255, 82, 38))
-				local new = ColorSequenceKeypoint.new
-				local color = Color3.fromRGB
-				tbl7[1] = v16
-				tbl7[2] = v17
-
-				do
-					local values = table.pack(new(1, color(196, 42, 0)))
-					table.move(values, 1, values.n, 3, tbl7)
-				end
-
-				tbl6.Text = colorSequence(tbl7)
-				local colorSequence2 = ColorSequence.new
-				local tbl8 = {}
-				local v18 = ColorSequenceKeypoint.new(0, Color3.fromRGB(112, 26, 0))
-				local v19 = ColorSequenceKeypoint.new(0.55, Color3.fromRGB(56, 13, 0))
-				local new2 = ColorSequenceKeypoint.new
-				local color2 = Color3.fromRGB
-				tbl8[1] = v18
-				tbl8[2] = v19
-
-				do
-					local values = table.pack(new2(1, color2(18, 4, 0)))
-					table.move(values, 1, values.n, 3, tbl8)
-				end
-
-				tbl6.Stroke = colorSequence2(tbl8)
-				local tbl9 = { Limit = math.huge }
-				local colorSequence3 = ColorSequence.new
-				local tbl10 = {}
-				local v20 = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 105, 105))
-				local v21 = ColorSequenceKeypoint.new(0.4, Color3.fromRGB(255, 28, 40))
-				local new3 = ColorSequenceKeypoint.new
-				local color3 = Color3.fromRGB
-				tbl10[1] = v20
-				tbl10[2] = v21
-
-				do
-					local values = table.pack(new3(1, color3(184, 0, 18)))
-					table.move(values, 1, values.n, 3, tbl10)
-				end
-
-				tbl9.Text = colorSequence3(tbl10)
-				local colorSequence4 = ColorSequence.new
-				local tbl11 = {}
-				local v22 = ColorSequenceKeypoint.new(0, Color3.fromRGB(124, 0, 15))
-				local v23 = ColorSequenceKeypoint.new(0.55, Color3.fromRGB(61, 0, 9))
-				local new4 = ColorSequenceKeypoint.new
-				local color4 = Color3.fromRGB
-				tbl11[1] = v22
-				tbl11[2] = v23
-
-				do
-					local values = table.pack(new4(1, color4(18, 0, 3)))
-					table.move(values, 1, values.n, 3, tbl11)
-				end
-
-				tbl9.Stroke = colorSequence4(tbl11)
-				brainrotNameTiers[1] = tbl4
-				brainrotNameTiers[2] = tbl5
-				brainrotNameTiers[3] = tbl6
-				brainrotNameTiers[4] = tbl9
-			end
-
-			chilliGithubFastManualDefaultsRu.BrainrotNameTiers = brainrotNameTiers
-
-			chilliGithubFastManualDefaultsRu.BrainrotNameTier = function(arg)
-				local n10 = tonumber(arg) or 0
-
-				for _, brainrotNameTier in ipairs(chilliGithubFastManualDefaultsRu.BrainrotNameTiers) do
-					if n10 < brainrotNameTier.Limit then
-						return brainrotNameTier
-					end
-				end
-
-				return chilliGithubFastManualDefaultsRu.BrainrotNameTiers[#chilliGithubFastManualDefaultsRu.BrainrotNameTiers]
-			end
-
-			chilliGithubFastManualDefaultsRu.CreateBrainrotNameStyle = function(parent)
-				parent.TextColor3 = Color3.fromRGB(255, 255, 255)
-				local uiStroke = Instance.new("UIStroke")
-				uiStroke.Color = Color3.fromRGB(255, 255, 255)
-				uiStroke.Thickness = 1.15
-				uiStroke.Transparency = 0.08
-				uiStroke.Parent = parent
-				local uiGradient = Instance.new("UIGradient")
-				uiGradient.Rotation = 90
-				uiGradient.Parent = uiStroke
-				local uiGradient2 = Instance.new("UIGradient")
-				uiGradient2.Rotation = 90
-				uiGradient2.Parent = parent
-				return { Label = parent, Outline = uiStroke, Text = uiGradient2, Stroke = uiGradient }
-			end
-
-			chilliGithubFastManualDefaultsRu.ApplyBrainrotNameStyle = function(arg, arg2)
-				if not arg then
-					return
-				end
-
-				if tonumber(arg2) == nil then
-					arg.Label.TextColor3 = Color3.fromRGB(238, 238, 242)
-					arg.Outline.Color = Color3.fromRGB(0, 0, 0)
-					arg.Outline.Transparency = 0.28
-					arg.Text.Enabled = false
-					arg.Stroke.Enabled = false
-					return
-				end
-
-				local v16 = chilliGithubFastManualDefaultsRu.BrainrotNameTier(arg2)
-				arg.Label.TextColor3 = Color3.fromRGB(255, 255, 255)
-				arg.Outline.Transparency = 0.08
-				arg.Text.Enabled = true
-				arg.Stroke.Enabled = true
-				arg.Text.Color = v16.Text
-				arg.Stroke.Color = v16.Stroke
-			end
-
-			do
-				local n10 = 0.5
-				local obj2 = setmetatable({}, { __mode = "k" })
-
-				local function fn25(arg)
-					local v16 = fn23(arg)
-					if not v16 then
-						return false
-					end
-
-					if fn22(v16.Name) == "lucky block" then
-						return true
-					end
-
-					for _, descendant in ipairs(v16:GetDescendants()) do
-						if descendant:IsA("TextLabel") and fn22(descendant.Name) == "stolen" and descendant.Visible and fn22(descendant.Text) == "fusing" then
-							return true
-						end
-					end
-
-					return false
-				end
-
-				fn7 = function(arg)
-					local now = os.clock()
-					local v16 = obj2[arg]
-					if v16 and now < v16.ExpiresAt then
-						return v16.Value
-					end
-					local v17 = fn25(arg)
-
-					if v16 then
-						v16.Value = v17
-						v16.ExpiresAt = now + n10
-					else
-						obj2[arg] = { Value = v17, ExpiresAt = now + n10 }
-					end
-
-					return v17
-				end
-			end
-
-			fn8 = function(arg)
-				local n10 = tonumber(arg) or 0
-				if n10 >= 1e9 then
-					return string.format("%.2fB/s", n10 / 1e9)
-				end
-
-				if n10 >= 1000000 then
-					return string.format("%.2fM/s", n10 / 1000000)
-				end
-
-				if n10 >= 1000 then
-					return string.format("%.1fK/s", n10 / 1000)
-				end
-				return string.format("%d/s", math.floor(n10))
-			end
-
-			do
-				local function fn25(arg)
-					if not arg or arg == "" then
-						return nil
-					end
-					local match, v16 = arg:gsub("[%$,/s]", ""):gsub("%s+", ""):match("^([%d%.]+)([KkMmBbTt]?)$")
-
-					if match then
-						local n10 = tonumber(match) or 0
-						local str3 = v16:upper()
-
-						if str3 == "K" then
-							n10 *= 1000
-						elseif str3 == "M" then
-							n10 *= 1000000
-						elseif str3 == "B" then
-							n10 *= 1e9
-						elseif str3 == "T" then
-							n10 *= 1e12
-						end
-
-						return n10
-					end
-
-					return nil
-				end
-
-				local function fn26(arg, arg2, arg3, arg4)
-					local v16 = fn24(arg3)
-					arg = arg and arg.Position
-					if not arg then
-						return v16
-					end
-					local v17 = arg4 and arg4[arg3]
-					local overhead = nil
-
-					if v17 then
-						local v18, v19, v20 = ipairs(arg4[arg3])
-						local n10 = 14
-						overhead = nil
-
-						for _, v21 in v18, v19, v20 do
-							local magnitude = (v21.Position - arg).Magnitude
-
-							if magnitude < n10 then
-								overhead = v21.Overhead
-								n10 = magnitude
-							end
-						end
-					end
-
-					local v18 = nil
-
-					if arg2 then
-						local v19, v20, v21 = ipairs(arg2:GetChildren())
-						local n10 = 14
-						v18 = nil
-
-						for _, v22 in v19, v20, v21 do
-							if v22:IsA("Model") and v22.Name == arg3 then
-								local rootPart = v22:FindFirstChild("RootPart") or v22.PrimaryPart or v22:FindFirstChildWhichIsA("BasePart")
-
-								if rootPart then
-									local magnitude = (rootPart.Position - arg).Magnitude
-
-									if magnitude < n10 then
-										n10 = magnitude
-										v18 = v22
-									end
-								end
-							end
-						end
-					end
-
-					local text
-
-					if overhead and overhead:FindFirstChild("Mutation") and overhead.Mutation.Visible and overhead.Mutation.Text ~= "" then
-						text = overhead.Mutation.Text
-					else
-						text = nil
-
-						if v18 then
-							local attribute = v18:GetAttribute("Mutation") or v18:GetAttribute("__mutation")
-							local flag8 = attribute and tostring(attribute) ~= ""
-							text = nil
-
-							if flag8 then
-								text = tostring(attribute)
-							end
-						end
-					end
-
-					local tbl6 = {}
-					local tbl7 = {}
-
-					if v18 then
-						for _, child in ipairs(v18:GetChildren()) do
-							local match = child.Name:match("^_Trait%.(.+)$")
-
-							if match and not tbl7[match] then
-								tbl7[match] = true
-								table.insert(tbl6, match)
-							end
-						end
-
-						local attribute = v18:GetAttribute("Trait") or v18:GetAttribute("Traits")
-
-						if attribute then
-							local str3 = tostring(attribute)
-
-							if not tbl7[str3] then
-								tbl7[str3] = true
-								table.insert(tbl6, str3)
-							end
-						end
-					end
-
-					local v19 = text and v14 and v14[text]
-					local n10 = 1
-
-					if v19 then
-						n10 = 1 + (tonumber(v14[text].Modifier) or 0)
-					end
-
-					local flag8 = false
-
-					if v15 then
-						for _, v20 in ipairs(tbl6) do
-							local v21 = v15[v20] or v15[v20:gsub("_", " ")]
-
-							if v21 then
-								if v20 == "Sleepy" or v21.Name == "Sleepy" then
-									flag8 = true
-								else
-									n10 += tonumber(v21.MultiplierModifier) or 0
-								end
-							end
-						end
-					end
-
-					local v20 = math.round(v16 * n10 * (flag8 and 0.5 or 1))
-					local v21 = fn25(overhead and overhead:FindFirstChild("Generation") and overhead.Generation.Text)
-					if v21 and v21 > v20 then
-						return v21
-					end
-					return v20 > 0 and v20 or v21 or v16
-				end
-
-				fn9 = function(arg)
-					local now = os.clock()
-					if not arg and now - n7 < n8 then
-						return
-					end
-					n7 = now
-					local tbl6 = {}
-					local plots = Workspace:FindFirstChild("Plots")
-					if not plots then
-						tbl3 = tbl6
-						return
-					end
-					local debris = Workspace:FindFirstChild("Debris")
-					local tbl7 = {}
-
-					if debris then
-						for _, child in ipairs(debris:GetChildren()) do
-							if child.Name == "FastOverheadTemplate" and child:IsA("BasePart") then
-								local animalOverhead = child:FindFirstChild("AnimalOverhead")
-								local displayName = animalOverhead and animalOverhead:FindFirstChild("DisplayName")
-
-								if displayName and displayName:IsA("TextLabel") and displayName.Text ~= "" then
-									local text = displayName.Text
-									tbl7[text] = tbl7[text] or {}
-									table.insert(tbl7[text], { Position = child.Position, Overhead = animalOverhead })
-								end
-							end
-						end
-					end
-
-					for _, child in ipairs(plots:GetChildren()) do
-						local animalPodiums = child:FindFirstChild("AnimalPodiums")
-
-						if animalPodiums then
-							for _, child2 in ipairs(animalPodiums:GetChildren()) do
-								local base = child2:FindFirstChild("Base")
-								base = base and base:FindFirstChild("Spawn")
-
-								if base and base:IsA("BasePart") then
-									local promptAttachment = base:FindFirstChild("PromptAttachment")
-									local v16 = ipairs
-									promptAttachment = promptAttachment or base
-									local v17 = nil
-
-									for _, descendant in v16(promptAttachment:GetDescendants()) do
-										if descendant:IsA("ProximityPrompt") and tostring(descendant.ActionText) == str then
-											v17 = descendant
-											break
-										else
-											v17 = nil
-										end
-									end
-
-									if v17 then
-										local str3 = tostring(v17.ObjectText or "")
-
-										tbl6[#tbl6 + 1] = {
-											Prompt = v17,
-											Plot = child,
-											Spawn = base,
-											Name = str3,
-											Generation = fn26(base, child, str3, tbl7),
-										}
-									end
-								end
-							end
-						end
-					end
-
-					tbl3 = tbl6
-				end
-			end
-
-			local n10
-			n10 = 0.03
-			local n11
-			n11 = -math.huge
-			local v16
-			v16 = nil
-			local v17
-			v17 = nil
-			local v18
-			v18 = nil
-			local v19
-			v19 = nil
-			local v20
-			v20 = nil
-			local v21
-			v21 = nil
-			local fn25
-
-			fn25 = function(arg, arg2, distance, generation)
-				local tbl6 = { Prompt = arg.Prompt, Plot = arg.Plot, Position = arg2 }
-				local name = arg.Name
-				local name2
-
-				if name then
-					name2 = name
-				else
-					name2 = tostring(arg.Prompt.ObjectText or "")
-				end
-
-				tbl6.Name = name2
-				tbl6.Generation = generation
-				tbl6.Distance = distance
-				return tbl6
-			end
-
-			prompt2 = nil
-
-			fn10 = function(arg)
-				if not arg then
-					return nil
-				end
-
-				for _, v22 in ipairs(tbl3) do
-					if v22.Prompt == arg then
-						return v22
-					end
-				end
-
-				return nil
-			end
-
-			fn11 = function(arg)
-				if not (prompt2 and prompt2.Parent and arg) then
-					return nil
-				end
-				local v22 = fn10(prompt2)
-				if not v22 then
-					return nil
-				end
-				local position = v22.Spawn.Position
-				return fn25(v22, position, (arg.Position - position).Magnitude, v22.Generation or 0)
-			end
-
-			fn12 = function(arg, arg2, arg3, arg4)
-				if flag4 then
-					arg2 = arg4 or arg2
-					if arg2 and arg2.Distance <= n3 then
-						return arg2
-					end
-					return nil
-				end
-
-				local v22 = fn11(arg)
-				if v22 then
-					return v22
-				end
-				return arg3
-			end
-
-			str2 = "Default (Chilli Hub)"
-			fn13 = nil
-			fn14 = nil
-			screenGui = Instance.new("ScreenGui")
-			screenGui.Name = "ChilliMacLibTargetGui"
-			screenGui.ResetOnSpawn = false
-			screenGui.IgnoreGuiInset = true
-			screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-			screenGui.Enabled = false
-
-			pcall(function()
-				screenGui.Parent = type(gethui) == "function" and gethui() or CoreGui
-			end)
-
-			do
-				local frame3 = Instance.new("Frame")
-				frame3.Name = "TargetCard"
-				frame3.AnchorPoint = Vector2.new(0.5, 0)
-				frame3.Position = UDim2.new(0.5, 0, 0, 72)
-				frame3.Size = UDim2.fromOffset(270, 48)
-				frame3.BackgroundColor3 = Color3.fromRGB(20, 20, 26)
-				frame3.BackgroundTransparency = 0.15
-				frame3.BorderSizePixel = 0
-				frame3.Parent = screenGui
-				Instance.new("UICorner", frame3).CornerRadius = UDim.new(0, 10)
-				local uiStroke = Instance.new("UIStroke")
-				uiStroke.Color = Color3.fromRGB(58, 255, 55)
-				uiStroke.Thickness = 1.2
-				uiStroke.Transparency = 0.3
-				uiStroke.Parent = frame3
-				local textLabel3 = Instance.new("TextLabel")
-				textLabel3.BackgroundTransparency = 1
-				textLabel3.Position = UDim2.fromOffset(12, 5)
-				textLabel3.Size = UDim2.new(1, -24, 0, 14)
-				textLabel3.Font = Enum.Font.GothamBold
-				textLabel3.TextSize = 11
-				textLabel3.TextColor3 = Color3.fromRGB(58, 255, 55)
-				textLabel3.TextXAlignment = Enum.TextXAlignment.Left
-				textLabel3.Text = "AUTO STEAL (MAC LIB) - MỤC TIÊU GẦN NHẤT"
-				textLabel3.Parent = frame3
-				local textLabel4 = Instance.new("TextLabel")
-				textLabel4.BackgroundTransparency = 1
-				textLabel4.Position = UDim2.fromOffset(12, 22)
-				textLabel4.Size = UDim2.new(1, -24, 0, 20)
-				textLabel4.Font = Enum.Font.GothamBlack
-				textLabel4.TextSize = 13
-				textLabel4.TextColor3 = Color3.fromRGB(255, 255, 255)
-				textLabel4.TextXAlignment = Enum.TextXAlignment.Left
-				textLabel4.TextTruncate = Enum.TextTruncate.AtEnd
-				textLabel4.Text = "Đang quét tìm brainrot gần nhất..."
-				textLabel4.Parent = frame3
-				local flag8 = false
-				local v22 = nil
-				local vector2 = Vector2.new(0, 0)
-				local position = nil
-
-				fn4(frame3.InputBegan:Connect(function(input)
-					local v23 = flag8
-					local flag9
-
-					if flag8 then
-						flag9 = v23
-					else
-						flag9 = input.UserInputState ~= Enum.UserInputState.Begin
-					end
-
-					if flag9 then
-						return
-					end
-					local flag10 = input.UserInputType == Enum.UserInputType.Touch
-					if not (input.UserInputType == Enum.UserInputType.MouseButton1) and not flag10 then
-						return
-					end
-					local vector22 = Vector2.new(input.Position.X, input.Position.Y)
-					if not fn21(frame3, vector22) then
-						return
-					end
-					flag8 = true
-					v22 = flag10 and input or nil
-					vector2 = vector22
-					position = frame3.Position
-				end))
-
-				fn4(UserInputService2.InputChanged:Connect(function(input)
-					if not flag8 or not position then
-						return
-					end
-
-					if v22 and input == v22 or not v22 and input.UserInputType == Enum.UserInputType.MouseMovement then
-						local n12 = Vector2.new(input.Position.X, input.Position.Y) - vector2
-						frame3.Position = UDim2.new(position.X.Scale, position.X.Offset + n12.X, position.Y.Scale, position.Y.Offset + n12.Y)
-					end
-				end))
-
-				fn4(UserInputService2.InputEnded:Connect(function(input)
-					if not flag8 then
-						return
-					end
-
-					if v22 and input == v22 or not v22 and input.UserInputType == Enum.UserInputType.MouseButton1 then
-						flag8 = false
-						v22 = nil
-						position = nil
-					end
-				end))
-
-				fn15 = function(arg)
-					if not screenGui.Parent then
-						return
-					end
-
-					if not (str2 and string.find(str2, "Mac")) then
-						screenGui.Enabled = false
-						return
-					end
-					screenGui.Enabled = true
-
-					if arg and arg.Name then
-						local str3 = arg.Distance and string.format("%.1fm", arg.Distance) or ""
-						local str4 = arg.Generation and arg.Generation > 0 and " | " .. fn8(arg.Generation) or ""
-						textLabel4.Text = string.format("%s (%s)%s", tostring(arg.Name), str3, str4)
-					else
-						textLabel4.Text = "Đang quét tìm brainrot gần nhất..."
-					end
-				end
-			end
-
-			fn16 = function(arg)
-				fn15(arg)
-			end
-
-			do
-				local function fn26(arg)
-					local match, v22 = tostring(arg or ""):match("%$?([%d%.]+)%s*([KMB]?)")
-					if not match then
-						return 0
-					end
-					local n12 = tonumber(match) or 0
-
-					if v22 == "K" then
-						n12 *= 1000
-					elseif v22 == "M" then
-						n12 *= 1000000
-					elseif v22 == "B" then
-						n12 *= 1e9
-					end
-
-					return n12
-				end
-
-				local function fn27()
-					local name = localPlayer.Name
-					local displayName = localPlayer.DisplayName
-					local plots = Workspace:FindFirstChild("Plots")
-					if not plots then
-						return nil
-					end
-
-					for _, child in ipairs(plots:GetChildren()) do
-						local plotSign = child:FindFirstChild("PlotSign")
-
-						if plotSign then
-							local surfaceGui = plotSign:FindFirstChild("SurfaceGui")
-
-							if surfaceGui then
-								local frame3 = surfaceGui:FindFirstChild("Frame")
-
-								if frame3 then
-									local textLabel3 = frame3:FindFirstChildOfClass("TextLabel")
-
-									if textLabel3 and type(textLabel3.Text) == "string" then
-										local text = textLabel3.Text
-										if string.find(text, displayName, 1, true) or string.find(text, name, 1, true) then
-											return child
-										end
-										continue
-									end
-
-									continue
-								end
-							end
-						end
-					end
-
-					return nil
-				end
-
-				local function fn28(arg)
-					if not (arg and arg:IsA("Model")) then
-						return nil
-					end
-
-					for _, descendant in ipairs(arg:GetDescendants()) do
-						if descendant:IsA("TextLabel") then
-							local v22 = string.lower(descendant.Name)
-							if v22 == "generation" or v22 == "gen" or v22:find("generation") or v22:find("gen") then
-								return descendant
-							end
-						end
-					end
-
-					return nil
-				end
-
-				fn17 = function(arg)
-					if not arg then
-						return nil, nil, 0
-					end
-					local position = arg.Position
-					local v22 = nil
-					local v23 = nil
-					local n12 = -math.huge
-					local huge = math.huge
-					local n13 = 0
-
-					local function fn29(arg2, arg3, arg4, arg5)
-						if not (arg2 and arg2.Parent) then
-							return
-						end
-
-						if tostring(arg2.ActionText) ~= str then
-							return
-						end
-
-						if fn7(arg2) then
-							return
-						end
-
-						if not arg4 then
-							arg4 = tostring(arg2.ObjectText or "")
-						end
-
-						if type(arg5) ~= "number" then
-							local flag8 = type(arg5) == "string" and arg5 ~= ""
-							local n14 = 0
-
-							if flag8 then
-								arg5 = fn26(arg5)
-							else
-								arg5 = n14
-							end
-						end
-
-						if arg5 == 0 then
-							arg5 = fn24(arg4)
-						end
-
-						if n2 and n2 > 1000 and arg5 > 0 and arg5 < n2 then
-							return
-						end
-						n13 += 1
-						local magnitude = (position - arg3).Magnitude
-
-						if magnitude <= n3 then
-							local tbl6 = {
-								Prompt = arg2,
-								Spawn = { Position = arg3 },
-								Position = arg3,
-								Name = arg4,
-								Generation = arg5,
-								Distance = magnitude,
-							}
-
-							if not v22 or arg5 > n12 then
-								v22 = tbl6
-								n12 = arg5
-							end
-
-							if not v23 or magnitude < huge then
-								v23 = tbl6
-								huge = magnitude
-							end
-						end
-					end
-
-					local plots = Workspace:FindFirstChild("Plots")
-					local n14 = 0
-
-					if n9 then
-						n14 = os.clock() < n9
-					end
-
-					if plots and not n14 then
-						local v24 = fn27()
-
-						for _, child in ipairs(plots:GetChildren()) do
-							if child ~= v24 then
-								local animalPodiums = child:FindFirstChild("AnimalPodiums")
-
-								if animalPodiums then
-									for _, child2 in ipairs(animalPodiums:GetChildren()) do
-										local base = child2:FindFirstChild("Base")
-										local spawn = base and base:FindFirstChild("Spawn")
-
-										if spawn and spawn:IsA("BasePart") then
-											local promptAttachment = spawn:FindFirstChild("PromptAttachment") or spawn
-											local v25 = nil
-
-											for _, descendant in ipairs(promptAttachment:GetDescendants()) do
-												if descendant:IsA("ProximityPrompt") and tostring(descendant.ActionText) == str then
-													v25 = descendant
-													break
-												else
-													v25 = nil
-												end
-											end
-
-											if v25 then
-												local str3 = tostring(v25.ObjectText or "")
-												local attachment = spawn:FindFirstChild("Attachment")
-												attachment = attachment and attachment:FindFirstChild("AnimalOverhead")
-												local str4 = ""
-
-												if attachment then
-													local generation = attachment:FindFirstChild("Generation")
-
-													if generation and generation:IsA("TextLabel") then
-														str4 = generation.Text
-													end
-												end
-
-												if str4 == "" and str3 ~= "" then
-													local v26 = child:FindFirstChild(str3) or child:FindFirstChild(str3, true)
-
-													if v26 and v26:IsA("Model") then
-														local v27 = fn28(v26)
-
-														if v27 then
-															str4 = v27.Text
-														end
-													end
-												end
-
-												fn29(v25, spawn.Position, str3, str4, child.Name, tostring(i))
-											end
-										end
-									end
-								end
-							end
-						end
-					end
-
-					local debris = Workspace:FindFirstChild("Debris")
-
-					if debris then
-						for _, child in ipairs(debris:GetChildren()) do
-							local v24 = string.lower(child.Name or "")
-
-							if v24 ~= "lucky block" and v24 ~= "camera" and not child:IsA("Camera") then
-								local v25 = nil
-
-								for _, descendant in ipairs(child:GetDescendants()) do
-									if descendant:IsA("ProximityPrompt") and tostring(descendant.ActionText) == str then
-										v25 = descendant
-										break
-									else
-										v25 = nil
-									end
-								end
-
-								if v25 then
-									local position2 = child:IsA("BasePart") and child.Position or child:IsA("Model") and child.PrimaryPart and child.PrimaryPart.Position or v25.Parent and v25.Parent:IsA("BasePart") and v25.Parent.Position
-
-									if position2 then
-										local str3 = ""
-
-										if child:IsA("Model") then
-											local v26 = fn28(child)
-
-											if v26 then
-												str3 = v26.Text
-											end
-										end
-
-										fn29(v25, position2, tostring(v25.ObjectText or child.Name), str3, nil, nil)
-									end
-								end
-							end
-						end
-					end
-
-					for _, player in ipairs(Players:GetPlayers()) do
-						if player.Character then
-							local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
-
-							if humanoidRootPart then
-								for _, descendant in ipairs(player.Character:GetDescendants()) do
-									if descendant:IsA("ProximityPrompt") and tostring(descendant.ActionText) == str then
-										fn29(descendant, humanoidRootPart.Position, tostring(descendant.ObjectText or "Carried Brainrot"), "", nil, nil)
-									end
-								end
-							end
-						end
-					end
-
-					return v22, v23, n13
-				end
-			end
-
-			fn18 = function(arg)
-				if not arg then
-					return nil, nil, nil, nil, 0
-				end
-				local now = os.clock()
-				local position = arg.Position
-				if now - n11 < n10 and v16 and (position - v16).Magnitude < 0.5 then
-					return v17, v18, v19, v20, v21
-				end
-				fn9(false)
-				local n12 = 0
-				local v22 = nil
-				local v23 = nil
-				local v24 = nil
-				local v25 = nil
-				local v26 = nil
-				local v27 = nil
-				local v28 = nil
-				local v29 = nil
-
-				for _, v30 in ipairs(tbl3) do
-					local prompt3 = v30.Prompt
-
-					if prompt3.Parent and prompt3.Enabled and tostring(prompt3.ActionText) == str and not fn7(prompt3) then
-						local generation = v30.Generation or 0
-						local v31 = flag4
-						local flag8
-
-						if flag4 then
-							flag8 = v31
-						else
-							flag8 = generation >= n2
-						end
-
-						if flag8 then
-							n12 += 1
-							local position2 = v30.Spawn.Position
-							local magnitude = (position - position2).Magnitude
-
-							if not v22 or generation > v23 then
-								v22 = fn25(v30, position2, magnitude, generation)
-								v23 = generation
-							end
-
-							if not v24 or magnitude < v25 then
-								v24 = fn25(v30, position2, magnitude, generation)
-								v25 = magnitude
-							end
-
-							if magnitude <= n3 then
-								if not v26 or generation > v27 then
-									v26 = fn25(v30, position2, magnitude, generation)
-									v27 = generation
-								end
-
-								if not v28 or magnitude < v29 then
-									v28 = fn25(v30, position2, magnitude, generation)
-									v29 = magnitude
-								end
-							end
-						end
-					end
-				end
-
-				n11 = now
-				v16 = position
-				v17 = v26
-				v18 = v28
-				v19 = v22
-				v20 = v24
-				v21 = n12
-				return v26, v28, v22, v24, n12
-			end
-
-			fn19 = function(arg)
-				if not arg or not arg:IsA("ProximityPrompt") or not arg.Parent or type(getconnections) ~= "function" then
-					return nil
-				end
-				local tbl6 = {}
-				local tbl7 = {}
-
-				if not pcall(function()
-					for _, v22 in pairs(getconnections(arg.PromptButtonHoldBegan)) do
-						if v22 and v22.Function then
-							tbl6[#tbl6 + 1] = v22.Function
-						end
-					end
-
-					for _, v22 in pairs(getconnections(arg.Triggered)) do
-						if v22 and v22.Function then
-							tbl7[#tbl7 + 1] = v22.Function
-						end
-					end
-				end) or #tbl7 == 0 then
-					return nil
-				end
-
-				return tbl6, tbl7
-			end
-
-			do
-				local v22 = CoreGui
-
-				pcall(function()
-					if type(gethui) == "function" then
-						local hui = gethui()
-
-						if typeof(hui) == "Instance" then
-							v22 = hui
-						end
-					end
-				end)
-
-				local chilliAutoGetBarGui = v22:FindFirstChild("ChilliAutoGetBarGui")
-
-				if chilliAutoGetBarGui then
-					pcall(function()
-						chilliAutoGetBarGui:Destroy()
-					end)
-				end
-
-				screenGui2 = Instance.new("ScreenGui")
-				screenGui2.Name = "ChilliAutoGetBarGui"
-				screenGui2.ResetOnSpawn = false
-				screenGui2.IgnoreGuiInset = true
-				screenGui2.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-				screenGui2.Enabled = false
-				screenGui2.Parent = v22
-			end
-
-			local color
-			color = Color3.fromRGB(58, 255, 55)
-			local color2
-			color2 = Color3.fromRGB(20, 109, 0)
-			local createUIGradient
-
-			do
-				local gothamBold = Enum.Font.GothamBold
-
-				pcall(function()
-					gothamBold = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold, Enum.FontStyle.Normal)
-				end)
-
-				local function fn26(arg)
-					if typeof(gothamBold) == "Font" then
-						arg.FontFace = gothamBold
-					else
-						arg.Font = Enum.Font.GothamBold
-					end
-				end
-
-				createUIGradient = function(parent, arg, arg2)
-					local uiGradient = Instance.new("UIGradient")
-					local new = ColorSequenceKeypoint.new
-					uiGradient.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0, arg), new(1, arg2) })
-					uiGradient.Rotation = 90
-					uiGradient.Parent = parent
-					return uiGradient
-				end
-
-				frame = Instance.new("Frame")
-				frame.Name = "Holder"
-				frame.AnchorPoint = Vector2.new(0.5, 0)
-				frame.Position = UDim2.new(0.5, 0, 0, 10)
-				frame.Size = UDim2.fromOffset(248, 46)
-				frame.BackgroundColor3 = Color3.fromRGB(24, 24, 28)
-				frame.BackgroundTransparency = 0.28
-				frame.BorderSizePixel = 0
-				frame.Parent = screenGui2
-				Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 16)
-				local uiStroke = Instance.new("UIStroke")
-				uiStroke.Color = Color3.fromRGB(255, 255, 255)
-				uiStroke.Thickness = 1
-				uiStroke.Transparency = 0.93
-				uiStroke.Parent = frame
-				local n12 = 0.125
-				local n13 = 248
-				local n14 = 1
-				local uiScale = Instance.new("UIScale")
-				uiScale.Parent = frame
-
-				local function fn27()
-					local currentCamera = Workspace.CurrentCamera
-					local viewportSize = currentCamera and currentCamera.ViewportSize or Vector2.new(1280, 720)
-
-					if viewportSize.X < 1 then
-						viewportSize = Vector2.new(1280, 720)
-					end
-
-					uiScale.Scale = math.clamp(viewportSize.X * n12 * n14 / n13, 0.6, 1.4)
-				end
-
-				fn27()
-				local currentCamera = Workspace.CurrentCamera
-
-				if currentCamera then
-					fn4(currentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(fn27))
-				end
-
-				fn4(Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(fn27))
-				textLabel = Instance.new("TextLabel")
-				textLabel.BackgroundTransparency = 1
-				textLabel.Position = UDim2.fromOffset(14, 8)
-				textLabel.Size = UDim2.new(1, -104, 0, 15)
-				textLabel.TextSize = 13
-				textLabel.TextScaled = true
-				textLabel.TextXAlignment = Enum.TextXAlignment.Left
-				textLabel.TextTruncate = Enum.TextTruncate.None
-				textLabel.TextColor3 = Color3.fromRGB(238, 238, 242)
-				textLabel.Text = ""
-				fn26(textLabel)
-				textLabel.Parent = frame
-				local uiTextSizeConstraint = Instance.new("UITextSizeConstraint")
-				uiTextSizeConstraint.MinTextSize = 8
-				uiTextSizeConstraint.MaxTextSize = 13
-				uiTextSizeConstraint.Parent = textLabel
-				chilliGithubFastManualDefaultsRu.AutoStealBarNameStyle = chilliGithubFastManualDefaultsRu.CreateBrainrotNameStyle(textLabel)
-				textLabel2 = Instance.new("TextLabel")
-				textLabel2.BackgroundTransparency = 1
-				textLabel2.AnchorPoint = Vector2.new(1, 0)
-				textLabel2.Position = UDim2.new(1, -14, 0, 8)
-				textLabel2.Size = UDim2.fromOffset(88, 15)
-				textLabel2.TextSize = 13
-				textLabel2.TextXAlignment = Enum.TextXAlignment.Right
-				textLabel2.TextColor3 = color
-				textLabel2.Text = ""
-				fn26(textLabel2)
-			end
-
-			textLabel2.Parent = frame
-			local frame3 = Instance.new("Frame")
-			frame3.Position = UDim2.fromOffset(14, 30)
-			frame3.Size = UDim2.new(1, -28, 0, 6)
-			frame3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			frame3.BackgroundTransparency = 0.88
-			frame3.BorderSizePixel = 0
-			frame3.Parent = frame
-			Instance.new("UICorner", frame3).CornerRadius = UDim.new(1, 0)
-			frame2 = Instance.new("Frame")
-			frame2.Size = UDim2.new(0, 0, 1, 0)
-			frame2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			frame2.BorderSizePixel = 0
-			frame2.Parent = frame3
-			Instance.new("UICorner", frame2).CornerRadius = UDim.new(1, 0)
-			createUIGradient(frame2, color, color2)
-		end
-
-		local frame3, visible, flag8, n8, n9, n10, n11, fn20, fn21, v13
-		local fn22, fn23, fn24
-
-		do
-			local frame4 = Instance.new("Frame")
-			frame4.Position = UDim2.fromOffset(14, 41)
-			frame4.Size = UDim2.new(1, -28, 0, 4)
-			frame4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			frame4.BackgroundTransparency = 0.9
-			frame4.BorderSizePixel = 0
-			frame4.Visible = false
-			frame4.Parent = frame
-			Instance.new("UICorner", frame4).CornerRadius = UDim.new(1, 0)
-			frame3 = Instance.new("Frame")
-			frame3.Size = UDim2.new(0, 0, 1, 0)
-			frame3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			frame3.BackgroundTransparency = 0.55
-			frame3.BorderSizePixel = 0
-			frame3.Parent = frame4
-			Instance.new("UICorner", frame3).CornerRadius = UDim.new(1, 0)
-			visible = false
-			flag8 = false
-			n8 = 0
-			n9 = 1
-			n10 = 0
-			n11 = 0
-
-			fn20 = function()
-				flag8 = false
-			end
-
-			fn21 = function(arg)
-				if not flag5 or not screenGui2.Parent then
-					flag8 = false
-					return
-				end
-				n9 = math.max(tonumber(arg) or 1, 0.01)
-				n8 = os.clock()
-				flag8 = true
-			end
-
-			local n12 = 0.22
-			local n13 = 10
-			local color = Color3.fromRGB(255, 255, 255)
-			v13 = nil
-			local v14 = nil
-			local radius = 0
-
-			fn22 = function()
-				if connection then
-					connection:Disconnect()
-					connection = nil
-				end
-
-				if v14 then
-					pcall(function()
-						v14:Destroy()
-					end)
-
-					v14 = nil
-				end
-
-				if v13 then
-					pcall(function()
-						v13:Destroy()
-					end)
-
-					v13 = nil
-				end
-
-				radius = 0
-			end
-
-			local function fn25()
-				if v13 and v13.Parent and v14 then
-					return
-				end
-				fn22()
-				local part = Instance.new("Part")
-				part.Name = fn()
-				part.Anchored = true
-				part.CanCollide = false
-				part.CanQuery = false
-				part.CanTouch = false
-				part.CastShadow = false
-				part.Massless = true
-				part.Size = Vector3.one
-				part.Transparency = 1
-				part.Parent = Workspace
-				local cylinderHandleAdornment = Instance.new("CylinderHandleAdornment")
-				cylinderHandleAdornment.Name = fn()
-				cylinderHandleAdornment.Adornee = part
-				cylinderHandleAdornment.AlwaysOnTop = true
-				cylinderHandleAdornment.Color3 = color
-				cylinderHandleAdornment.Height = 0.05
-				cylinderHandleAdornment.InnerRadius = 0
-				cylinderHandleAdornment.Radius = 0
-				cylinderHandleAdornment.Transparency = 0.25
-				cylinderHandleAdornment.ZIndex = 1
-				cylinderHandleAdornment.Parent = part
-				v13 = part
-				v14 = cylinderHandleAdornment
-			end
-
-			fn23 = function(arg)
-				local character_ = localPlayer.Character
-				character_ = character_ and character_:FindFirstChild("HumanoidRootPart")
-
-				if not visible or not character_ then
-					if v13 then
-						fn22()
-					end
-
-					return
-				end
-
-				fn25()
-				local n14 = math.max(tonumber(n3) or 20, 1)
-				local n15 = math.min(arg or 0.016, 0.1)
-
-				if radius <= 0 then
-					radius = n14
-				else
-					radius += (n14 - radius) * (1 - math.exp(-n15 * n13))
-				end
-
-				v13.CFrame = CFrame.new(character_.Position - Vector3.new(0, 2.9, 0)) * CFrame.Angles(-1.5707963267948966, 0, 0)
-				v14.Radius = radius
-				v14.InnerRadius = math.max(radius - n12, 0)
-			end
-
-			fn24 = function(arg)
-				visible = arg == true
-				frame4.Visible = visible
-				frame.Size = UDim2.fromOffset(248, visible and 55 or 46)
-
-				if not visible then
-					n11 = 0
-					frame3.Size = UDim2.new(0, 0, 1, 0)
-					fn22()
-				end
-			end
-		end
-
-		local fn25
-
-		fn25 = function(arg, arg2, arg3)
-			if textLabel.Parent then
-				textLabel.Text = tostring(arg or "")
-				chilliGithubFastManualDefaultsRu.ApplyBrainrotNameStyle(chilliGithubFastManualDefaultsRu.AutoStealBarNameStyle, arg3)
-			end
-
-			if textLabel2.Parent then
-				textLabel2.Text = tostring(arg2 or "")
-			end
-		end
-
-		do
-			local flag9 = false
-			local v14 = nil
-			local vector2 = Vector2.new(0, 0)
-			local position = nil
-
-			fn4(frame.InputBegan:Connect(function(input)
-				if flag9 or input.UserInputState ~= Enum.UserInputState.Begin then
-					return
-				end
-				local flag10 = input.UserInputType == Enum.UserInputType.Touch
-				if not (input.UserInputType == Enum.UserInputType.MouseButton1) and not flag10 then
-					return
-				end
-				local vector22 = Vector2.new(input.Position.X, input.Position.Y)
-				local absolutePosition = frame.AbsolutePosition
-				local absoluteSize = frame.AbsoluteSize
-				if vector22.X < absolutePosition.X or vector22.X > absolutePosition.X + absoluteSize.X or vector22.Y < absolutePosition.Y or vector22.Y > absolutePosition.Y + absoluteSize.Y then
-					return
-				end
-				flag9 = true
-				v14 = flag10 and input or nil
-				vector2 = vector22
-				position = frame.Position
-			end))
-
-			fn4(UserInputService2.InputChanged:Connect(function(input)
-				if not flag9 then
-					return
-				end
-
-				if not (v14 and input == v14 or not v14 and input.UserInputType == Enum.UserInputType.MouseMovement) or not position then
-					return
-				end
-				local n12 = Vector2.new(input.Position.X, input.Position.Y) - vector2
-				frame.Position = UDim2.new(position.X.Scale, position.X.Offset + n12.X, position.Y.Scale, position.Y.Offset + n12.Y)
-			end))
-
-			fn4(UserInputService2.InputEnded:Connect(function(input)
-				if not flag9 then
-					return
-				end
-				local flag10 = v14 and input == v14
-				local flag11
-
-				if flag10 then
-					flag11 = flag10
-				else
-					flag11 = not v14 and input.UserInputType == Enum.UserInputType.MouseButton1
-				end
-
-				if flag11 then
-					flag9 = false
-					v14 = nil
-					position = nil
-				end
-			end))
-		end
-
-		local fn26
-
-		fn26 = function()
-			if screenGui2.Parent then
-				screenGui2.Enabled = flag3 and flag5
-			end
-
-			if not flag3 or not flag5 then
-				fn20()
-				fn25("", "")
-			end
-		end
-
-		do
-			local n12 = 1
-			local n13 = 0.25
-			local n14 = -math.huge
-			local n15 = -math.huge
-
-			local function fn27()
-				if not flag3 then
-					return
-				end
-				local now = os.clock()
-				if now - n14 < n12 then
-					return
-				end
-				n14 = now
-
-				task.spawn(function()
-					fn14()
-					task.wait(0.05)
-					fn13()
-				end)
-			end
-
-			local function fn28(arg)
-				local now = os.clock()
-				if now - n15 < n13 then
-					return
-				end
-				n15 = now
-
-				for _, v14 in ipairs(arg) do
-					pcall(v14)
-				end
-			end
-
-			local function fn29(arg)
-				if not (arg and arg.Parent) or type(getconnections) ~= "function" then
-					return
-				end
-
-				pcall(function()
-					for _, v14 in pairs(getconnections(arg.PromptButtonHoldEnded)) do
-						if v14 and v14.Function then
-							pcall(v14.Function)
-						end
-					end
-				end)
-			end
-
-			local function fn30(arg, arg2, arg3, arg4, arg5)
-				local prompt3 = type(arg) == "table" and arg.Prompt or arg
-				local plotName = type(arg) == "table" and arg.PlotName or nil
-				local slotName = type(arg) == "table" and arg.SlotName or nil
-				if not prompt3 then
-					return false, "no prompt"
-				end
-
-				if str2 == "Fix 1 (Wait Before Fire)" then
-					task.wait(0.1)
-				end
-
-				local n16 = os.clock() - n6
-				local n17 = 0
-
-				if str2 == "Fix 2 (Longer Settle)" then
-					n17 = 1.5
-				end
-
-				if n16 < n17 then
-					task.wait(n17 - n16)
-				end
-
-				if not flag2 or not flag3 or arg2 ~= n5 then
-					return false, "stopped"
-				end
-				local v14, v15 = fn19(prompt3)
-				if not v14 or not v15 then
-					return false, "no handlers"
-				end
-				local n18 = 1.3
-
-				if flag6 then
-					flag6 = false
-					n18 = 2
-				end
-
-				if arg4 then
-					pcall(arg4, n18)
-				end
-
-				if str2 == "Xen Hub Source v11" then
-					if plotName and slotName then
-						local function fn31()
-							pcall(function()
-								local reB096e1ca9c3a453b8b60268b235083 = game:GetService("ReplicatedStorage").Packages.Net["RE/b096e1ca-9c3a-453b-8b60-268b235083b9"]
-								reB096e1ca9c3a453b8b60268b235083:FireServer(Workspace:GetServerTimeNow() + 53, "5c0bd012-dfb2-4bac-8f1a-e41f136e4744")
-								reB096e1ca9c3a453b8b60268b235083:FireServer(Workspace:GetServerTimeNow() + 53, "6be28b5b-dbc3-4aab-aa0c-6ebcfa191f22")
-							end)
-						end
-
-						local function fn32(arg6, arg7)
-							pcall(function()
-								game:GetService("ReplicatedStorage").Packages.Net["RE/5aa39ea1-0c65-4fcf-aff9-b18a7ef277c3"]:FireServer(Workspace:GetServerTimeNow() + 67, "c262398d-68e3-4499-8bea-99766bf11686", arg6, tonumber(arg7) or arg7)
-								local v16
-								v16:FireServer(Workspace:GetServerTimeNow() + 67, "579e6c26-5a80-407d-9488-0f84752e8f1f", arg6, tonumber(arg7) or arg7)
-							end)
-						end
-
-						fn31()
-						task.wait(1.3)
-						fn32(plotName, slotName)
-						return true, "fired xen hub source"
-					end
-
-					for _, v16 in ipairs(v14) do
-						pcall(v16)
-					end
-
-					task.wait(1.3)
-
-					for _, v16 in ipairs(v15) do
-						pcall(v16)
-					end
-
-					return true, "fired fallback"
-				end
-
-				if str2 and string.find(str2, "v20") and localPlayer:GetAttribute("Stealing") == true then
-					return false, "v20_radar"
-				end
-
-				if str2 and string.find(str2, "v21") then
-					local now = os.clock()
-
-					while not prompt3.Enabled and prompt3.Parent and os.clock() - now < 0.6 do
-						task.wait(0.02)
-					end
-				end
-
-				if os.clock() - n6 < 1.5 and str2 and (string.find(str2, "Smart Window") or string.find(str2, "v19") or string.find(str2, "v19")) then
-					for _, v16 in ipairs(v14) do
-						pcall(v16)
-					end
-
-					task.wait(n18)
-
-					for _, v16 in ipairs(v15) do
-						pcall(v16)
-					end
-
-					n6 = os.clock()
-					return true, "fired (v14 protected window)"
-				end
-
-				local flag9 = str2 and string.find(str2, "v23")
-
-				if flag9 then
-					local v16 = globalCacheLockUntil
-					flag9 = os.clock() < v16
-				end
-
-				if (isDebris or flag9) and str2 and string.find(str2, "v22") then
-					for _, v16 in ipairs(v14) do
-						pcall(v16)
-					end
-
-					task.wait(n18)
-
-					for _, v16 in ipairs(v15) do
-						pcall(v16)
-					end
-
-					fn29(prompt3)
-					n6 = os.clock()
-					return true, "fired (v22 debris cache hold)"
-				end
-
-				if str2 == "Fix 4 (FireProximityPrompt)" then
-					if fireproximityprompt then
-						fireproximityprompt(prompt3, 0)
-						fireproximityprompt(prompt3, 1)
-					end
-				end
-
-				for _, v16 in ipairs(v14) do
-					pcall(v16)
-				end
-
-				local str3 = tostring(prompt3.ObjectText)
-				local now = os.clock()
-
-				while os.clock() - now < n18 do
-					task.wait(0.05)
-					if not flag2 or not flag3 or arg2 ~= n5 then
-						fn29(prompt3)
-						return false, "stopped"
-					end
-
-					if not arg5 and localPlayer:GetAttribute("Stealing") == true then
-						for _, v16 in ipairs(v15) do
-							pcall(v16)
-						end
-
-						fn29(prompt3)
-						return false, "carrying"
-					end
-
-					if tostring(prompt3.ObjectText) ~= str3 then
-						fn28(v15)
-						fn27()
-						fn29(prompt3)
-						return false, "brainrot changed"
-					end
-
-					if not prompt3.Parent or not prompt3.Enabled or not arg3() then
-						fn28(v15)
-						fn27()
-						fn29(prompt3)
-						return false, "retargeted"
-					end
-				end
-
-				local v16
-
-				if str2 == "Default (Chilli Hub)" or str2 == "Fix 3 (Re-fetch Triggers)" then
-					local v17
-					v17, v16 = fn19(prompt3)
-					v16 = v16 or v15
-				else
-					v16 = v15
-				end
-
-				for _, v17 in ipairs(v16) do
-					pcall(v17)
-				end
-
-				fn29(prompt3)
-				n6 = os.clock()
-				return true, "fired"
-			end
-
-			local function fn31(arg, arg2, arg3)
-				if not flag2 or not flag3 or arg2 ~= n5 then
-					return false
-				end
-
-				if arg3 and localPlayer:GetAttribute("Stealing") ~= true then
-					return false
-				end
-				local character_ = localPlayer.Character
-				local humanoidRootPart = character_ and character_:FindFirstChild("HumanoidRootPart")
-				if not humanoidRootPart then
-					return false
-				end
-
-				if flag4 then
-					local prompt3 = arg.Prompt
-					if not prompt3 or not prompt3.Parent or not prompt3.Enabled or tostring(prompt3.ActionText) ~= str or fn7(prompt3) then
-						return false
-					end
-					local position = arg.Position
-					return not position or (humanoidRootPart.Position - position).Magnitude <= n3
-				end
-
-				if prompt2 and prompt2.Parent then
-					return arg.Prompt == prompt2
-				end
-				local v14
-
-				if str2 and (string.find(str2, "Mac Lib") or string.find(str2, "Original")) then
-					local v15
-					v15, v14 = fn17(humanoidRootPart)
-				else
-					local v15
-					v15, v14 = fn18(humanoidRootPart)
-				end
-
-				if not v14 then
-					return false
-				end
-
-				if v14.Prompt == arg.Prompt then
-					return true
-				end
-				return v14.Distance >= (humanoidRootPart.Position - arg.Position).Magnitude - n
-			end
-
-			local function fn32(arg)
-				local v14 = prompt
-				local parent = prompt
-
-				if v14 then
-					parent = v14.Parent
-				end
-
-				if parent then
-					local now = os.clock()
-
-					while flag2 and flag3 and arg == n5 and os.clock() - now < 1 do
-						if v14.Enabled and tostring(v14.ActionText) == str then
-							return
-						end
-						task.wait(0.05)
-					end
-				else
-					task.wait(0.2)
-				end
-			end
-
-			local function fn33(arg)
-				local flag9 = false
-
-				while true do
-					if flag2 and flag3 and arg == n5 then
-						local flag10 = localPlayer:GetAttribute("Stealing") == true
-
-						if not flag9 then
-							if str2 and string.find(str2, "v19") then
-								task.wait()
-							else
-								task.wait(0.1)
-							end
-						end
-
-						local flag11 = not flag2 or not flag3 or arg ~= n5
-						flag9 = false
-
-						if not flag11 then
-							if not (str2 and string.find(str2, "v20")) and localPlayer:GetAttribute("Stealing") == true then
-								flag7 = true
-								fn20()
-
-								if flag5 then
-									fn25("GET READY - carrying brainrot", "")
-								end
-
-								while flag2 and flag3 and arg == n5 and localPlayer:GetAttribute("Stealing") == true do
-									if str2 and string.find(str2, "v19") then
-										task.wait()
-									else
-										task.wait(0.05)
-									end
-								end
-
-								if not (str2 and string.find(str2, "v19")) then
-									fn32(arg)
-								end
-
-								flag7 = false
-
-								if str2 and string.find(str2, "v19") then
-									flag9 = true
-								end
-							else
-								if not (str2 and string.find(str2, "v20")) then
-									fn16(nil)
-								end
-
-								flag7 = false
-								local character_ = localPlayer.Character
-								character_ = character_ and character_:FindFirstChild("HumanoidRootPart")
-
-								if not character_ then
-									fn20()
-								else
-									local v14, v15, v16
-
-									if flag4 then
-										v14, v15, v16 = fn18(character_)
-									else
-										v14, v15 = fn17(character_)
-										v16 = nil
-									end
-
-									local v17 = fn12(character_, v14, v15, v16)
-									fn15(v17)
-
-									if not v17 then
-										fn20()
-									else
-										prompt = v17.Prompt
-
-										if not fn30(v17, arg, function()
-											return fn31(v17, arg, false)
-										end, fn21, false) then
-											fn20()
-										end
-									end
-								end
-							end
-
-							continue
-						end
-					end
-
-					break
-				end
-			end
-
-			fn13 = function()
-				n5 += 1
-				flag3 = true
-				flag7 = false
-				n7 = -math.huge
-				fn26()
-				task.spawn(fn33, n5)
-			end
-		end
-
-		fn14 = function()
-			flag3 = false
-			flag7 = false
-			n5 += 1
-			fn20()
-			fn16(nil)
-			fn26()
-		end
-
-		local n12 = 0
-
-		fn4(localPlayer:GetAttributeChangedSignal("Stealing"):Connect(function()
-			if localPlayer:GetAttribute("Stealing") == true then
-				n6 = os.clock()
-				n12 += 1
-				local v14 = n12
-
-				task.spawn(function()
-					task.wait(1.5)
-
-					if flag3 and localPlayer:GetAttribute("Stealing") == true and n12 == v14 then
-						fn14()
-						task.wait(0.05)
-						fn13()
-					end
-				end)
-			else
-				n12 += 1
-
-				if not (os.clock() - n4 < 0.5) then
-					local flag9 = false
-
-					if RagdollController then
-						local ok, result = pcall(function()
-							return RagdollController.IsInRagdoll()
-						end)
-
-						if ok and result == true then
-							flag9 = true
-						end
-					end
-
-					if not flag9 then
-						local character_ = localPlayer.Character
-						character_ = character_ and character_:FindFirstChildOfClass("Humanoid")
-
-						if character_ then
-							local state = character_:GetState()
-
-							if state == Enum.HumanoidStateType.Physics or state == Enum.HumanoidStateType.FallingDown or state == Enum.HumanoidStateType.Ragdoll then
-								flag9 = true
-							end
-						end
-					end
-
-					local flag10
-
-					if not flag9 then
-						local character_ = localPlayer.Character
-
-						if character_ and character_:FindFirstChildOfClass("BallSocketConstraint", true) then
-							flag10 = true
-						else
-							flag10 = flag9
-						end
-					else
-						flag10 = flag9
-					end
-
-					if flag10 then
-						flag6 = true
-					end
-				end
-			end
-		end))
-
-		fn4(Workspace.ChildAdded:Connect(function(child)
-			if child.Name == "Plots" then
-				n7 = -math.huge
-			end
-		end))
-
-		local plots = Workspace:FindFirstChild("Plots")
-
-		if plots then
-			fn4(plots.ChildAdded:Connect(function()
-				n7 = -math.huge
-			end))
-
-			fn4(plots.ChildRemoved:Connect(function()
-				n7 = -math.huge
-			end))
-		end
-
-		local v14
-
-		v14 = v12:CreateToggle({
-			Name = "Auto Steal",
-			Default = true,
-			Callback = function(arg)
-				str2 = "Auto Get Default"
-
-				if arg then
-					fn13()
-				else
-					fn14()
-				end
-			end,
-		})
-
-		local fn27
-
-		fn27 = function()
-			if v14 and v14.Get and v14:Get() ~= true then
-				v14:Set(true, true)
-			end
-		end
-
-		v12:CreateToggle({
-			Name = "Steal Best Brainrot Only",
-			Default = false,
-			Quick = false,
-			SubOf = v14,
-			Callback = function(arg)
-				flag4 = arg == true
-			end,
-		})
-
-		do
-			local tbl4 = {
-				["K/s"] = { Min = 0, Max = 1000, Mult = 1000 },
-				["M/s"] = { Min = 0, Max = 1000, Mult = 1000000 },
-				["B/s"] = { Min = 1, Max = 10, Mult = 1e9 },
-			}
-
-			local createSlider = nil
-			local n13 = 1
-			local str3 = "M/s"
-
-			local function fn28(arg, arg2)
-				if arg ~= nil then
-					n13 = math.floor(tonumber(arg) or n13)
-				end
-
-				if arg2 ~= nil then
-					str3 = tostring(arg2)
-				elseif createSlider and createSlider.GetUnit then
-					local unit = createSlider:GetUnit()
-
-					if unit and unit ~= "" then
-						str3 = tostring(unit)
-					end
-				end
-
-				n2 = n13 * (tbl4[str3] or tbl4["M/s"]).Mult
-				n7 = -math.huge
-			end
-
-			local function fn29(arg)
-				str3 = arg
-				local ms = tbl4[arg] or tbl4["M/s"]
-
-				if createSlider and createSlider.SetRange then
-					createSlider:SetRange(ms.Min, ms.Max)
-					local min = createSlider:Get() or ms.Min
-					local min2 = ms.Min
-					local max = ms.Max
-					local n14 = math.clamp(math.floor(min + 0.5), min2, max)
-
-					if n14 ~= min then
-						createSlider:Set(n14)
-					else
-						fn28(n14, arg)
-					end
-				else
-					fn28(nil, arg)
-				end
-			end
-
-			createSlider = v12.CreateSlider
-
-			createSlider = createSlider(v12, {
-				Name = "Auto Steal Min Value",
-				Note = "Filters out Brainrots below this threshold. Tap arrow to change unit (K/s, M/s, B/s).",
-				Min = 0,
-				Max = 1000,
-				Default = 0,
-				AllowDecimals = false,
-				Increment = 1,
-				Unit = {
-					Default = "M/s",
-					Selector = true,
-					Options = { "K/s", "M/s", "B/s" },
-					ColorEnabled = true,
-					Colors = { Number = Color3.fromRGB(255, 255, 255), Suffix = Color3.fromRGB(58, 255, 55) },
-					Callback = function(arg)
-						fn29(arg)
-					end,
-				},
-				Quick = false,
-				SubOf = v14,
-				Callback = function(arg)
-					fn28(arg, nil)
-				end,
-			})
-		end
-
-		v12:CreateSlider({
-			Name = "Auto Steal Distance",
-			Min = 10,
-			Max = 200,
-			Default = 58,
-			AllowDecimals = false,
-			Increment = 1,
-			Unit = " studs",
-			Quick = false,
-			SubOf = v14,
-			Callback = function(arg)
-				n3 = math.clamp(tonumber(arg) or 20, 10, 200)
-			end,
-		})
-
-		local fn28
-
-		do
-			local color = Color3.fromRGB(170, 255, 0)
-			local color2 = Color3.fromRGB(240, 255, 210)
-			local flag9 = false
-			local attachment = nil
-			local attachment2 = nil
-			local beam = nil
-			local v15 = nil
-			local v16 = nil
-			local n13 = -math.huge
-
-			fn28 = function()
-				pcall(function()
-					if beam then
-						beam:Destroy()
-					end
-				end)
-
-				pcall(function()
-					if attachment then
-						attachment:Destroy()
-					end
-				end)
-
-				pcall(function()
-					if attachment2 then
-						attachment2:Destroy()
-					end
-				end)
-
-				beam = nil
-				attachment = nil
-				attachment2 = nil
-				v15 = nil
-				v16 = nil
-			end
-
-			local function fn29()
-				local v17 = Workspace:FindFirstChild(localPlayer.Name)
-				if not v17 or not v17:IsA("Model") then
-					return nil
-				end
-				local humanoidRootPart = v17:FindFirstChild("HumanoidRootPart")
-				if humanoidRootPart and humanoidRootPart:IsA("BasePart") and humanoidRootPart.Parent == v17 then
-					return humanoidRootPart
-				end
-				local hitbox = v17:FindFirstChild("__HITBOX") or v17:FindFirstChild("__hitbox") or v17:FindFirstChild("Hitbox") or v17:FindFirstChild("HitBox")
-				if hitbox and hitbox:IsA("BasePart") then
-					return hitbox
-				end
-				return nil
-			end
-
-			local function fn30(parent, parent2)
-				fn28()
-				if not (parent and parent2) then
-					return
-				end
-				attachment = Instance.new("Attachment")
-				attachment.Name = fn()
-				attachment.Position = Vector3.new(0, 0.6, 0)
-				attachment.Parent = parent
-				attachment2 = Instance.new("Attachment")
-				attachment2.Name = fn()
-				attachment2.Position = Vector3.new(0, 2.6, 0)
-				attachment2.Parent = parent2
-				beam = Instance.new("Beam")
-				beam.Name = fn()
-				beam.Archivable = false
-				beam.Attachment0 = attachment
-				beam.Attachment1 = attachment2
-				beam.Color = ColorSequence.new(color, color2)
-				beam.CurveSize0 = 0
-				beam.CurveSize1 = 0
-				beam.FaceCamera = true
-				beam.LightEmission = 1
-				beam.Segments = 4
-				beam.Texture = "rbxassetid://446111271"
-				beam.TextureLength = 3
-				beam.TextureMode = Enum.TextureMode.Wrap
-				beam.TextureSpeed = 3
-				local v17 = beam
-				local numberSequence = NumberSequence.new
-				local tbl4 = {}
-				local v18 = NumberSequenceKeypoint.new(0, 0)
-				local v19 = NumberSequenceKeypoint.new(0.85, 0)
-				tbl4[1] = v18
-				tbl4[2] = v19
-
-				do
-					local values = table.pack(NumberSequenceKeypoint.new(1, 0.25))
-					table.move(values, 1, values.n, 3, tbl4)
-				end
-
-				v17.Transparency = numberSequence(tbl4)
-				beam.Width0 = 0.34
-				beam.Width1 = 0.7
-				beam.ZOffset = 0.1
-				obj[beam] = true
-				beam.Parent = attachment
-				v15 = parent
-				v16 = parent2
-			end
-
-			local function fn31()
-				if not (flag9 and flag3) then
-					if beam then
-						fn28()
-					end
-
-					return
-				end
-
-				local now = os.clock()
-				if now - n13 < 0.1 then
-					return
-				end
-				n13 = now
-				local character_ = localPlayer.Character
-				local humanoidRootPart = character_ and character_:FindFirstChild("HumanoidRootPart")
-				local v17 = fn29(character_)
-				if not (humanoidRootPart and v17) then
-					fn28()
-					return
-				end
-				local v18, v19, v20 = fn18(humanoidRootPart)
-				local v21 = fn12(humanoidRootPart, v18, v19, v20)
-				local spawn = v21 and fn10(v21.Prompt) or nil
-				spawn = spawn and spawn.Spawn or nil
-				if not spawn then
-					fn28()
-					return
-				end
-				local flag10 = v15 ~= v17 or v16 ~= spawn
-
-				if not flag10 then
-					flag10 = not (attachment and attachment.Parent)
-				end
-
-				if flag10 then
-					fn30(v17, spawn)
-				end
-			end
-
-			fn4(RunService.Heartbeat:Connect(function()
-				if flag2 then
-					fn31()
-				end
-			end))
-
-			v12:CreateToggle({
-				Name = "Target Beam",
-				Note = "Draws a straight amber line to the Brainrot Auto Steal is targeting.",
-				Default = true,
-				Quick = false,
-				SubOf = v14,
-				Callback = function(arg)
-					flag9 = arg == true
-
-					if not flag9 then
-						fn28()
-					end
-				end,
-			})
-		end
-
-		local n13
-		n13 = 140
-		local n14
-		n14 = 5
-		local n15
-		n15 = 0.5
-		local color
-		color = Color3.fromRGB(58, 255, 55)
-		local n16
-		n16 = 214
-		local n17
-		n17 = 40
-		local n18
-		n18 = 44
-		local screenGui3
-		screenGui3 = nil
-		local v15
-		v15 = nil
-		local v16
-		v16 = nil
-		local tbl4
-		tbl4 = {}
-		local v17
-		v17 = nil
-		local v18
-		v18 = nil
-		local flag9, n19, n20, v19, flag10, n21, str3, fn29
-
-		do
-			local v20 = nil
-			local v21 = nil
-			local v22 = nil
-			flag9 = false
-			n19 = 5
-			n20 = 1
-			v19 = nil
-			flag10 = false
-			n21 = -math.huge
-			local v23 = nil
-			local n22 = -math.huge
-			str3 = ""
-			local gothamBold = Enum.Font.GothamBold
-
-			pcall(function()
-				gothamBold = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold, Enum.FontStyle.Normal)
-			end)
-
-			local function fn30(arg)
-				if typeof(gothamBold) == "Font" then
-					arg.FontFace = gothamBold
-				else
-					arg.Font = Enum.Font.GothamBold
-				end
-			end
-
-			local v24 = v2:CreateState({
-				Name = "Base Target Panel Position",
-				Default = {
-					XOffset = 0,
-					XScale = 0.78183454275131226,
-					YScale = 0.022769367322325706,
-					YOffset = 0,
-				},
-			})
-
-			local function fn31()
-				local v25 = v24:Get()
-				if type(v25) == "table" and type(v25.XOffset) == "number" and type(v25.YOffset) == "number" then
-					return UDim2.new(tonumber(v25.XScale) or 1, v25.XOffset, tonumber(v25.YScale) or 0.5, v25.YOffset)
-				end
-				return UDim2.new(1, -18, 0.5, 0)
-			end
-
-			local function fn32(arg)
-				v24:Set({ XScale = arg.X.Scale, XOffset = arg.X.Offset, YScale = arg.Y.Scale, YOffset = arg.Y.Offset })
-			end
-
-			local tweenInfo = TweenInfo.new(0.28, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
-			local n23 = 0
-			local v25 = nil
-
-			local function fn33()
-				if not v15 then
-					return
-				end
-				local visible2 = n23 == 0 and not flag9
-
-				if v20 then
-					v20.Visible = visible2
-					v20.Text = v25 and "no brainrot left in this base" or "no base nearby"
-				end
-
-				local n24 = flag9 and 0 or n23
-				local n25
-
-				if n24 > 0 then
-					n25 = (n17 + 4) * n24 + 4
-				else
-					n25 = 0
-
-					if visible2 then
-						n25 = 26
-					end
-				end
-
-				local n26 = n18 + n25
-				if v21 == n26 then
-					return
-				end
-				v21 = n26
-
-				if v18 then
-					if n25 > 0 then
-						v18.Visible = true
-					end
-
-					TweenService:Create(v18, tweenInfo, { Size = UDim2.new(1, -20, 0, math.max(n25, 1)) }):Play()
-				end
-
-				local tween = TweenService:Create(v15, tweenInfo, { Size = UDim2.fromOffset(214, n26) })
-
-				if n25 <= 0 and v18 then
-					tween.Completed:Connect(function()
-						if v18 and v21 == n26 then
-							v18.Visible = false
-						end
-					end)
-				end
-
-				tween:Play()
-			end
-
-			fn29 = function()
-				table.clear(tbl4)
-				v15 = nil
-				v16 = nil
-				v17 = nil
-				v18 = nil
-				v20 = nil
-				v21 = nil
-				v22 = nil
-				v19 = nil
-				str3 = ""
-
-				if screenGui3 then
-					pcall(function()
-						screenGui3:Destroy()
-					end)
-
-					screenGui3 = nil
-				end
-			end
-
-			local function fn34(arg, arg2)
-				local debris = Workspace:FindFirstChild("Debris")
-				if not debris or arg2 == "" then
-					return nil
-				end
-				local v26 = nil
-				local v27 = nil
-
-				for _, child in ipairs(debris:GetChildren()) do
-					if child.Name == "FastOverheadTemplate" and child:IsA("BasePart") then
-						local animalOverhead = child:FindFirstChild("AnimalOverhead")
-						local displayName = animalOverhead and animalOverhead:FindFirstChild("DisplayName")
-
-						if displayName and displayName:IsA("TextLabel") and displayName.Text == arg2 then
-							local magnitude = (child.Position - arg.Position).Magnitude
-
-							if not v26 or magnitude < v26 then
-								v26 = magnitude
-								v27 = animalOverhead
-							end
-						end
-					end
-				end
-
-				if v27 and v26 and v26 <= 14 then
-					return v27
-				end
-				return nil
-			end
-
-			local function fn35(arg, arg2, arg3)
-				if not (arg and arg2) or arg3 == "" then
-					return nil
-				end
-				local v26 = nil
-				local v27 = nil
-
-				for _, child in ipairs(arg:GetChildren()) do
-					if child:IsA("Model") and child.Name == arg3 then
-						local ok, result = pcall(function()
-							return child:GetPivot()
-						end)
-
-						if ok then
-							local magnitude = (result.Position - arg2.Position).Magnitude
-
-							if not v26 or magnitude < v26 then
-								v27 = child
-								v26 = magnitude
-							end
-						end
-					end
-				end
-
-				if v27 and v26 and v26 <= 14 then
-					return v27
-				end
-				return nil
-			end
-
-			local str4 = ""
-
-			local function fn36(arg, painted)
-				if arg.Painted == painted then
-					return
-				end
-				arg.Painted = painted
-				local v26 = ipairs
-				local tweens = arg.Tweens or {}
-
-				for _, tween in v26(tweens) do
-					pcall(function()
-						tween:Cancel()
-					end)
-				end
-
-				local tweens2 = {}
-				local tween = TweenService:Create(arg.Accent, tweenInfo, { Size = UDim2.new(0, painted and 3 or 0, 1, -12) })
-				local tween2 = TweenService:Create(arg.Stroke, tweenInfo, { Color = painted and color or Color3.fromRGB(255, 255, 255), Transparency = painted and 0.1 or 0.86 })
-				local v27 = TweenService
-				local create = v27.Create
-				local row = arg.Row
-				local tbl5 = { BackgroundTransparency = painted and 0.12 or 0.4 }
-				local v28 = table.pack(create(v27, row, tweenInfo, tbl5))
-				tweens2[1] = tween
-				tweens2[2] = tween2
-
-				do
-					local values = table.pack(table.unpack(v28, 1, v28.n))
-					table.move(values, 1, values.n, 3, tweens2)
-				end
-
-				arg.Tweens = tweens2
-
-				for _, tween3 in ipairs(arg.Tweens) do
-					tween3:Play()
-				end
-			end
-
-			local function fn37()
-				for _, v26 in ipairs(tbl4) do
-					fn36(v26, prompt2 ~= nil and v26.Prompt == prompt2)
-				end
-			end
-
-			local function fn38(layoutOrder)
-				local textButton = Instance.new("TextButton")
-				textButton.AutoButtonColor = false
-				textButton.BackgroundColor3 = Color3.fromRGB(30, 30, 36)
-				textButton.BackgroundTransparency = 0.3
-				textButton.BorderSizePixel = 0
-				textButton.LayoutOrder = layoutOrder
-				textButton.Size = UDim2.new(1, 0, 0, 40)
-				textButton.Text = ""
-				textButton.Parent = v16
-				Instance.new("UICorner", textButton).CornerRadius = UDim.new(0, 9)
-				local frame4 = Instance.new("Frame")
-				frame4.AnchorPoint = Vector2.new(0, 0.5)
-				frame4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				frame4.BorderSizePixel = 0
-				frame4.Position = UDim2.new(0, 0, 0.5, 0)
-				frame4.Size = UDim2.new(0, 0, 1, -12)
-				frame4.ZIndex = 4
-				frame4.Parent = textButton
-				Instance.new("UICorner", frame4).CornerRadius = UDim.new(1, 0)
-				local uiGradient = Instance.new("UIGradient")
-				local new = ColorSequenceKeypoint.new
-				local color2 = Color3.fromRGB
-				uiGradient.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.fromRGB(58, 255, 55)), new(1, color2(20, 109, 0)) })
-				uiGradient.Rotation = 90
-				uiGradient.Parent = frame4
-				local uiStroke = Instance.new("UIStroke")
-				uiStroke.Thickness = 1.3
-				uiStroke.Parent = textButton
-				local viewportFrame = Instance.new("ViewportFrame")
-				viewportFrame.Ambient = Color3.fromRGB(190, 190, 200)
-				viewportFrame.BackgroundColor3 = Color3.fromRGB(14, 14, 18)
-				viewportFrame.BackgroundTransparency = 0.25
-				viewportFrame.BorderSizePixel = 0
-				viewportFrame.LightColor = Color3.fromRGB(255, 255, 255)
-				viewportFrame.LightDirection = Vector3.new(-0.4, -0.7, -0.6)
-				viewportFrame.Position = UDim2.fromOffset(4, 3)
-				viewportFrame.Size = UDim2.fromOffset(n17 - 6, n17 - 6)
-				viewportFrame.Parent = textButton
-				Instance.new("UICorner", viewportFrame).CornerRadius = UDim.new(0, 8)
-				local camera = Instance.new("Camera")
-				camera.Parent = viewportFrame
-				viewportFrame.CurrentCamera = camera
-				local frame5 = Instance.new("Frame")
-				frame5.AnchorPoint = Vector2.new(1, 1)
-				frame5.BackgroundColor3 = Color3.fromRGB(10, 10, 13)
-				frame5.BackgroundTransparency = 0.15
-				frame5.BorderSizePixel = 0
-				frame5.Position = UDim2.fromOffset(n17 - 3, n17 - 3)
-				frame5.Size = UDim2.fromOffset(24, 13)
-				frame5.ZIndex = 4
-				frame5.Parent = textButton
-				Instance.new("UICorner", frame5).CornerRadius = UDim.new(0, 5)
-				local textLabel3 = Instance.new("TextLabel")
-				textLabel3.BackgroundTransparency = 1
-				textLabel3.Size = UDim2.fromScale(1, 1)
-				textLabel3.Text = ""
-				textLabel3.TextColor3 = Color3.fromRGB(255, 255, 255)
-				textLabel3.TextScaled = true
-				textLabel3.ZIndex = 5
-				fn30(textLabel3)
-				textLabel3.Parent = frame5
-				local uiStroke2 = Instance.new("UIStroke")
-				uiStroke2.Color = Color3.fromRGB(0, 0, 0)
-				uiStroke2.Thickness = 1.4
-				uiStroke2.Transparency = 0.25
-				uiStroke2.Parent = textLabel3
-				local textLabel4 = Instance.new("TextLabel")
-				textLabel4.BackgroundTransparency = 1
-				textLabel4.Position = UDim2.fromOffset(n17 + 2, 5)
-				textLabel4.Size = UDim2.new(1, -n17 - 10, 0, 13)
-				textLabel4.Text = ""
-				textLabel4.TextColor3 = Color3.fromRGB(238, 238, 242)
-				textLabel4.TextScaled = true
-				textLabel4.TextTruncate = Enum.TextTruncate.AtEnd
-				textLabel4.TextXAlignment = Enum.TextXAlignment.Left
-				fn30(textLabel4)
-				textLabel4.Parent = textButton
-				local v26 = chilliGithubFastManualDefaultsRu.CreateBrainrotNameStyle(textLabel4)
-				local textLabel5 = Instance.new("TextLabel")
-				textLabel5.BackgroundTransparency = 1
-				textLabel5.Position = UDim2.fromOffset(n17 + 2, 20)
-				textLabel5.Size = UDim2.fromOffset(62, 11)
-				textLabel5.Text = ""
-				textLabel5.TextColor3 = Color3.fromRGB(115, 255, 0)
-				textLabel5.TextScaled = true
-				textLabel5.TextXAlignment = Enum.TextXAlignment.Left
-				fn30(textLabel5)
-				textLabel5.Parent = textButton
-				local textLabel6 = Instance.new("TextLabel")
-				textLabel6.BackgroundTransparency = 1
-				textLabel6.Position = UDim2.fromOffset(n17 + 66, 20)
-				textLabel6.RichText = true
-				textLabel6.Size = UDim2.fromOffset(62, 11)
-				textLabel6.Text = ""
-				textLabel6.TextScaled = true
-				textLabel6.TextXAlignment = Enum.TextXAlignment.Left
-				fn30(textLabel6)
-				textLabel6.Parent = textButton
-				local frame6 = Instance.new("Frame")
-				frame6.AnchorPoint = Vector2.new(1, 0)
-				frame6.BackgroundTransparency = 1
-				frame6.Position = UDim2.new(1, -7, 0, 19)
-				frame6.Size = UDim2.fromOffset(44, 12)
-				frame6.Parent = textButton
-				local uiListLayout = Instance.new("UIListLayout")
-				uiListLayout.FillDirection = Enum.FillDirection.Horizontal
-				uiListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
-				uiListLayout.Padding = UDim.new(0, 2)
-				uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-				uiListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-				uiListLayout.Parent = frame6
-
-				local tbl5 = {
-					Row = textButton,
-					Accent = frame4,
-					Stroke = uiStroke,
-					Viewport = viewportFrame,
-					Camera = camera,
-					Rank = textLabel3,
-					NameLabel = textLabel4,
-					NameStyle = v26,
-					ValueLabel = textLabel5,
-					MutationLabel = textLabel6,
-					TraitHolder = frame6,
-					Prompt = nil,
-					RowKey = nil,
-					ModelKey = nil,
-					Clone = nil,
-					Track = nil,
-					SourceTrack = nil,
-					Painted = nil,
-					Tweens = nil,
-				}
-
-				fn5(textButton, function()
-					if not tbl5.Prompt then
-						return
-					end
-
-					if prompt2 == tbl5.Prompt then
-						prompt2 = nil
-						str4 = ""
-					else
-						prompt2 = tbl5.Prompt
-						str4 = tbl5.NameLabel.Text
-						fn27()
-					end
-
-					str3 = ""
-					fn37()
-				end)
-
-				return tbl5
-			end
-
-			local function fn39()
-				if screenGui3 and screenGui3.Parent then
-					return
-				end
-				screenGui3 = Instance.new("ScreenGui")
-				screenGui3.Name = "ChilliAutoGetTargetPanel"
-				screenGui3.DisplayOrder = 5
-				screenGui3.IgnoreGuiInset = true
-				screenGui3.ResetOnSpawn = false
-				screenGui3.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-				local parent = CoreGui
-
-				if type(gethui) == "function" then
-					local ok
-					ok, parent = pcall(gethui)
-					ok = ok and typeof(parent) == "Instance"
-					local v26 = CoreGui
-
-					if not ok then
-						parent = v26
-					end
-				end
-
-				screenGui3.Parent = parent
-				local frame4 = Instance.new("Frame")
-				frame4.Active = true
-				frame4.AnchorPoint = Vector2.new(1, 0)
-				frame4.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
-				frame4.BackgroundTransparency = 0.18
-				frame4.BorderSizePixel = 0
-				frame4.Position = fn31()
-				frame4.Size = UDim2.fromOffset(214, 44)
-				frame4.ClipsDescendants = true
-				frame4.Parent = screenGui3
-				Instance.new("UICorner", frame4).CornerRadius = UDim.new(0, 14)
-				v15 = frame4
-				local uiStroke = Instance.new("UIStroke")
-				uiStroke.Color = Color3.fromRGB(255, 255, 255)
-				uiStroke.Thickness = 1
-				uiStroke.Transparency = 0.9
-				uiStroke.Parent = frame4
-				local uiScale = Instance.new("UIScale")
-				uiScale.Parent = frame4
-
-				local function fn40()
-					local currentCamera = Workspace.CurrentCamera
-					local viewportSize = currentCamera and currentCamera.ViewportSize or Vector2.new(1280, 720)
-
-					if viewportSize.X < 1 then
-						viewportSize = Vector2.new(1280, 720)
-					end
-
-					uiScale.Scale = math.clamp(viewportSize.X * 0.15 / n16, 0.7, 1.3) * n20
-				end
-
-				v19 = fn40
-				fn40()
-				local currentCamera = Workspace.CurrentCamera
-
-				if currentCamera then
-					fn4(currentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(fn40))
-				end
-
-				local textButton = Instance.new("TextButton")
-				textButton.Name = "Handle"
-				textButton.Active = true
-				textButton.AutoButtonColor = false
-				textButton.BackgroundTransparency = 1
-				textButton.BorderSizePixel = 0
-				textButton.Position = UDim2.fromOffset(0, 0)
-				textButton.Size = UDim2.new(1, 0, 0, 44)
-				textButton.Text = ""
-				textButton.ZIndex = 2
-				textButton.Parent = frame4
-				local fn41 = nil
-				local flag11 = false
-				local flag12 = nil
-				local flag13 = false
-				local vector2 = Vector2.new(0, 0)
-				local vector22 = Vector2.new(0, 0)
-
-				textButton.InputBegan:Connect(function(input)
-					if flag11 or input.UserInputState ~= Enum.UserInputState.Begin then
-						return
-					end
-
-					if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then
-						return
-					end
-					local vector23 = Vector2.new(input.Position.X, input.Position.Y)
-					local absolutePosition = textButton.AbsolutePosition
-					local absoluteSize = textButton.AbsoluteSize
-					if vector23.X < absolutePosition.X or vector23.X > absolutePosition.X + absoluteSize.X or vector23.Y < absolutePosition.Y or vector23.Y > absolutePosition.Y + absoluteSize.Y then
-						return
-					end
-
-					for _, child in ipairs(textButton:GetChildren()) do
-						if child:IsA("GuiButton") and child.Visible then
-							local absolutePosition2 = child.AbsolutePosition
-							local absoluteSize2 = child.AbsoluteSize
-							if vector23.X >= absolutePosition2.X and vector23.X <= absolutePosition2.X + absoluteSize2.X and vector23.Y >= absolutePosition2.Y and vector23.Y <= absolutePosition2.Y + absoluteSize2.Y then
-								return
-							end
-						end
-					end
-
-					local absoluteSize2 = screenGui3.AbsoluteSize
-					if absoluteSize2.X <= 0 or absoluteSize2.Y <= 0 then
-						return
-					end
-					flag11 = true
-					flag13 = false
-					flag12 = input.UserInputType == Enum.UserInputType.Touch and input or nil
-					vector2 = Vector2.new(input.Position.X, input.Position.Y)
-					vector22 = Vector2.new(frame4.Position.X.Scale + frame4.Position.X.Offset / absoluteSize2.X, frame4.Position.Y.Scale + frame4.Position.Y.Offset / absoluteSize2.Y)
-				end)
-
-				fn4(UserInputService2.InputChanged:Connect(function(input)
-					if not flag11 then
-						return
-					end
-
-					if not (flag12 and input == flag12 or not flag12 and input.UserInputType == Enum.UserInputType.MouseMovement) or not v15 then
-						return
-					end
-					local absoluteSize = screenGui3.AbsoluteSize
-					if absoluteSize.X <= 0 or absoluteSize.Y <= 0 then
-						return
-					end
-					local n24 = Vector2.new(input.Position.X, input.Position.Y) - vector2
-					if not flag13 and n24.Magnitude < 6 then
-						return
-					end
-					flag13 = true
-					frame4.Position = UDim2.fromScale(math.clamp(vector22.X + n24.X / absoluteSize.X, math.min(math.max(frame4.AbsoluteSize.X / absoluteSize.X, 0), 0.998), 0.998), math.clamp(vector22.Y + n24.Y / absoluteSize.Y, 0, 0.98))
-				end))
-
-				fn4(UserInputService2.InputEnded:Connect(function(input)
-					if not flag11 then
-						return
-					end
-
-					if input.UserInputType == Enum.UserInputType.MouseButton1 or input == flag12 then
-						flag11 = false
-						flag12 = nil
-
-						if flag13 then
-							fn32(frame4.Position)
-						elseif fn41 then
-							fn41()
-						end
-					end
-				end))
-
-				local textLabel3 = Instance.new("TextLabel")
-				textLabel3.BackgroundTransparency = 1
-				textLabel3.Position = UDim2.fromOffset(32, 8)
-				textLabel3.Size = UDim2.fromOffset(n16 - 102, 14)
-				textLabel3.Text = "Base Targets"
-				textLabel3.TextColor3 = Color3.fromRGB(240, 240, 244)
-				textLabel3.TextScaled = true
-				textLabel3.TextXAlignment = Enum.TextXAlignment.Left
-				fn30(textLabel3)
-				textLabel3.Parent = textButton
-				local textLabel4 = Instance.new("TextLabel")
-				textLabel4.BackgroundTransparency = 1
-				textLabel4.Position = UDim2.fromOffset(32, 23)
-				textLabel4.Size = UDim2.fromOffset(n16 - 102, 10)
-				textLabel4.Text = "walk into a base"
-				textLabel4.TextColor3 = Color3.fromRGB(140, 140, 150)
-				textLabel4.TextScaled = true
-				textLabel4.TextXAlignment = Enum.TextXAlignment.Left
-				fn30(textLabel4)
-				textLabel4.Parent = textButton
-				v17 = textLabel4
-				local textButton2 = Instance.new("TextButton")
-				textButton2.AnchorPoint = Vector2.new(0, 0.5)
-				textButton2.AutoButtonColor = false
-				textButton2.BackgroundTransparency = 1
-				textButton2.BorderSizePixel = 0
-				textButton2.Position = UDim2.new(0, 8, 0, math.floor(n18 * 0.5))
-				textButton2.Size = UDim2.fromOffset(20, 20)
-				textButton2.Text = ""
-				textButton2.ZIndex = 6
-				textButton2.Parent = textButton
-				local frame5 = Instance.new("Frame")
-				frame5.AnchorPoint = Vector2.new(0.5, 0.5)
-				frame5.BackgroundTransparency = 1
-				frame5.BorderSizePixel = 0
-				frame5.Position = UDim2.fromScale(0.5, 0.5)
-				frame5.Size = UDim2.fromScale(0.62, 0.62)
-				frame5.Parent = textButton2
-				local uiAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
-				uiAspectRatioConstraint.AspectRatio = 1
-				uiAspectRatioConstraint.AspectType = Enum.AspectType.FitWithinMaxSize
-				uiAspectRatioConstraint.DominantAxis = Enum.DominantAxis.Height
-				uiAspectRatioConstraint.Parent = frame5
-
-				for _, v26 in ipairs({ { 0.335355, 45 }, { 0.664645, -45 } }) do
-					local frame6 = Instance.new("Frame")
-					frame6.AnchorPoint = Vector2.new(0.5, 0.5)
-					frame6.BackgroundColor3 = Color3.fromRGB(58, 255, 55)
-					frame6.BorderSizePixel = 0
-					frame6.Position = UDim2.fromScale(v26[1], 0.535355)
-					frame6.Rotation = v26[2]
-					frame6.Size = UDim2.fromScale(0.6657, 0.2)
-					frame6.Parent = frame5
-				end
-
-				v22 = frame5
-				frame5.Rotation = flag9 and 180 or 0
-
-				fn41 = function()
-					flag9 = not flag9
-					TweenService:Create(frame5, tweenInfo, { Rotation = flag9 and 180 or 0 }):Play()
-					fn33()
-				end
-
-				fn5(textButton2, fn41)
-				local textButton3 = Instance.new("TextButton")
-				textButton3.AnchorPoint = Vector2.new(1, 0)
-				textButton3.AutoButtonColor = false
-				textButton3.BackgroundColor3 = Color3.fromRGB(34, 34, 40)
-				textButton3.BackgroundTransparency = 0.2
-				textButton3.BorderSizePixel = 0
-				textButton3.Position = UDim2.new(1, -10, 0, 8)
-				textButton3.Size = UDim2.fromOffset(58, 20)
-				textButton3.Text = ""
-				textButton3.Parent = textButton
-				Instance.new("UICorner", textButton3).CornerRadius = UDim.new(1, 0)
-				local uiStroke2 = Instance.new("UIStroke")
-				uiStroke2.Color = Color3.fromRGB(255, 255, 255)
-				uiStroke2.Thickness = 1.2
-				uiStroke2.Transparency = 0.78
-				uiStroke2.Parent = textButton3
-				local textLabel5 = Instance.new("TextLabel")
-				textLabel5.BackgroundTransparency = 1
-				textLabel5.Position = UDim2.fromOffset(9, 5)
-				textLabel5.Size = UDim2.fromOffset(9, 10)
-				textLabel5.Text = "X"
-				textLabel5.TextColor3 = Color3.fromRGB(226, 226, 232)
-				textLabel5.TextScaled = true
-				fn30(textLabel5)
-				textLabel5.Parent = textButton3
-				local textLabel6 = Instance.new("TextLabel")
-				textLabel6.BackgroundTransparency = 1
-				textLabel6.Position = UDim2.fromOffset(21, 5)
-				textLabel6.Size = UDim2.fromOffset(30, 10)
-				textLabel6.Text = "Clear"
-				textLabel6.TextColor3 = Color3.fromRGB(226, 226, 232)
-				textLabel6.TextScaled = true
-				textLabel6.TextXAlignment = Enum.TextXAlignment.Left
-				fn30(textLabel6)
-				textLabel6.Parent = textButton3
-
-				local function fn42(arg)
-					local color2 = arg and Color3.fromRGB(255, 150, 150) or Color3.fromRGB(226, 226, 232)
-					TweenService:Create(textButton3, tweenInfo, { BackgroundTransparency = arg and 0.05 or 0.2 }):Play()
-
-					TweenService:Create(uiStroke2, tweenInfo, {
-						Color = arg and Color3.fromRGB(255, 120, 120) or Color3.fromRGB(255, 255, 255),
-						Transparency = arg and 0.25 or 0.78,
-					}):Play()
-
-					TweenService:Create(textLabel5, tweenInfo, { TextColor3 = color2 }):Play()
-					TweenService:Create(textLabel6, tweenInfo, { TextColor3 = color2 }):Play()
-				end
-
-				textButton3.MouseEnter:Connect(function()
-					fn42(true)
-				end)
-
-				textButton3.MouseLeave:Connect(function()
-					fn42(false)
-				end)
-
-				fn5(textButton3, function()
-					prompt2 = nil
-					str4 = ""
-					str3 = ""
-					fn37()
-				end)
-
-				local frame6 = Instance.new("Frame")
-				frame6.BackgroundTransparency = 1
-				frame6.Position = UDim2.fromOffset(10, 40)
-				frame6.Size = UDim2.new(1, -20, 0, (n17 + 4) * (n14 + 1))
-				frame6.Parent = frame4
-				local uiListLayout = Instance.new("UIListLayout")
-				uiListLayout.FillDirection = Enum.FillDirection.Vertical
-				uiListLayout.Padding = UDim.new(0, 4)
-				uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-				uiListLayout.Parent = frame6
-				v16 = frame6
-				v18 = frame6
-				local textLabel7 = Instance.new("TextLabel")
-				textLabel7.BackgroundTransparency = 1
-				textLabel7.LayoutOrder = 99
-				textLabel7.Size = UDim2.new(1, 0, 0, 22)
-				textLabel7.Text = ""
-				textLabel7.TextColor3 = Color3.fromRGB(140, 140, 150)
-				textLabel7.TextScaled = true
-				textLabel7.Visible = false
-				fn30(textLabel7)
-				textLabel7.Parent = frame6
-				v20 = textLabel7
-				table.clear(tbl4)
-
-				for i_ = 1, n14 + 1 do
-					tbl4[i_] = fn38(i_)
-				end
-			end
-
-			local function fn40(arg, arg2, arg3, arg4, arg5)
-				local modelKey = tostring(arg5) .. "|" .. arg4
-				if arg.ModelKey == modelKey and arg.Clone and arg.Clone.Parent then
-					return
-				end
-
-				for _, child in ipairs(arg.Viewport:GetChildren()) do
-					if not child:IsA("Camera") then
-						child:Destroy()
-					end
-				end
-
-				arg.Clone = nil
-				arg.Track = nil
-				arg.SourceTrack = nil
-				if arg4 == "" then
-					arg.ModelKey = modelKey
-					return
-				end
-				local v26 = fn35(arg2, arg3, arg4)
-				if not v26 then
-					arg.ModelKey = nil
-					return
-				end
-				arg.ModelKey = modelKey
-
-				local ok, clone = pcall(function()
-					return v26:Clone()
-				end)
-
-				if not ok or not clone then
-					arg.ModelKey = nil
-					return
-				end
-
-				for _, descendant in ipairs(clone:GetDescendants()) do
-					if descendant:IsA("ParticleEmitter") or descendant:IsA("Beam") or descendant:IsA("Trail") or descendant:IsA("Light") or descendant:IsA("Sound") or descendant:IsA("Script") or descendant:IsA("LocalScript") then
-						descendant:Destroy()
-					end
-				end
-
-				local worldModel = Instance.new("WorldModel")
-				worldModel.Parent = arg.Viewport
-				clone.Parent = worldModel
-
-				pcall(function()
-					clone:PivotTo(CFrame.new())
-				end…
+    local SetupLoadingScreenOverlay = function()
+        local F=typeof(getgenv)=="function"and getgenv()or _G;
+        F.ChilliCanvasHold=true;
+        local O=game:GetService("CoreGui");
+        pcall(function()
+            local I=gethui();
+            local d=typeof(I)=="Instance";
+            if d then O=I;
+            end;
+        end);
+        local I=O:FindFirstChild("ChilliHubLoading");
+        if I then I:Destroy();
+        end;
+        local d=Instance.new("ScreenGui");
+        d.Name="ChilliHubLoading";
+        d.ResetOnSpawn=false;
+        d.IgnoreGuiInset=true;
+        d.DisplayOrder=1000;
+        d.ZIndexBehavior=Enum.ZIndexBehavior.Sibling;
+        I=Instance.new("Frame");
+        I.AnchorPoint=Vector2.new(0.5,0);
+        I.Position=UDim2.new(0.5,0,0,24);
+        I.Size=UDim2.fromOffset(260,64);
+        I.BackgroundColor3=Color3.fromRGB(18,18,22);
+        I.BackgroundTransparency=0.05;
+        I.Parent=d;
+        Instance.new("UICorner",I).CornerRadius=UDim.new(0,10);
+        local o=Instance.new("UIStroke",I);
+        o.Color=Color3.fromRGB(255,60,60);
+        o.Thickness=1.5;
+        o.Transparency=0.2;
+        o=Instance.new("TextLabel");
+        o.BackgroundTransparency=1;
+        o.Position=UDim2.fromOffset(12,8);
+        o.Size=UDim2.new(1,-24,0,18);
+        o.Font=Enum.Font.GothamBold;
+        o.TextSize=15;
+        o.TextColor3=Color3.fromRGB(255,255,255);
+        o.TextXAlignment=Enum.TextXAlignment.Left;
+        o.Text="Chilli Hub";
+        o.Parent=I;
+        local N=Instance.new("TextLabel");
+        N.BackgroundTransparency=1;
+        N.Position=UDim2.fromOffset(12,8);
+        N.Size=UDim2.new(1,-24,0,18);
+        N.Font=Enum.Font.GothamBold;
+        N.TextSize=15;
+        N.TextColor3=Color3.fromRGB(255,120,90);
+        N.TextXAlignment=Enum.TextXAlignment.Right;
+        N.Text="0%";
+        N.Parent=I;
+        local t=Instance.new("TextLabel");
+        t.BackgroundTransparency=1;
+        t.Position=UDim2.fromOffset(12,27);
+        t.Size=UDim2.new(1,-24,0,14);
+        t.Font=Enum.Font.GothamMedium;
+        t.TextSize=12;
+        t.TextColor3=Color3.fromRGB(170,170,185);
+        t.TextXAlignment=Enum.TextXAlignment.Left;
+        t.Text="Loading part 1 / 10";
+        t.Parent=I;
+        o=Instance.new("Frame");
+        o.Position=UDim2.fromOffset(12,46);
+        o.Size=UDim2.new(1,-24,0,8);
+        o.BackgroundColor3=Color3.fromRGB(42,42,50);
+        o.Parent=I;
+        Instance.new("UICorner",o).CornerRadius=UDim.new(1,0);
+        local I=Instance.new("Frame");
+        I.Size=UDim2.new(0,0,1,0);
+        I.BackgroundColor3=Color3.fromRGB(255,255,255);
+        I.Parent=o;
+        Instance.new("UICorner",I).CornerRadius=UDim.new(1,0);
+        Instance.new("UIGradient",I).Color=ColorSequence.new(Color3.fromRGB(255,50,50),Color3.fromRGB(255,150,60));
+        d.Parent=O;
+        local O,o="ChilliLibrary/SAE_LoadProgress.txt";
+        pcall(function()
+            local i=isfile(O);
+            if i then o=tonumber(string.match(readfile(O),"^(%d+)"));
+            end;
+        end);
+        local function i(k)pcall(function()
+            if not(isfolder("ChilliLibrary"))then makefolder("ChilliLibrary");
+            end;
+            writefile(O,tostring(k).." "..tostring(os.time()));
+        end);
+    end;
+    i(0);
+    F.ChilliHubLoading=os.clock()+30;
+    F.ChilliHubLoadStep=function(O)
+        local k=math.clamp(math.floor(tonumber(O)or 0),0,10);
+        i(k);
+        pcall(function()
+            I.Size=UDim2.new(k/10,0,1,0);
+            N.Text=tostring(k*10).."%";
+            t.Text=k>=10 and"Loaded"or"Loading part "..tostring(k+1).." / 10";
+        end);
+        task.wait(0.05);
+        local O=k>=10;
+        if O then F.ChilliHubLoadStep=nil;
+            F.ChilliCanvasHold=nil;
+            F.ChilliHubLoading=nil;
+            local F=o and o<10;
+            if F then pcall(function()
+                t.Text="Last load stopped at "..tostring(o*10).."% (part "..tostring(o+1).." / 10)";
+                t.TextColor3=Color3.fromRGB(255,170,90);
+            end);
+            task.delay(8,function()
+                pcall(function()
+                    d:Destroy();
+                end);
+            end);
+        else pcall(function()
+            d:Destroy();
+        end);
+    end;
+end;
+end;
+end
+SetupLoadingScreenOverlay()
+local LogBootstrapWarning = function(F)
+    local O=typeof(getgenv)=="function"and getgenv()or _G;
+    if type(O.ChilliDebugPrint)=="function"then pcall(O.ChilliDebugPrint,F);
+    end;
+end
+task.spawn(pcall, function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/refs/heads/main/DiscordLink"))();
+end)
+local LoadChilliLibrary = function()
+    local loc_2 = function()
+        local tmp_2 = function(O,I)
+            local d={};
+            d[20]={};
+            (function(O, I, ...) local d = table.pack(...);
+                table.move(d, 1, d.n, I + 1, O) end) (d[20],0,game:GetService("Players").LocalPlayer);
+                d[21]=(game:GetService("CoreGui"));
+                (function(O, I, ...) local d = table.pack(...);
+                    table.move(d, 1, d.n, I + 1, O) end) (d[20],1,d[21]);
+                    (function(F, O, I) for d = 1, I.n, 1 do F[O + d] = I[d] end;
+                    F.n = O + I.n end) (d[20],2, table.pack (game:GetService("UserInputService")));
+                    d[1],d[2],d[3]=d[20][1],d[20][2],d[20][3];
+                    d[22]={};
+                    (function(F, O, I) for d = 1, I.n, 1 do F[O + d] = I[d] end;
+                    F.n = O + I.n end) (d[22],0, table.pack (game:GetService("TweenService")));
+                    d[4]=d[22][1];
+                    d[23]={};
+                    (function(F, O, I) for d = 1, I.n, 1 do F[O + d] = I[d] end;
+                    F.n = O + I.n end) (d[23],0, table.pack (game:GetService("RunService")));
+                    d[5]=d[23][1];
+                    d[24]={};
+                    (function(O, I, ...) local d = table.pack(...);
+                        table.move(d, 1, d.n, I + 1, O) end) (d[24],0,workspace.CurrentCamera);
+                        d[24].n=1;
+                        d[6]=d[24][1];
+                        assert(d[1],"ChilliLibrary chi co the chay mot lan o phia client");
+                        d[25]={};
+                        (function(F, O, I) for d = 1, I.n, 1 do F[O + d] = I[d] end;
+                        F.n = O + I.n end) (d[25],0, table.pack (d[1]:WaitForChild("PlayerGui")));
+                        d[7]=d[25][1];
+                        d[26]={};
+                        d[27]=type(I)=="table"and I or{};
+                        (function(O, I, ...) local d = table.pack(...);
+                            table.move(d, 1, d.n, I + 1, O) end) (d[26],0,d[27]);
+                            d[26].n=1;
+                            d[8]=d[26][1];
+                            d[8].N=nil;
+                            if type(d[8].Namespace)=="string"then d[1]=(string.gsub(d[8].Namespace,"[^%w_]",""));
+                                if d[1]~=""then d[8].N=d[1];
+                                end;
+                            end;
+                            d[8].C=nil;
+                            if type(d[8].ConfigFolder)=="string"then if d[8].ConfigFolder~=""then if not(string.find(d[8].ConfigFolder,"..",1,true))then d[28]=d[8].ConfigFolder;
+                                d[8].C=d[28];
+                            end;
+                        end;
+                    end;
+                    d[8].T="Chilli Hub";
+                    if type(d[8].Title)=="string"then if d[8].Title~=""then d[29]=d[8].Title;
+                        d[8].T=d[29];
+                    end;
+                end;
+                d[30]={};
+                d[31]=d[8].N and"ChilliUI_"..d[8].N or"Settings";
+                (function(O, I, ...) local d = table.pack(...);
+                    table.move(d, 1, d.n, I + 1, O) end) (d[30],0,d[31]);
+                    d[32]=d[8].N and"ChilliLeft_"..d[8].N or"ChilliLeftCenter";
+                    (function(O, I, ...) local d = table.pack(...);
+                        table.move(d, 1, d.n, I + 1, O) end) (d[30],1,d[32]);
+                        d[33]=d[8].N and"ChilliLibraryOwned_"..d[8].N or"ChilliLibraryOwned";
+                        (function(O, I, ...) local d = table.pack(...);
+                            table.move(d, 1, d.n, I + 1, O) end) (d[30],2,d[33],"CoreGui");
+                            d[30].n=4;
+                            d[9],d[10],d[11],d[12]=d[30][1],d[30][2],d[30][3],d[30][4];
+                            d[34]={};
+                            (function(F, O, I) for d = 1, I.n, 1 do F[O + d] = I[d] end;
+                            F.n = O + I.n end) (d[34],0, table.pack (pcall(function()
+                            return gethui();
+                        end)));
+                        d[13],d[14]=d[34][1],d[34][2];
+                        if d[13]and typeof(d[14])=="Instance"then d[15]=d[14];
+                            d[12]="HiddenUI";
+                        else d[15]=d[2];
+                        end;
+                        d[35]= table.pack (pcall(function()
+                            local I={};
+                            local o=Instance.new("ScreenGui");
+                            o.Name="ChilliLibraryUIProbe";
+                            I[1]=d[15];
+                            o.Parent=I[1];
+                            o:Destroy();
+                        end));
+                        d[14]=d[35][1];
+                        d[1]=d[35][2];
+                        if not d[14]then error("ChilliLibrary requires write access to "..d[12].."; PlayerGui fallback is disabled: "..tostring(d[1]),0);
+                        end;
+                        d[16]=function()
+                            local I=Instance.new("MeshPart");
+                            I.Name="Spider";
+                            I.Archivable=true;
+                            I.Anchored=true;
+                            I.BackSurface=Enum.SurfaceType.Smooth;
+                            I.BottomSurface=Enum.SurfaceType.Smooth;
+                            I.BrickColor=BrickColor.new("Institutional white");
+                            I.CanCollide=false;
+                            I.CanQuery=false;
+                            I.CanTouch=false;
+                            I.CastShadow=true;
+                            I.Color=Color3.new(1,1,1);
+                            I.FrontSurface=Enum.SurfaceType.Smooth;
+                            I.LeftSurface=Enum.SurfaceType.Smooth;
+                            I.Massless=true;
+                            I.Material=Enum.Material.Plastic;
+                            I.Reflectance=0;
+                            I.RightSurface=Enum.SurfaceType.Smooth;
+                            I.RootPriority=-5;
+                            I.Size=Vector3.new(0.9052265286445618,0.24434703588485718,0.9125359058380127);
+                            I.TopSurface=Enum.SurfaceType.Smooth;
+                            I.Transparency=0;
+                            I.MeshId="rbxassetid://135715081992798";
+                            I.TextureID="";
+                            I.DoubleSided=false;
+                            I.RenderFidelity=Enum.RenderFidelity.Automatic;
+                            I.CollisionFidelity=Enum.CollisionFidelity.Box;
+                            I.CFrame=CFrame.new();
+                            local o=Instance.new("Attachment");
+                            o.Name="HeadAttachment";
+                            o.CFrame=CFrame.new(0.72625732421875,-0.504150390625,0.3289794921875,0.7071012258529663,-0.7068588733673096,-0.01893438585102558,-1.1771917343139648E-5,0.026765286922454834,-0.9996418952941895,0.7071123719215393,0.70684814453125,0.018917446956038475);
+                            o.Parent=I;
+                            return I;
+                        end;
+                        d[36]={};
+                        d[37]={};
+                        d[37][d[9]]=true;
+                        d[37][d[10]]=true;
+                        (function(O, I, ...) local d = table.pack(...);
+                            table.move(d, 1, d.n, I + 1, O) end) (d[36],0,d[37]);
+                            d[36].n=1;
+                            d[17]=d[36][1];
+                            if not(d[8].N)then d[17].ChilliLibrarySettings=true;
+                                d[17].ChilliLibraryLauncher=true;
+                            end;
+                            (function(I,o)
+                                for N,t in ipairs(d[15]:GetChildren())do if t~=I and t~=o and t:IsA("ScreenGui")and d[17][t.Name]then local I,o,i=t:GetAttribute("HudRestorePosition"),t:GetAttribute("LeftCenterHiddenByLibrary")==true,t:GetAttribute("LeftCenterScreenDisabledByLibrary")==true;
+                                    if typeof(I)=="UDim2"or o or i then N=(d[7]:FindFirstChild("LeftCenter"));
+                                        local k=N and(N:FindFirstChild("LeftCenter"));
+                                        if k then if typeof(I)=="UDim2"then while I.X.Scale<=-0.5 do I=UDim2.new(I.X.Scale+1,I.X.Offset,I.Y.Scale,I.Y.Offset);
+                                        end;
+                                        k.Position=I;
+                                    end;
+                                    if o then k.Visible=true;
+                                    end;
+                                end;
+                                if i then if N then if N:IsA("ScreenGui")then N.Enabled=true;
+                                end;
+                            end;
+                        end;
+                    end;
+                    t:Destroy();
+                end;
+            end;
+        end)();
+        d[18]=function(I,o,N)
+            I[o]=N;
+        end;
+        d[38]={};
+        d[39]={obj1=Instance.new("ScreenGui")};
+        (function(O, I, ...) local d = table.pack(...);
+            table.move(d, 1, d.n, I + 1, O) end) (d[38],0,d[39]);
+            d[38].n=1;
+            d[19]=d[38][1];
+            pcall(d[18],d[19].obj1,"Name",d[9]);
+            pcall(d[18],d[19].obj1,"Archivable",true);
+            d[19].obj1:SetAttribute("MenuSize",UDim2.new(0.44999998807907104,0,0.550000011920929,0));
+            d[19].obj1:SetAttribute(d[11],true);
+            if d[8].N then d[19].obj1:SetAttribute("ChilliNamespace",d[8].N);
+            end;
+            d[40]=d[19].obj1;
+            d[40].Parent=d[15];
+            d[41]=(Instance.new("Frame"));
+            d[19].obj2=d[41];
+            pcall(d[18],d[19].obj2,"Name","Frame");
+            pcall(d[18],d[19].obj2,"Archivable",true);
+            pcall(d[18],d[19].obj2,"Visible",true);
+            pcall(d[18],d[19].obj2,"Active",false);
+            pcall(d[18],d[19].obj2,"AnchorPoint",Vector2.new(0.5,0.5));
+            pcall(d[18],d[19].obj2,"BackgroundColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj2,"BackgroundTransparency",0.4000000059604645);
+            pcall(d[18],d[19].obj2,"BorderColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj2,"BorderSizePixel",0);
+            pcall(d[18],d[19].obj2,"ClipsDescendants",false);
+            pcall(d[18],d[19].obj2,"Position",UDim2.new(0.5,0,0.4749999940395355,0));
+            pcall(d[18],d[19].obj2,"Rotation",0);
+            pcall(d[18],d[19].obj2,"Selectable",false);
+            pcall(d[18],d[19].obj2,"SelectionOrder",0);
+            pcall(d[18],d[19].obj2,"Size",UDim2.new(0.44999998807907104,0,0.550000011920929,0));
+            pcall(d[18],d[19].obj2,"SizeConstraint",Enum.SizeConstraint.RelativeXY);
+            pcall(d[18],d[19].obj2,"ZIndex",1);
+            pcall(d[18],d[19].obj2,"AutomaticSize",Enum.AutomaticSize.None);
+            pcall(d[18],d[19].obj2,"LayoutOrder",0);
+            d[42]=d[19].obj2;
+            d[43]=d[19].obj1;
+            d[42].Parent=d[43];
+            d[44]=(Instance.new("UIStroke"));
+            d[19].obj3=d[44];
+            pcall(d[18],d[19].obj3,"Name","UIStroke");
+            pcall(d[18],d[19].obj3,"Archivable",true);
+            pcall(d[18],d[19].obj3,"ApplyStrokeMode",Enum.ApplyStrokeMode.Border);
+            pcall(d[18],d[19].obj3,"Color",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj3,"Enabled",true);
+            pcall(d[18],d[19].obj3,"LineJoinMode",Enum.LineJoinMode.Round);
+            pcall(d[18],d[19].obj3,"Thickness",0.00800000037997961);
+            pcall(d[18],d[19].obj3,"Transparency",0);
+            d[45]=d[19].obj3;
+            d[46]=d[19].obj2;
+            d[45].Parent=d[46];
+            d[47]=(Instance.new("Frame"));
+            d[19].obj4=d[47];
+            pcall(d[18],d[19].obj4,"Name","Top");
+            pcall(d[18],d[19].obj4,"Archivable",true);
+            pcall(d[18],d[19].obj4,"Visible",true);
+            pcall(d[18],d[19].obj4,"Active",false);
+            pcall(d[18],d[19].obj4,"AnchorPoint",Vector2.new(0.5,0));
+            pcall(d[18],d[19].obj4,"BackgroundColor3",Color3.fromRGB(111,0,2));
+            pcall(d[18],d[19].obj4,"BackgroundTransparency",0);
+            pcall(d[18],d[19].obj4,"BorderColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj4,"BorderSizePixel",0);
+            pcall(d[18],d[19].obj4,"ClipsDescendants",false);
+            pcall(d[18],d[19].obj4,"Position",UDim2.new(0.5,0,0,0));
+            pcall(d[18],d[19].obj4,"Rotation",0);
+            pcall(d[18],d[19].obj4,"Selectable",false);
+            pcall(d[18],d[19].obj4,"SelectionOrder",0);
+            pcall(d[18],d[19].obj4,"Size",UDim2.new(1,0,0.13500000536441803,0));
+            pcall(d[18],d[19].obj4,"SizeConstraint",Enum.SizeConstraint.RelativeXY);
+            pcall(d[18],d[19].obj4,"ZIndex",1);
+            pcall(d[18],d[19].obj4,"AutomaticSize",Enum.AutomaticSize.None);
+            pcall(d[18],d[19].obj4,"LayoutOrder",0);
+            d[48]=d[19].obj4;
+            d[49]=d[19].obj2;
+            d[48].Parent=d[49];
+            d[50]=(Instance.new("UIStroke"));
+            d[19].obj5=d[50];
+            pcall(d[18],d[19].obj5,"Name","UIStroke");
+            pcall(d[18],d[19].obj5,"Archivable",true);
+            pcall(d[18],d[19].obj5,"ApplyStrokeMode",Enum.ApplyStrokeMode.Border);
+            pcall(d[18],d[19].obj5,"Color",Color3.fromRGB(58,0,0));
+            pcall(d[18],d[19].obj5,"Enabled",true);
+            pcall(d[18],d[19].obj5,"LineJoinMode",Enum.LineJoinMode.Round);
+            pcall(d[18],d[19].obj5,"Thickness",0.05999999865889549);
+            pcall(d[18],d[19].obj5,"Transparency",0);
+            d[51]=d[19].obj5;
+            d[52]=d[19].obj4;
+            d[51].Parent=d[52];
+            d[53]=(Instance.new("Frame"));
+            d[19].obj6=d[53];
+            pcall(d[18],d[19].obj6,"Name","Color");
+            pcall(d[18],d[19].obj6,"Archivable",true);
+            pcall(d[18],d[19].obj6,"Visible",true);
+            pcall(d[18],d[19].obj6,"Active",false);
+            pcall(d[18],d[19].obj6,"AnchorPoint",Vector2.new(0.5,0));
+            pcall(d[18],d[19].obj6,"BackgroundColor3",Color3.fromRGB(255,255,255));
+            pcall(d[18],d[19].obj6,"BackgroundTransparency",0);
+            pcall(d[18],d[19].obj6,"BorderColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj6,"BorderSizePixel",0);
+            pcall(d[18],d[19].obj6,"ClipsDescendants",false);
+            pcall(d[18],d[19].obj6,"Position",UDim2.new(0.5,0,0,0));
+            pcall(d[18],d[19].obj6,"Rotation",0);
+            pcall(d[18],d[19].obj6,"Selectable",false);
+            pcall(d[18],d[19].obj6,"SelectionOrder",0);
+            pcall(d[18],d[19].obj6,"Size",UDim2.new(1,0,0.8799999952316284,0));
+            pcall(d[18],d[19].obj6,"SizeConstraint",Enum.SizeConstraint.RelativeXY);
+            pcall(d[18],d[19].obj6,"ZIndex",1);
+            pcall(d[18],d[19].obj6,"AutomaticSize",Enum.AutomaticSize.None);
+            pcall(d[18],d[19].obj6,"LayoutOrder",0);
+            d[54]=d[19].obj6;
+            d[55]=d[19].obj4;
+            d[54].Parent=d[55];
+            d[56]=(Instance.new("Frame"));
+            d[19].obj7=d[56];
+            pcall(d[18],d[19].obj7,"Name","Transparent");
+            pcall(d[18],d[19].obj7,"Archivable",true);
+            pcall(d[18],d[19].obj7,"Visible",true);
+            pcall(d[18],d[19].obj7,"Active",false);
+            pcall(d[18],d[19].obj7,"AnchorPoint",Vector2.new(0.5,0.5));
+            pcall(d[18],d[19].obj7,"BackgroundColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj7,"BackgroundTransparency",0.8999999761581421);
+            pcall(d[18],d[19].obj7,"BorderColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj7,"BorderSizePixel",0);
+            pcall(d[18],d[19].obj7,"ClipsDescendants",false);
+            pcall(d[18],d[19].obj7,"Position",UDim2.new(0.5,0,0.5,0));
+            pcall(d[18],d[19].obj7,"Rotation",0);
+            pcall(d[18],d[19].obj7,"Selectable",false);
+            pcall(d[18],d[19].obj7,"SelectionOrder",0);
+            pcall(d[18],d[19].obj7,"Size",UDim2.new(0.9879999756813049,0,0.8700000047683716,0));
+            pcall(d[18],d[19].obj7,"SizeConstraint",Enum.SizeConstraint.RelativeXY);
+            pcall(d[18],d[19].obj7,"ZIndex",1);
+            pcall(d[18],d[19].obj7,"AutomaticSize",Enum.AutomaticSize.None);
+            pcall(d[18],d[19].obj7,"LayoutOrder",0);
+            d[57]=d[19].obj7;
+            d[58]=d[19].obj6;
+            d[57].Parent=d[58];
+            d[59]=(Instance.new("ImageLabel"));
+            d[19].obj8=d[59];
+            pcall(d[18],d[19].obj8,"Name","Pattern");
+            pcall(d[18],d[19].obj8,"Archivable",true);
+            pcall(d[18],d[19].obj8,"Visible",true);
+            pcall(d[18],d[19].obj8,"Active",false);
+            pcall(d[18],d[19].obj8,"AnchorPoint",Vector2.new(0.5,0.5));
+            pcall(d[18],d[19].obj8,"BackgroundColor3",Color3.fromRGB(255,255,255));
+            pcall(d[18],d[19].obj8,"BackgroundTransparency",1);
+            pcall(d[18],d[19].obj8,"BorderColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj8,"BorderSizePixel",0);
+            pcall(d[18],d[19].obj8,"ClipsDescendants",false);
+            pcall(d[18],d[19].obj8,"Position",UDim2.new(0.5,0,0.5,0));
+            pcall(d[18],d[19].obj8,"Rotation",0);
+            pcall(d[18],d[19].obj8,"Selectable",false);
+            pcall(d[18],d[19].obj8,"SelectionOrder",0);
+            pcall(d[18],d[19].obj8,"Size",UDim2.new(1,0,1,0));
+            pcall(d[18],d[19].obj8,"SizeConstraint",Enum.SizeConstraint.RelativeXY);
+            pcall(d[18],d[19].obj8,"ZIndex",1);
+            pcall(d[18],d[19].obj8,"AutomaticSize",Enum.AutomaticSize.None);
+            pcall(d[18],d[19].obj8,"LayoutOrder",0);
+            pcall(d[18],d[19].obj8,"Image","");
+            pcall(d[18],d[19].obj8,"ImageColor3",Color3.fromRGB(255,255,255));
+            pcall(d[18],d[19].obj8,"ImageTransparency",0.5);
+            pcall(d[18],d[19].obj8,"ScaleType",Enum.ScaleType.Tile);
+            pcall(d[18],d[19].obj8,"SliceCenter",Rect.new(0,0,0,0));
+            pcall(d[18],d[19].obj8,"SliceScale",1);
+            pcall(d[18],d[19].obj8,"TileSize",UDim2.new(0.15000000596046448,0,2,0));
+            pcall(d[18],d[19].obj8,"ResampleMode",Enum.ResamplerMode.Default);
+            d[60]=d[19].obj8;
+            d[61]=d[19].obj7;
+            d[60].Parent=d[61];
+            d[62]=(Instance.new("TextLabel"));
+            d[19].obj9=d[62];
+            pcall(d[18],d[19].obj9,"Name","Label");
+            pcall(d[18],d[19].obj9,"Archivable",true);
+            pcall(d[18],d[19].obj9,"Visible",true);
+            pcall(d[18],d[19].obj9,"Active",false);
+            pcall(d[18],d[19].obj9,"AnchorPoint",Vector2.new(0.5,0.5));
+            pcall(d[18],d[19].obj9,"BackgroundColor3",Color3.fromRGB(239,220,203));
+            pcall(d[18],d[19].obj9,"BackgroundTransparency",1);
+            pcall(d[18],d[19].obj9,"BorderColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj9,"BorderSizePixel",0);
+            pcall(d[18],d[19].obj9,"ClipsDescendants",false);
+            pcall(d[18],d[19].obj9,"Position",UDim2.new(0.5687711238861084,0,0.5,0));
+            pcall(d[18],d[19].obj9,"Rotation",0);
+            pcall(d[18],d[19].obj9,"Selectable",false);
+            pcall(d[18],d[19].obj9,"SelectionOrder",0);
+            pcall(d[18],d[19].obj9,"Size",UDim2.new(0.8620089292526245,0,0.7499999403953552,0));
+            pcall(d[18],d[19].obj9,"SizeConstraint",Enum.SizeConstraint.RelativeXY);
+            pcall(d[18],d[19].obj9,"ZIndex",6);
+            pcall(d[18],d[19].obj9,"AutomaticSize",Enum.AutomaticSize.None);
+            pcall(d[18],d[19].obj9,"LayoutOrder",0);
+            pcall(d[18],d[19].obj9,"Text",d[8].T);
+            pcall(d[18],d[19].obj9,"TextColor3",Color3.fromRGB(255,255,255));
+            pcall(d[18],d[19].obj9,"TextTransparency",0);
+            pcall(d[18],d[19].obj9,"TextStrokeColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj9,"TextStrokeTransparency",1);
+            pcall(d[18],d[19].obj9,"TextSize",14);
+            pcall(d[18],d[19].obj9,"TextScaled",true);
+            pcall(d[18],d[19].obj9,"TextWrapped",true);
+            pcall(d[18],d[19].obj9,"TextXAlignment",Enum.TextXAlignment.Left);
+            pcall(d[18],d[19].obj9,"TextYAlignment",Enum.TextYAlignment.Center);
+            pcall(d[18],d[19].obj9,"Font",Enum.Font.FredokaOne);
+            pcall(d[18],d[19].obj9,"RichText",false);
+            pcall(d[18],d[19].obj9,"LineHeight",1);
+            pcall(d[18],d[19].obj9,"MaxVisibleGraphemes",-1);
+            d[63]=d[19].obj9;
+            d[64]=d[19].obj6;
+            d[63].Parent=d[64];
+            d[65]=(Instance.new("UIStroke"));
+            d[19].obj10=d[65];
+            pcall(d[18],d[19].obj10,"Name","UIStroke");
+            pcall(d[18],d[19].obj10,"Archivable",true);
+            pcall(d[18],d[19].obj10,"ApplyStrokeMode",Enum.ApplyStrokeMode.Contextual);
+            pcall(d[18],d[19].obj10,"Color",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj10,"Enabled",true);
+            pcall(d[18],d[19].obj10,"LineJoinMode",Enum.LineJoinMode.Round);
+            pcall(d[18],d[19].obj10,"Thickness",0.07999999821186066);
+            pcall(d[18],d[19].obj10,"Transparency",0);
+            d[66]=d[19].obj10;
+            d[67]=d[19].obj9;
+            d[66].Parent=d[67];
+            d[68]=(Instance.new("UIGradient"));
+            d[19].obj11=d[68];
+            pcall(d[18],d[19].obj11,"Name","UIGradient");
+            pcall(d[18],d[19].obj11,"Archivable",true);
+            pcall(d[18],d[19].obj11,"Color",ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(253,86,89)),ColorSequenceKeypoint.new(1,Color3.fromRGB(255,11,15))}));
+            pcall(d[18],d[19].obj11,"Enabled",true);
+            pcall(d[18],d[19].obj11,"Offset",Vector2.new(0,0));
+            pcall(d[18],d[19].obj11,"Rotation",90);
+            pcall(d[18],d[19].obj11,"Transparency",NumberSequence.new({NumberSequenceKeypoint.new(0,0,0),NumberSequenceKeypoint.new(1,0,0)}));
+            d[69]=d[19].obj11;
+            d[70]=d[19].obj6;
+            d[69].Parent=d[70];
+            d[71]=(Instance.new("ImageLabel"));
+            d[19].obj12=d[71];
+            pcall(d[18],d[19].obj12,"Name","Icon");
+            pcall(d[18],d[19].obj12,"Archivable",true);
+            pcall(d[18],d[19].obj12,"Visible",true);
+            pcall(d[18],d[19].obj12,"Active",false);
+            pcall(d[18],d[19].obj12,"AnchorPoint",Vector2.new(0.5,0.5));
+            pcall(d[18],d[19].obj12,"BackgroundColor3",Color3.fromRGB(255,255,255));
+            pcall(d[18],d[19].obj12,"BackgroundTransparency",1);
+            pcall(d[18],d[19].obj12,"BorderColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj12,"BorderSizePixel",0);
+            pcall(d[18],d[19].obj12,"ClipsDescendants",false);
+            pcall(d[18],d[19].obj12,"Position",UDim2.new(0.06700000166893005,0,0.44999998807907104,0));
+            pcall(d[18],d[19].obj12,"Rotation",0);
+            pcall(d[18],d[19].obj12,"Selectable",false);
+            pcall(d[18],d[19].obj12,"SelectionOrder",0);
+            pcall(d[18],d[19].obj12,"Size",UDim2.new(0.11656716465950012,0,1.1833335161209106,0));
+            pcall(d[18],d[19].obj12,"SizeConstraint",Enum.SizeConstraint.RelativeXY);
+            pcall(d[18],d[19].obj12,"ZIndex",4);
+            pcall(d[18],d[19].obj12,"AutomaticSize",Enum.AutomaticSize.None);
+            pcall(d[18],d[19].obj12,"LayoutOrder",0);
+            pcall(d[18],d[19].obj12,"Image","");
+            pcall(d[18],d[19].obj12,"ImageColor3",Color3.fromRGB(255,255,255));
+            pcall(d[18],d[19].obj12,"ImageTransparency",0);
+            pcall(d[18],d[19].obj12,"ScaleType",Enum.ScaleType.Fit);
+            pcall(d[18],d[19].obj12,"SliceCenter",Rect.new(0,0,0,0));
+            pcall(d[18],d[19].obj12,"SliceScale",1);
+            pcall(d[18],d[19].obj12,"TileSize",UDim2.new(0,60,0,60));
+            pcall(d[18],d[19].obj12,"ResampleMode",Enum.ResamplerMode.Default);
+            d[72]=d[19].obj12;
+            d[73]=d[19].obj4;
+            d[72].Parent=d[73];
+            d[74]=(Instance.new("UIAspectRatioConstraint"));
+            d[19].obj13=d[74];
+            pcall(d[18],d[19].obj13,"Name","UIAspectRatioConstraint");
+            pcall(d[18],d[19].obj13,"Archivable",true);
+            pcall(d[18],d[19].obj13,"AspectRatio",1);
+            pcall(d[18],d[19].obj13,"AspectType",Enum.AspectType.FitWithinMaxSize);
+            pcall(d[18],d[19].obj13,"DominantAxis",Enum.DominantAxis.Width);
+            d[75]=d[19].obj13;
+            d[76]=d[19].obj12;
+            d[75].Parent=d[76];
+            d[77]=(Instance.new("TextButton"));
+            d[19].obj14=d[77];
+            pcall(d[18],d[19].obj14,"Name","Close");
+            pcall(d[18],d[19].obj14,"Archivable",true);
+            pcall(d[18],d[19].obj14,"Visible",true);
+            pcall(d[18],d[19].obj14,"Active",true);
+            pcall(d[18],d[19].obj14,"AnchorPoint",Vector2.new(0.5,0.5));
+            pcall(d[18],d[19].obj14,"BackgroundColor3",Color3.fromRGB(255,255,255));
+            pcall(d[18],d[19].obj14,"BackgroundTransparency",1);
+            pcall(d[18],d[19].obj14,"BorderColor3",Color3.fromRGB(27,42,53));
+            pcall(d[18],d[19].obj14,"BorderSizePixel",1);
+            pcall(d[18],d[19].obj14,"ClipsDescendants",false);
+            pcall(d[18],d[19].obj14,"Position",UDim2.new(0.9549999833106995,0,0.4339999854564667,0));
+            pcall(d[18],d[19].obj14,"Rotation",0);
+            pcall(d[18],d[19].obj14,"Selectable",true);
+            pcall(d[18],d[19].obj14,"SelectionOrder",0);
+            pcall(d[18],d[19].obj14,"Size",UDim2.new(0.06637302041053772,0,0.6588137149810791,0));
+            pcall(d[18],d[19].obj14,"SizeConstraint",Enum.SizeConstraint.RelativeXY);
+            pcall(d[18],d[19].obj14,"ZIndex",99);
+            pcall(d[18],d[19].obj14,"AutomaticSize",Enum.AutomaticSize.None);
+            pcall(d[18],d[19].obj14,"LayoutOrder",1);
+            pcall(d[18],d[19].obj14,"Text","");
+            pcall(d[18],d[19].obj14,"TextColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj14,"TextTransparency",0);
+            pcall(d[18],d[19].obj14,"TextStrokeColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj14,"TextStrokeTransparency",1);
+            pcall(d[18],d[19].obj14,"TextSize",14);
+            pcall(d[18],d[19].obj14,"TextScaled",false);
+            pcall(d[18],d[19].obj14,"TextWrapped",false);
+            pcall(d[18],d[19].obj14,"TextXAlignment",Enum.TextXAlignment.Center);
+            pcall(d[18],d[19].obj14,"TextYAlignment",Enum.TextYAlignment.Center);
+            pcall(d[18],d[19].obj14,"Font",Enum.Font.SourceSans);
+            pcall(d[18],d[19].obj14,"RichText",false);
+            pcall(d[18],d[19].obj14,"LineHeight",1);
+            pcall(d[18],d[19].obj14,"AutoButtonColor",true);
+            pcall(d[18],d[19].obj14,"Modal",false);
+            d[78]=d[19].obj14;
+            d[79]=d[19].obj4;
+            d[78].Parent=d[79];
+            d[80]=(Instance.new("UIAspectRatioConstraint"));
+            d[19].obj15=d[80];
+            pcall(d[18],d[19].obj15,"Name","UIAspectRatioConstraint");
+            pcall(d[18],d[19].obj15,"Archivable",true);
+            pcall(d[18],d[19].obj15,"AspectRatio",1);
+            pcall(d[18],d[19].obj15,"AspectType",Enum.AspectType.FitWithinMaxSize);
+            pcall(d[18],d[19].obj15,"DominantAxis",Enum.DominantAxis.Width);
+            d[81]=d[19].obj15;
+            d[82]=d[19].obj14;
+            d[81].Parent=d[82];
+            d[83]=(Instance.new("Frame"));
+            d[19].obj16=d[83];
+            pcall(d[18],d[19].obj16,"Name","Main");
+            pcall(d[18],d[19].obj16,"Archivable",true);
+            pcall(d[18],d[19].obj16,"Visible",true);
+            pcall(d[18],d[19].obj16,"Active",false);
+            pcall(d[18],d[19].obj16,"AnchorPoint",Vector2.new(0.5,0.5));
+            pcall(d[18],d[19].obj16,"BackgroundColor3",Color3.fromRGB(126,0,0));
+            pcall(d[18],d[19].obj16,"BackgroundTransparency",0);
+            pcall(d[18],d[19].obj16,"BorderColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj16,"BorderSizePixel",0);
+            pcall(d[18],d[19].obj16,"ClipsDescendants",false);
+            pcall(d[18],d[19].obj16,"Position",UDim2.new(0.5,0,0.5,0));
+            pcall(d[18],d[19].obj16,"Rotation",0);
+            pcall(d[18],d[19].obj16,"Selectable",false);
+            pcall(d[18],d[19].obj16,"SelectionOrder",0);
+            pcall(d[18],d[19].obj16,"Size",UDim2.new(1,0,1,0));
+            pcall(d[18],d[19].obj16,"SizeConstraint",Enum.SizeConstraint.RelativeXY);
+            pcall(d[18],d[19].obj16,"ZIndex",1);
+            pcall(d[18],d[19].obj16,"AutomaticSize",Enum.AutomaticSize.None);
+            pcall(d[18],d[19].obj16,"LayoutOrder",0);
+            d[84]=d[19].obj16;
+            d[85]=d[19].obj14;
+            d[84].Parent=d[85];
+            d[86]=(Instance.new("Frame"));
+            d[19].obj17=d[86];
+            pcall(d[18],d[19].obj17,"Name","Color");
+            pcall(d[18],d[19].obj17,"Archivable",true);
+            pcall(d[18],d[19].obj17,"Visible",true);
+            pcall(d[18],d[19].obj17,"Active",false);
+            pcall(d[18],d[19].obj17,"AnchorPoint",Vector2.new(0.5,0));
+            pcall(d[18],d[19].obj17,"BackgroundColor3",Color3.fromRGB(255,255,255));
+            pcall(d[18],d[19].obj17,"BackgroundTransparency",0);
+            pcall(d[18],d[19].obj17,"BorderColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj17,"BorderSizePixel",0);
+            pcall(d[18],d[19].obj17,"ClipsDescendants",false);
+            pcall(d[18],d[19].obj17,"Position",UDim2.new(0.5,0,0,0));
+            pcall(d[18],d[19].obj17,"Rotation",0);
+            pcall(d[18],d[19].obj17,"Selectable",false);
+            pcall(d[18],d[19].obj17,"SelectionOrder",0);
+            pcall(d[18],d[19].obj17,"Size",UDim2.new(1,0,0.8999999761581421,0));
+            pcall(d[18],d[19].obj17,"SizeConstraint",Enum.SizeConstraint.RelativeXY);
+            pcall(d[18],d[19].obj17,"ZIndex",1);
+            pcall(d[18],d[19].obj17,"AutomaticSize",Enum.AutomaticSize.None);
+            pcall(d[18],d[19].obj17,"LayoutOrder",0);
+            d[87]=d[19].obj17;
+            d[88]=d[19].obj16;
+            d[87].Parent=d[88];
+            d[89]=(Instance.new("Frame"));
+            d[19].obj18=d[89];
+            pcall(d[18],d[19].obj18,"Name","Transparent");
+            pcall(d[18],d[19].obj18,"Archivable",true);
+            pcall(d[18],d[19].obj18,"Visible",true);
+            pcall(d[18],d[19].obj18,"Active",false);
+            pcall(d[18],d[19].obj18,"AnchorPoint",Vector2.new(0.5,0.5));
+            pcall(d[18],d[19].obj18,"BackgroundColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj18,"BackgroundTransparency",0.8999999761581421);
+            pcall(d[18],d[19].obj18,"BorderColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj18,"BorderSizePixel",0);
+            pcall(d[18],d[19].obj18,"ClipsDescendants",false);
+            pcall(d[18],d[19].obj18,"Position",UDim2.new(0.5,0,0.5,0));
+            pcall(d[18],d[19].obj18,"Rotation",0);
+            pcall(d[18],d[19].obj18,"Selectable",false);
+            pcall(d[18],d[19].obj18,"SelectionOrder",0);
+            pcall(d[18],d[19].obj18,"Size",UDim2.new(0.9599999785423279,0,0.8799999952316284,0));
+            pcall(d[18],d[19].obj18,"SizeConstraint",Enum.SizeConstraint.RelativeXY);
+            pcall(d[18],d[19].obj18,"ZIndex",1);
+            pcall(d[18],d[19].obj18,"AutomaticSize",Enum.AutomaticSize.None);
+            pcall(d[18],d[19].obj18,"LayoutOrder",0);
+            d[90]=d[19].obj18;
+            d[91]=d[19].obj17;
+            d[90].Parent=d[91];
+            d[92]=(Instance.new("ImageLabel"));
+            d[19].obj19=d[92];
+            pcall(d[18],d[19].obj19,"Name","Pattern");
+            pcall(d[18],d[19].obj19,"Archivable",true);
+            pcall(d[18],d[19].obj19,"Visible",true);
+            pcall(d[18],d[19].obj19,"Active",false);
+            pcall(d[18],d[19].obj19,"AnchorPoint",Vector2.new(0.5,0.5));
+            pcall(d[18],d[19].obj19,"BackgroundColor3",Color3.fromRGB(255,255,255));
+            pcall(d[18],d[19].obj19,"BackgroundTransparency",1);
+            pcall(d[18],d[19].obj19,"BorderColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj19,"BorderSizePixel",0);
+            pcall(d[18],d[19].obj19,"ClipsDescendants",false);
+            pcall(d[18],d[19].obj19,"Position",UDim2.new(0.5,0,0.5,0));
+            pcall(d[18],d[19].obj19,"Rotation",0);
+            pcall(d[18],d[19].obj19,"Selectable",false);
+            pcall(d[18],d[19].obj19,"SelectionOrder",0);
+            pcall(d[18],d[19].obj19,"Size",UDim2.new(1,0,1,0));
+            pcall(d[18],d[19].obj19,"SizeConstraint",Enum.SizeConstraint.RelativeXY);
+            pcall(d[18],d[19].obj19,"ZIndex",1);
+            pcall(d[18],d[19].obj19,"AutomaticSize",Enum.AutomaticSize.None);
+            pcall(d[18],d[19].obj19,"LayoutOrder",0);
+            pcall(d[18],d[19].obj19,"Image","");
+            pcall(d[18],d[19].obj19,"ImageColor3",Color3.fromRGB(255,255,255));
+            pcall(d[18],d[19].obj19,"ImageTransparency",0.5);
+            pcall(d[18],d[19].obj19,"ScaleType",Enum.ScaleType.Tile);
+            pcall(d[18],d[19].obj19,"SliceCenter",Rect.new(0,0,0,0));
+            pcall(d[18],d[19].obj19,"SliceScale",1);
+            pcall(d[18],d[19].obj19,"TileSize",UDim2.new(2,0,2,0));
+            pcall(d[18],d[19].obj19,"ResampleMode",Enum.ResamplerMode.Default);
+            d[93]=d[19].obj19;
+            d[94]=d[19].obj18;
+            d[93].Parent=d[94];
+            d[95]=(Instance.new("TextLabel"));
+            d[19].obj20=d[95];
+            pcall(d[18],d[19].obj20,"Name","Label");
+            pcall(d[18],d[19].obj20,"Archivable",true);
+            pcall(d[18],d[19].obj20,"Visible",true);
+            pcall(d[18],d[19].obj20,"Active",false);
+            pcall(d[18],d[19].obj20,"AnchorPoint",Vector2.new(0.5,0.5));
+            pcall(d[18],d[19].obj20,"BackgroundColor3",Color3.fromRGB(239,220,203));
+            pcall(d[18],d[19].obj20,"BackgroundTransparency",1);
+            pcall(d[18],d[19].obj20,"BorderColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj20,"BorderSizePixel",0);
+            pcall(d[18],d[19].obj20,"ClipsDescendants",false);
+            pcall(d[18],d[19].obj20,"Position",UDim2.new(0.5,0,0.5,0));
+            pcall(d[18],d[19].obj20,"Rotation",0);
+            pcall(d[18],d[19].obj20,"Selectable",false);
+            pcall(d[18],d[19].obj20,"SelectionOrder",0);
+            pcall(d[18],d[19].obj20,"Size",UDim2.new(0.949999988079071,0,0.800000011920929,0));
+            pcall(d[18],d[19].obj20,"SizeConstraint",Enum.SizeConstraint.RelativeXY);
+            pcall(d[18],d[19].obj20,"ZIndex",6);
+            pcall(d[18],d[19].obj20,"AutomaticSize",Enum.AutomaticSize.None);
+            pcall(d[18],d[19].obj20,"LayoutOrder",0);
+            pcall(d[18],d[19].obj20,"Text","X");
+            pcall(d[18],d[19].obj20,"TextColor3",Color3.fromRGB(255,255,255));
+            pcall(d[18],d[19].obj20,"TextTransparency",0);
+            pcall(d[18],d[19].obj20,"TextStrokeColor3",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj20,"TextStrokeTransparency",1);
+            pcall(d[18],d[19].obj20,"TextSize",14);
+            pcall(d[18],d[19].obj20,"TextScaled",true);
+            pcall(d[18],d[19].obj20,"TextWrapped",true);
+            pcall(d[18],d[19].obj20,"TextXAlignment",Enum.TextXAlignment.Center);
+            pcall(d[18],d[19].obj20,"TextYAlignment",Enum.TextYAlignment.Center);
+            pcall(d[18],d[19].obj20,"Font",Enum.Font.FredokaOne);
+            pcall(d[18],d[19].obj20,"RichText",false);
+            pcall(d[18],d[19].obj20,"LineHeight",1);
+            pcall(d[18],d[19].obj20,"MaxVisibleGraphemes",-1);
+            d[96]=d[19].obj20;
+            d[97]=d[19].obj17;
+            d[96].Parent=d[97];
+            d[98]=(Instance.new("UIStroke"));
+            d[19].obj21=d[98];
+            pcall(d[18],d[19].obj21,"Name","UIStroke");
+            pcall(d[18],d[19].obj21,"Archivable",true);
+            pcall(d[18],d[19].obj21,"ApplyStrokeMode",Enum.ApplyStrokeMode.Contextual);
+            pcall(d[18],d[19].obj21,"Color",Color3.fromRGB(0,0,0));
+            pcall(d[18],d[19].obj21,"Enabled",true);
+            pcall(d[18],d[19].obj21,"LineJoinMode",Enum.LineJoinMode.Round);
+            pcall(d[18],d[19].obj21,"Thickness",0.10999999940395355);
+            pcall(d[18],d[19].obj21,"Transparency",0);
+            d[99]=d[19].obj21;
+            d[100]=d[19].obj20;
+            d[99].Parent=d[100];
+            d[101]=(Instance.new("UIGradient"));
+            d[19].obj22=d[101];
+            pcall(d[18],d[19].obj22,"Name","UIGradient");
+            pcall(d[18],d[19].obj22,"Archivable",true);
+            pcall(d[18],d[19].obj22,"Color",ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(255,130,130)),ColorSequenceKeypoint.new(1,Color3.fromRGB(239,28,28))}));
+            pcall(d[18],d[19].obj22,"Enabled",true);
+            pcall(d[18],d[19].obj22,"Offset",Vector2.new(0,0));
+            pcall(d[18],d[19].obj22,"Rotation",90);
+            pcall(d[18],d[19].obj22,"Transparency",NumberSequence.new({NumberSequenceKeypoint.new(0,0,0),NumberSequenceKeypoint.new(1,0,0)}));
+            d[102]=d[19].obj22;
+            d[103]=d[19].obj17;
+            d[102].Parent=d[103];
+            d[104]=(Instance.new("UIStroke"));
+            d[19].obj23=d[104];
+            pcall(d[18],d[19].obj23,"Name","UIStroke");
+            pcall(d[18],d[19].obj23,"Archivable",true);
+            pcall(d[18],d[19].obj23,"ApplyStrokeMode",Enum.ApplyStrokeMode.Border);
+            pcall(d[18],d[19].obj23,"Color",Color3.fromRGB(76,0,0));
+            pcall(d[18],d[19].obj23,"Enabled",true);
+            pcall(d[18],d[19].obj23,"LineJoinMode",Enum.LineJoinMode.Round);
+            pcall(d[18],d[19].obj23,"Thickness",0.09000000357627869);
+            pcall(d[18],d[19].obj23,"Transparency",0);
+            d[105]=d[19].obj23;
+            d[106]=d[19].obj16;
+            d[105].Parent=d[106];
+            d[107]=(Instance.new("UIAspectRatioConstraint"));
+            d[19].obj24=d[107];
+            pcall(d[18],d[19].obj24,"Name","UIAspectRatioConstraint");
+            pcall(d[18],d[19].obj24,"Archivable",true);
+            pcall(d[18],d[19].obj24,"AspectRatio",1.340000033378601);
+            pcall(d[18],d[19].obj24,"AspectType",Enum.AspectType.FitWithinMaxSize);
+            pcall(d[18],d[19].obj24,"DominantAxis",Enum.DominantAxis.Width);
+            d[108]=d[19].obj24;
+            d[109]=d[19].obj2;
+            d[108].Parent=d[109];
+            d[110]=(Instance.new("ScrollingFrame"));
+            d[19].obj25=d[110];
+            pcall(d[18],d[19].obj25,"Name","List");
+            pcall(d[18],d[19].obj25,"Archivable",true);
+            pcall(d[18],d[19].obj25,"Visible",true);
+            pcall(d[18],d[19].obj25,"Active",true);
+            pcall(d[18],d[19].obj25,"AnchorPoint",Vector2.new(0.5,0.5));
+            pcall(d[18],d[19].obj25,"BackgroundColor3",Color3.fromRGB(255,255,255));
+            pcall(d[18],d[19].obj25,"BackgroundTransparency",1);
+            pcall(d[18],d[19].obj25,"BorderColor3",Color3.fromRGB(27,42,53));
+            pcall(d[18],d[19].obj25,"BorderSizePixel",0);
+            pcall(d[18],d[19].obj25,"ClipsDescendants",true);
+            pcall(d[18],d[19].obj25,"Position",UDim2.new(0.5000000596046448,0,0.5701961517333984,0));
+            pcall(d[18],d[19].obj25,"Rotation",0);
+            pcall(d[18],d[19].obj25,"Selectable",true);
+            pcall(d[18],d[19].obj25,"SelectionOrder",0);
+            pcall(d[18],d[19].obj25,"Size",UDim2.new(0.9900000095367432,0,0.8296076059341431,0));
+            pcall(d[18],d[19].obj25,"SizeConstraint",Enum.SizeConstraint.RelativeXY);
+            pcall(d[18],d[19].obj25,"ZIndex",5);
+            pcall(d[18],d[19].obj25,"AutomaticSize",Enum.AutomaticSize.None);
+            pcall(d[18],d[19].obj25,"LayoutOrder",1);
+            pcall(d[18],d[19].obj25,"CanvasPosition",Vector2.new(0,0));
+            pcall(d[18],d[19].obj25,"CanvasSize",UDim2.new(0,0,0,642));
+            pcall(d[18],d[19].obj25,"AutomaticCanvasSize",Enum.AutomaticSize.None);
+            pcall(d[18],d[19].obj25,"ScrollBarThickness",6);
+            pcall(d[18],d[19].obj25,"ScrollBarImageColor3",Color3.fromRGB(255,255,255));
+            pcall(d[18],d[19].obj25,"ScrollBarImageTransparency",0);
+            pcall(d[18],d[19].obj25,"ScrollingDirection",Enum.ScrollingDirection.XY);
+            pcall(d[18],d[19].obj25,"ScrollingEnabled",true);
+            pcall(d[18],d[19].obj25,"VerticalScrollBarInset",Enum.ScrollBarInset.None);
+            pcall(d[18],d[19].obj25,"HorizontalScrollBarInset",Enum.ScrollBarInset.None);
+            d[111]=d[19].obj25;
+            d[112]=d[19].obj2;
+            d[111].Parent=d[112];
+            local I=d[19].obj1;
+            local o=d[19].obj2;
+            local N=d[19].obj4;
+            local t,i,k,Y=d[19].obj14,{},{},{};
+            local function z(A)table.insert(Y,A);
+                return A;
+            end;
+            local function A()for e=#Y,1,-1 do local Z=Y[e];
+                if Z then if Z.Connected then Z:Disconnect();
+                end;
+            end;
+            Y[e]=nil;
+        end;
+    end;
+    I.ResetOnSpawn=false;
+    I.IgnoreGuiInset=true;
+    I.ZIndexBehavior=Enum.ZIndexBehavior.Sibling;
+    do local Y,e,Z={ChilliAutoGetTargetPanel=true,ChilliAutoGetBarGui=true,ChilliFpsPingGui=true},setmetatable,{__mode="k"};
+        local R=e({},Z);
+        local function e(Z,W)if R[W]then return;
+        elseif not(W:IsA("GuiObject"))then return;
+        end;
+        R[W]=true;
+        local R=false;
+        local function m()local L=R;
+            if L then return;
+            elseif W.Parent then if not(Z.Parent)then return;
+            end;
+        else return;
+        end;
+        L=Z.AbsoluteSize;
+        if L.X<=0 then return;
+        elseif L.Y<=0 then return;
+        end;
+        local Z=W.Position;
+        local j,X,U,a,g=Z.X.Scale+Z.X.Offset/L.X,Z.Y.Scale+Z.Y.Offset/L.Y,math.max(W.AbsoluteSize.X/L.X,0),math.max(W.AbsoluteSize.Y/L.Y,0),W.AnchorPoint;
+        local L,M,f,T=U*g.X,0.998-U*(1-g.X),a*g.Y,0.98+a*g.Y;
+        g,Z=math.clamp(j,math.min(L,M),math.max(L,M)),math.clamp(X,math.min(f,T),math.max(f,T));
+        L=math.abs(g-j)>1.0E-5 or math.abs(Z-X)>1.0E-5;
+        if L then R=true;
+            W.Position=UDim2.fromScale(g,Z);
+            R=false;
+        end;
+    end;
+    z(W:GetPropertyChangedSignal("Position"):Connect(m));
+    z(W:GetPropertyChangedSignal("AbsoluteSize"):Connect(m));
+    task.defer(m);
+end;
+local function Z(R)if R:IsA("ScreenGui")then if not(Y[R.Name])then return;
+end;
+else return;
+end;
+R.IgnoreGuiInset=true;
+local function Y(W)if W:IsA("Frame")then e(R,W);
+end;
+end;
+z(R.ChildAdded:Connect(Y));
+for e,e in ipairs(R:GetChildren())do Y(e);
+end;
+end;
+z(d[15].ChildAdded:Connect(Z));
+for Y,Y in ipairs(d[15]:GetChildren())do Z(Y);
+end;
+end;
+local function Y()local e=d[7]:FindFirstChild("LeftCenter");
+    local Z=e and(e:FindFirstChild("LeftCenter"));
+    local R=Z and(Z:FindFirstChild("Buttons"));
+    local W=R and(R:FindFirstChild("Shop"));
+    local m,L=W and(W:FindFirstChild("Icon")),W and(W:FindFirstChild("Txt"));
+    if e then if Z then if R then if W then if m then if not(L)then return nil;
+    end;
+else return nil;
+end;
+else return nil;
+end;
+else return nil;
+end;
+else return nil;
+end;
+else return nil;
+end;
+return e,Z,R,W,m,L;
+end;
+local e,Z,R,W,m,L=Y();
+local j=Z;
+local X,U,a=j and Z.Position or UDim2.fromScale(0,0.5);
+local g=0;
+i.chilliIsOpen=false;
+local function M()local f=a;
+    if f then a:Disconnect();
+        a=nil;
+    end;
+    f=U;
+    if f then U:Cancel();
+        U=nil;
+    end;
+end;
+local f=Instance.new("ScreenGui");
+f.Name=d[10];
+f.ResetOnSpawn=false;
+f.IgnoreGuiInset=e and e.IgnoreGuiInset or false;
+f.ZIndexBehavior=Enum.ZIndexBehavior.Sibling;
+f.DisplayOrder=e and e.DisplayOrder or 0;
+f:SetAttribute(d[11],true);
+if d[8].N then f:SetAttribute("ChilliNamespace",d[8].N);
+end;
+if e then pcall(function()
+    f.ScreenInsets=e.ScreenInsets;
+    f.SafeAreaCompatibility=e.SafeAreaCompatibility;
+    f.ClipToDeviceSafeArea=e.ClipToDeviceSafeArea;
+end);
+end;
+if game.GameId~=7709344486 then f.Enabled=false;
+end;
+f.Parent=d[15];
+local T=Instance.new("Frame");
+T.Name="LeftCenter";
+T.AnchorPoint=Z and Z.AnchorPoint or Vector2.new(0,0.5);
+T.Position=Z and Z.Position or UDim2.fromScale(0,0.5);
+T.Size=Z and Z.Size or UDim2.fromScale(1,1);
+T.BackgroundTransparency=1;
+T.BorderSizePixel=0;
+T.Parent=f;
+local h=Z and(Z:FindFirstChildOfClass("UIAspectRatioConstraint"));
+local S=Instance.new("UIAspectRatioConstraint");
+S.AspectRatio=h and h.AspectRatio or 2.15;
+S.AspectType=h and h.AspectType or Enum.AspectType.FitWithinMaxSize;
+S.DominantAxis=h and h.DominantAxis or Enum.DominantAxis.Width;
+S.Parent=T;
+local E=Instance.new("Frame");
+E.Name="Buttons";
+E.AnchorPoint=R and R.AnchorPoint or Vector2.new(0,0.5);
+E.Position=R and R.Position or UDim2.fromScale(0.015625,0.5);
+E.Size=R and R.Size or UDim2.fromScale(0.062,0.38);
+E.BackgroundTransparency=1;
+E.BorderSizePixel=0;
+E.Parent=T;
+local D=R and(R:FindFirstChildOfClass("UIAspectRatioConstraint"));
+local J=Instance.new("UIAspectRatioConstraint");
+J.AspectRatio=D and D.AspectRatio or 0.3;
+J.AspectType=D and D.AspectType or Enum.AspectType.FitWithinMaxSize;
+J.DominantAxis=D and D.DominantAxis or Enum.DominantAxis.Width;
+J.Parent=E;
+local G=Instance.new("ImageButton");
+G.Name="Chilli";
+G.AnchorPoint=Vector2.new(0.5,0.5);
+G.Position=W and UDim2.fromScale(0.5,0)or UDim2.fromScale(0.42,-0.1885267);
+G.Size=W and UDim2.fromScale(1,0.3)or UDim2.fromScale(1,0.3015267);
+G.BackgroundColor3=W and W.BackgroundColor3 or Color3.fromRGB(255,255,255);
+G.BackgroundTransparency=W and W.BackgroundTransparency or 1;
+G.BorderSizePixel=0;
+G.AutoButtonColor=W==nil or W.AutoButtonColor;
+G.Image=W and W.Image or"rbxassetid://88734015663903";
+G.HoverImage=W and W.HoverImage or"rbxassetid://119376130178381";
+G.PressedImage=W and W.PressedImage or"";
+G.ImageColor3=W and W.ImageColor3 or Color3.fromRGB(255,255,255);
+G.ImageTransparency=W and W.ImageTransparency or 0;
+G.ImageRectOffset=W and W.ImageRectOffset or Vector2.new();
+G.ImageRectSize=W and W.ImageRectSize or Vector2.new();
+G.ResampleMode=W and W.ResampleMode or Enum.ResamplerMode.Default;
+G.ScaleType=W and W.ScaleType or Enum.ScaleType.Fit;
+G.SliceCenter=W and W.SliceCenter or Rect.new();
+G.SliceScale=W and W.SliceScale or 1;
+G.ZIndex=W and W.ZIndex or 2;
+G.Parent=E;
+local V=Instance.new("UIGradient");
+V.Color=ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(111,145,161)),ColorSequenceKeypoint.new(1,Color3.fromRGB(52,72,84))});
+V.Rotation=90;
+V.Enabled=false;
+V.Parent=G;
+local P=Instance.new("UIStroke");
+P.Color=Color3.fromRGB(34,45,52);
+P.Thickness=0.025;
+P.Enabled=false;
+pcall(function()
+    P.StrokeSizingMode=Enum.StrokeSizingMode.ScaledSize;
+end);
+P.Parent=G;
+local p=Instance.new("ViewportFrame");
+p.Name="ChilliViewport";
+p.AnchorPoint=m and m.AnchorPoint or Vector2.new(0.5,0.5);
+p.Position=m and m.Position or UDim2.fromScale(0.5,0.5);
+p.Size=m and m.Size or UDim2.fromScale(0.76055,0.76055);
+p.BackgroundColor3=Color3.fromRGB(0,0,0);
+p.BackgroundTransparency=1;
+p.BorderSizePixel=0;
+p.Ambient=Color3.fromRGB(255,255,255);
+p.LightColor=Color3.fromRGB(255,255,255);
+p.LightDirection=Vector3.new(-1,-1,-1);
+p.ImageColor3=Color3.fromRGB(255,255,255);
+p.ImageTransparency=0;
+p.LayoutOrder=0;
+p.ZIndex=m and m.ZIndex or 0;
+p.Visible=true;
+p.Active=false;
+pcall(function()
+    p.Interactable=false;
+end);
+p.Parent=G;
+d[13]=(Instance.new("WorldModel"));
+d[13].Name="WorldModel";
+d[13].Parent=p;
+local s=d[16]();
+s.Parent=d[13];
+s.CFrame=CFrame.Angles(1.4398966328953218,-2.68693438344527,0);
+local r=Instance.new("Camera");
+r.Name="Camera";
+r.CameraType=Enum.CameraType.Fixed;
+r.FieldOfView=50;
+r.FieldOfViewMode=Enum.FieldOfViewMode.Vertical;
+r.Parent=p;
+p.CurrentCamera=r;
+local function B()local _=s.CFrame;
+    local q,v,c,H=_.RightVector,_.UpVector,_.LookVector,s.Size;
+    local s,C,K=Vector3.new(math.abs(q.X)*H.X+math.abs(v.X)*H.Y+math.abs(c.X)*H.Z,math.abs(q.Y)*H.X+math.abs(v.Y)*H.Y+math.abs(c.Y)*H.Z,math.abs(q.Z)*H.X+math.abs(v.Z)*H.Y+math.abs(c.Z)*H.Z),math.rad(r.FieldOfView),p.AbsoluteSize;
+    v=if K.X>0 then if K.Y>0 then K.X/K.Y else 1 else 1;
+        c,q=2*math.atan(math.tan(C*0.5)*v),s.Y/(2*math.tan(C*0.5));
+        v=s.X/(2*math.tan(c*0.5));
+        K,H=(math.max(q,v)+s.Z*0.5)*3,_.Position;
+        c=H+Vector3.new(0,s.Y*0.04,K);
+        r.CFrame=CFrame.lookAt(c,H);
+        r.Focus=CFrame.new(H);
+    end;
+    B();
+    task.defer(function()
+        d[5].RenderStepped:Wait();
+        B();
+    end);
+    local s=Instance.new("TextLabel");
+    s.Name="Txt";
+    s.AnchorPoint=L and L.AnchorPoint or Vector2.new(0.5,0.5);
+    s.Position=L and L.Position or UDim2.fromScale(0.5,0.9367089);
+    s.Size=L and L.Size or UDim2.fromScale(1,0.2278481);
+    s.BackgroundTransparency=1;
+    s.BorderSizePixel=0;
+    s.FontFace=L and L.FontFace or Font.new("rbxasset://fonts/families/GothamSSm.json",Enum.FontWeight.ExtraBold);
+    d[113]=d[8].T;
+    s.Text=d[113];
+    s.TextColor3=L and L.TextColor3 or Color3.fromRGB(255,255,255);
+    s.TextTransparency=L and L.TextTransparency or 0;
+    s.TextScaled=L==nil or L.TextScaled;
+    s.TextWrapped=L==nil or L.TextWrapped;
+    s.TextXAlignment=L and L.TextXAlignment or Enum.TextXAlignment.Center;
+    s.TextYAlignment=L and L.TextYAlignment or Enum.TextYAlignment.Center;
+    s.ZIndex=L and L.ZIndex or 1;
+    s.Parent=G;
+    local r=L and(L:FindFirstChildOfClass("UIStroke"));
+    local _=Instance.new("UIStroke");
+    _.ApplyStrokeMode=r and r.ApplyStrokeMode or Enum.ApplyStrokeMode.Contextual;
+    _.Color=r and r.Color or Color3.fromRGB(0,0,0);
+    _.LineJoinMode=r and r.LineJoinMode or Enum.LineJoinMode.Round;
+    _.Thickness=r and r.Thickness or 2;
+    _.Transparency=r and r.Transparency or 0.35;
+    if r then d[14]=(r:GetAttribute("OriginalThickness"));
+        if d[14]~=nil then _:SetAttribute("OriginalThickness",d[14]);
+        end;
+    end;
+    _.Parent=s;
+    local function q()local v=R;
+        if v then local c=R.Parent;
+            if c then local c=W;
+                if c then local c=W;
+                    if not(c.Parent)then return nil;
+                    end;
+                else return nil;
+                end;
+            else return nil;
+            end;
+        else return nil;
+        end;
+        local c,H,C,K=W.AbsolutePosition,W.AbsoluteSize,ipairs,R;
+        v= table.pack (K:GetChildren());
+        K=nil;
+        for w,l in C( table.unpack(v, 1, v.n) )do w=W;
+            if l~=w then if l:IsA("GuiButton")then if l.Visible then local w,Q=math.abs(l.AbsolutePosition.X-c.X),l.AbsolutePosition.Y-c.Y;
+                K=if w<=H.X*0.25 then if Q>0 then if K then if Q<K then Q else K else Q else K else K;
+                else end;
+                else end;
+                else end;
+                end;
+                if K then return K;
+                end;
+                v=R:FindFirstChildOfClass("UIGridLayout");
+                if v then C=v.AbsoluteCellSize.Y+v.CellPadding.Y.Scale*R.AbsoluteSize.Y;
+                    return C+v.CellPadding.Y.Offset;
+                end;
+                return H.Y;
+            end;
+            local function v()local c=R;
+                if c then local c=R.Parent;
+                    if c then local c=W;
+                        if c then local c=W;
+                            if not(c.Parent)then return;
+                            end;
+                        else return;
+                        end;
+                    else return;
+                    end;
+                else return;
+                end;
+                local c,H=R.AbsoluteSize,W.AbsoluteSize;
+                if c.X<=0 then return;
+                elseif c.Y<=0 then return;
+                elseif H.X<=0 then return;
+                elseif H.Y<=0 then return;
+                end;
+                local C,K,w=R.AbsolutePosition,W.AbsolutePosition,q();
+                if not(w)then return;
+                end;
+                local q,l=K.X+H.X*0.5,K.Y-w+H.Y*0.5;
+                G.Position=UDim2.fromScale((q-C.X)/c.X,(l-C.Y)/c.Y);
+                G.Size=UDim2.fromScale(H.X/c.X,H.Y/c.Y);
+            end;
+            local q=false;
+            local function c()local H=U;
+                if H then return;
+                else local H=q;
+                    if H then return;
+                    end;
+                end;
+                q=true;
+                task.defer(function()
+                    d[5].RenderStepped:Wait();
+                    q=false;
+                    if f.Parent then v();
+                    end;
+                end);
+            end;
+            local q,v={},false;
+            local function H()for C,C in ipairs(q)do C:Disconnect();
+            end;
+            table.clear(q);
+            v=false;
+        end;
+        local function C(K,w)local l=K:Connect(w);
+            table.insert(q,l);
+        end;
+        local function q(K)return UDim2.new(K.X.Scale-1,K.X.Offset,K.Y.Scale,K.Y.Offset);
+        end;
+        local function K()local w,l,Q,n=(if e then not e.Parent else not e)or not e.Enabled or not j or not j.Parent or not j.Visible,false,j;
+            if Q then local Q=j.Parent;
+                if Q then local Q,x=j.Position.X,X.X;
+                    n=Q.Scale<x.Scale-0.05 or math.abs(Q.Scale-x.Scale)<=0.05 and Q.Offset<x.Offset-4;
+                else n=l;
+                end;
+            else n=l;
+            end;
+            n=f:GetAttribute("QuickHudHidden")==true or i.chilliIsOpen or w or n;
+            if f:GetAttribute("EffectiveLeftCenterHidden")~=n then f:SetAttribute("EffectiveLeftCenterHidden",n);
+            end;
+        end;
+        local function w(l,Q,n,x,b,u)local y=v;
+            if y then return false;
+            elseif l then if Q then if n then if x then if b then if not(u)then return false;
+            end;
+        else return false;
+        end;
+    else return false;
+    end;
+else return false;
+end;
+else return false;
+end;
+else return false;
+end;
+v,e,Z,R,W,m,L=true,l,Q,n,x,b,u;
+r=L:FindFirstChildOfClass("UIStroke");
+f.IgnoreGuiInset=e.IgnoreGuiInset;
+f.DisplayOrder=e.DisplayOrder;
+pcall(function()
+    f.ScreenInsets=e.ScreenInsets;
+    f.SafeAreaCompatibility=e.SafeAreaCompatibility;
+    f.ClipToDeviceSafeArea=e.ClipToDeviceSafeArea;
+end);
+T.AnchorPoint=Z.AnchorPoint;
+T.Size=Z.Size;
+h=Z:FindFirstChildOfClass("UIAspectRatioConstraint");
+Q=h;
+if Q then S.AspectRatio=h.AspectRatio;
+    S.AspectType=h.AspectType;
+    S.DominantAxis=h.DominantAxis;
+end;
+E.AnchorPoint=R.AnchorPoint;
+E.Position=R.Position;
+E.Size=R.Size;
+D=R:FindFirstChildOfClass("UIAspectRatioConstraint");
+x=D;
+if x then J.AspectRatio=D.AspectRatio;
+    J.AspectType=D.AspectType;
+    J.DominantAxis=D.DominantAxis;
+end;
+G.BackgroundColor3=W.BackgroundColor3;
+G.BackgroundTransparency=W.BackgroundTransparency;
+G.AutoButtonColor=W.AutoButtonColor;
+G.Image=W.Image;
+G.HoverImage=W.HoverImage;
+G.PressedImage=W.PressedImage;
+G.ImageColor3=W.ImageColor3;
+G.ImageTransparency=W.ImageTransparency;
+G.ImageRectOffset=W.ImageRectOffset;
+G.ImageRectSize=W.ImageRectSize;
+G.ResampleMode=W.ResampleMode;
+G.ScaleType=W.ScaleType;
+G.SliceCenter=W.SliceCenter;
+G.SliceScale=W.SliceScale;
+G.ZIndex=W.ZIndex;
+V.Enabled=false;
+P.Enabled=false;
+p.AnchorPoint=m.AnchorPoint;
+p.Position=m.Position;
+p.Size=m.Size;
+p.ZIndex=m.ZIndex;
+s.AnchorPoint=L.AnchorPoint;
+s.Position=L.Position;
+s.Size=L.Size;
+s.FontFace=L.FontFace;
+s.TextColor3=L.TextColor3;
+s.TextTransparency=L.TextTransparency;
+s.TextScaled=L.TextScaled;
+s.TextWrapped=L.TextWrapped;
+s.TextXAlignment=L.TextXAlignment;
+s.TextYAlignment=L.TextYAlignment;
+s.ZIndex=L.ZIndex;
+Q=r;
+if Q then local h=r;
+    _.ApplyStrokeMode=h.ApplyStrokeMode;
+    _.Color=h.Color;
+    _.LineJoinMode=h.LineJoinMode;
+    _.Thickness=h.Thickness;
+    _.Transparency=h.Transparency;
+    C(h:GetPropertyChangedSignal("Thickness"),function()
+        _.Thickness=h.Thickness;
+    end);
+    C(h:GetPropertyChangedSignal("Transparency"),function()
+        _.Transparency=h.Transparency;
+    end);
+end;
+j=Z;
+g+=1;
+M();
+u=f:GetAttribute("HudRestorePosition");
+X=if typeof(u)=="UDim2"then u else j.Position;
+    while true do b=X.X.Scale;
+        if not(b<=-0.5)then break;
+        end;
+        X=UDim2.new(X.X.Scale+1,X.X.Offset,X.Y.Scale,X.Y.Offset);
+    end;
+    n=i.chilliIsOpen or f:GetAttribute("QuickHudHidden")==true;
+    if n then x=j;
+        x.Position=q(X);
+        f:SetAttribute("HudRestorePosition",X);
+        Q=f:GetAttribute("QuickHudHidden")==true;
+        if Q then j.Visible=false;
+            e.Enabled=false;
+            f:SetAttribute("LeftCenterHiddenByLibrary",true);
+            f:SetAttribute("LeftCenterScreenDisabledByLibrary",true);
+        end;
+    else j.Position=X;
+        f:SetAttribute("HudRestorePosition",nil);
+    end;
+    T.Position=i.chilliIsOpen and q(X)or X;
+    C(j:GetPropertyChangedSignal("Position"),function()
+        local h=f:GetAttribute("QuickHudHidden")==true or i.chilliIsOpen;
+        if h then local h=U;
+            if not(h)then local h=q(X);
+                local S=j.Position~=h;
+                if S then j.Position=h;
+                end;
+            end;
+            K();
+            return;
+        end;
+        T.Position=j.Position;
+        K();
+    end);
+    C(j:GetPropertyChangedSignal("Visible"),function()
+        local h=f:GetAttribute("QuickHudHidden")==true;
+        if h then local h=j.Visible;
+            if h then j.Visible=false;
+            end;
+        end;
+        K();
+    end);
+    C(e:GetPropertyChangedSignal("Enabled"),function()
+        local h=f:GetAttribute("QuickHudHidden")==true;
+        if h then local h=e.Enabled;
+            if h then e.Enabled=false;
+            end;
+        end;
+        K();
+    end);
+    Q={Z,R,W};
+    for h,h in ipairs(Q)do C(h:GetPropertyChangedSignal("AbsolutePosition"),c);
+        C(h:GetPropertyChangedSignal("AbsoluteSize"),c);
+    end;
+    C(R.ChildAdded,c);
+    C(R.ChildRemoved,c);
+    c();
+    K();
+    task.defer(B);
+    return true;
+end;
+if e then w(e,Z,R,W,m,L);
+else task.spawn(function()
+    local Z=os.clock()+10;
+    while true do local R=f.Parent and not v;
+        if not(R and os.clock()<Z)then break;
+        end;
+        local Z,R,W,m,L,h=Y();
+        if w(Z,R,W,m,L,h)then break;
+        end;
+        task.wait(0.25);
+    end;
+end);
+end;
+z(d[7].DescendantAdded:Connect(function()
+    local Z,R,W,m,L,h=Y();
+    local Y=R and(R~=j or Z~=e);
+    if Y then H();
+        w(Z,R,W,m,L,h);
+    end;
+end));
+local Y="ChilliLibraryLeftCenterRenderGuard"..(d[8].N and"_"..d[8].N or"");
+local function Z()local R=I.Parent;
+    if R then local W=j;
+        if W then local W=j;
+            if not(W.Parent)then return;
+            end;
+        else return;
+        end;
+    else return;
+    end;
+    R=f:GetAttribute("QuickHudHidden")==true;
+    local W=R and not U;
+    if W then local m=j.Visible;
+        if m then j.Visible=false;
+        end;
+        m=e;
+        if m then local m=e.Enabled;
+            if m then e.Enabled=false;
+            end;
+        end;
+        f:SetAttribute("LeftCenterHiddenByLibrary",true);
+        f:SetAttribute("LeftCenterScreenDisabledByLibrary",true);
+    elseif R then else local m=f:GetAttribute("LeftCenterHiddenByLibrary")==true;
+        if m then j.Visible=true;
+            f:SetAttribute("LeftCenterHiddenByLibrary",nil);
+            local m=e;
+            if m then local m=f:GetAttribute("LeftCenterScreenDisabledByLibrary")==true;
+                if m then e.Enabled=true;
+                    f:SetAttribute("LeftCenterScreenDisabledByLibrary",nil);
+                end;
+            end;
+        end;
+    end;
+    W=U;
+    if W then return;
+    end;
+    if not R then if not(i.chilliIsOpen)then return;
+    end;
+end;
+R=q(X);
+W=j.Position~=R;
+if W then j.Position=R;
+end;
+end;
+pcall(function()
+    d[5]:UnbindFromRenderStep(Y);
+end);
+d[114]=Y;
+d[115]=Enum.RenderPriority.Last.Value+10000;
+d[116]=Z;
+d[5]:BindToRenderStep(d[114],d[115],d[116]);
+local function Z()pcall(function()
+    d[5]:UnbindFromRenderStep(Y);
+end);
+A();
+H();
+end;
+I.Destroying:Connect(Z);
+local function Y()pcall(function()
+    for R,R in ipairs(I:GetDescendants())do if R:IsA("UIStroke")then R.StrokeSizingMode=Enum.StrokeSizingMode.ScaledSize;
+        R.BorderStrokePosition=Enum.BorderStrokePosition.Outer;
+        R.BorderOffset=UDim.new(0,0);
+    end;
+end;
+end);
+end;
+local function R(W,m,L,h)W.Active=true;
+    local S,E=false;
+    local D=Vector2.new(0,0);
+    local J=Vector2.new(0,0);
+    local function V()S,E=false,nil;
+    end;
+    z(W.InputBegan:Connect(function(P)
+        local p=S;
+        if p then return;
+        elseif P.UserInputState~=Enum.UserInputState.Begin then return;
+        end;
+        if P.UserInputType~=Enum.UserInputType.MouseButton1 then if P.UserInputType~=Enum.UserInputType.Touch then return;
+        end;
+    end;
+    if L then if not(L())then return;
+    end;
+end;
+p=I.AbsoluteSize;
+if p.X<=0 then return;
+elseif p.Y<=0 then return;
+end;
+local L,s,r=Vector2.new(P.Position.X,P.Position.Y),W.AbsolutePosition,W.AbsoluteSize;
+if L.X<s.X then return;
+elseif L.X>s.X+r.X then return;
+elseif L.Y<s.Y then return;
+elseif L.Y>s.Y+r.Y then return;
+end;
+for r,B in ipairs(W:GetDescendants())do if B:IsA("GuiButton")then if B.Visible then r,s=B.AbsolutePosition,B.AbsoluteSize;
+    if L.X>=r.X then if L.X<=r.X+s.X then if L.Y>=r.Y then if L.Y<=r.Y+s.Y then return;
+    end;
+end;
+end;
+end;
+end;
+end;
+end;
+S=true;
+E,D=P.UserInputType==Enum.UserInputType.Touch and P or nil,L;
+J=Vector2.new(m.Position.X.Scale+m.Position.X.Offset/p.X,m.Position.Y.Scale+m.Position.Y.Offset/p.Y);
+end));
+z(d[3].InputChanged:Connect(function(W)
+    local L=S;
+    if not(L)then return;
+    end;
+    L=E and W==E;
+    if not L then local P=E;
+        if P then return;
+        elseif not(W.UserInputType==Enum.UserInputType.MouseMovement)then return;
+        end;
+    end;
+    L=I.AbsoluteSize;
+    if L.X<=0 then return;
+    elseif L.Y<=0 then return;
+    end;
+    local P,p,s=Vector2.new(W.Position.X,W.Position.Y)-D,Vector2.new(m.AbsoluteSize.X/L.X,m.AbsoluteSize.Y/L.Y),m.AnchorPoint;
+    local W,D,r,B=p.X*s.X,0.998-p.X*(1-s.X),p.Y*s.Y,0.98+p.Y*s.Y;
+    m.Position=UDim2.fromScale(math.clamp(J.X+P.X/L.X,math.min(W,D),math.max(W,D)),math.clamp(J.Y+P.Y/L.Y,math.min(r,B),math.max(r,B)));
+    if h then h(m.Position);
+    end;
+end));
+z(d[3].InputEnded:Connect(function(W)
+    local m=S;
+    if not(m)then return;
+    end;
+    m=W.UserInputType==Enum.UserInputType.MouseButton1;
+    if m then V();
+    else local m=E;
+        if W==m then V();
+        end;
+    end;
+end));
+local W={Cancel=V,IsDragging=function()
+        local m=S;
+        return m;
+    end};
+return W;
+end;
+local W,m,L=10,setmetatable,{__mode="k"};
+local h=m({},L);
+local function L(S,E)if S then if S.Parent then if not(S.Visible)then return false;
+end;
+else return false;
+end;
+else return false;
+end;
+local D,J=S.AbsolutePosition,S.AbsoluteSize;
+return E.X>=D.X and E.X<=D.X+J.X and E.Y>=D.Y and E.Y<=D.Y+J.Y;
+end;
+z(d[3].InputChanged:Connect(function(S)
+    local E=h[S];
+    if not(E)then return;
+    end;
+    local D=Vector2.new(S.Position.X,S.Position.Y);
+    E.Position=D;
+    if(D-E.Start).Magnitude>W then E.Cancelled=true;
+    end;
+end));
+z(d[3].InputEnded:Connect(function(S)
+    local E=h[S];
+    if not E then return;
+    end;
+    local D=Vector2.new(S.Position.X,S.Position.Y);
+    E.Position=D;
+    E.Ended=true;
+    if(D-E.Start).Magnitude>W then E.Cancelled=true;
+    elseif not(L(E.Button,D))then E.Cancelled=true;
+    end;
+    task.delay(0.2,function()
+        if h[S]==E then h[S]=nil;
+        end;
+    end);
+end));
+local function W(S,E)S.Active=true;
+    local function D(J)if J.UserInputType~=Enum.UserInputType.Touch then return;
+    elseif J.UserInputState~=Enum.UserInputState.Begin then return;
+    end;
+    local V=Vector2.new(J.Position.X,J.Position.Y);
+    if not(L(S,V))then return;
+    end;
+    h[J]={Button=S,Start=V,Position=V,Cancelled=false,Ended=false};
+end;
+S.InputBegan:Connect(D);
+local function D(J)if J then if J.UserInputType==Enum.UserInputType.Touch then local V=h[J];
+    if V then if V.Button~=S then return;
+    elseif V.Cancelled then return;
+    elseif not(L(S,V.Position))then return;
+    end;
+else return;
+end;
+end;
+end;
+E();
+end;
+return S.Activated:Connect(D);
+end;
+local function L(h)local S,E,D=h.Size,false;
+    local function J(V)return UDim2.new(S.X.Scale*V,S.X.Offset*V,S.Y.Scale*V,S.Y.Offset*V);
+    end;
+    local function V(P,p)local s={};
+        local r=D;
+        if r then D:Cancel();
+        end;
+        s[1]=(d[4]:Create(h,TweenInfo.new(p,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Size=P}));
+        D=s[1];
+        D:Play();
+    end;
+    h.MouseEnter:Connect(function()
+        E=true;
+        V(J(1.04),0.12);
+    end);
+    h.MouseLeave:Connect(function()
+        E=false;
+        V(S,0.12);
+    end);
+    local function D()V(J(0.96),0.06);
+    end;
+    h.MouseButton1Down:Connect(D);
+    h.MouseButton1Up:Connect(function()
+        V(E and J(1.04)or S,0.09);
+    end);
+end;
+i.menuSize=I:GetAttribute("MenuSize")or o.Size;
+i.windowRestPosition=UDim2.fromScale(0.5,0.475);
+i.windowDragController=nil;
+local function h(S,E)return UDim2.new(S.X.Scale,S.X.Offset,S.Y.Scale+E,S.Y.Offset);
+end;
+local function S()return h(i.windowRestPosition,0.245);
+end;
+local function h()return UDim2.new(i.windowRestPosition.X.Scale,i.windowRestPosition.X.Offset,1.55,0);
+end;
+local E,D,J,V,P=0.34,0.26,false;
+local p=0;
+i.windowAnimating=false;
+local s;
+s={Base=i.menuSize,Listeners={},ReflowTabs=nil,X=1,Y=1,OnChanged=function(r)
+        table.insert(s.Listeners,r);
+        r(s.X,s.Y);
+        return r;
+    end,Refresh=function()
+    local function r(B,_)if B>0 then if _>0 then return math.max(1,_/B);
+    end;
+end;
+return 1;
+end;
+local B,_=r(s.Base.X.Scale,i.menuSize.X.Scale),r(s.Base.Y.Scale,i.menuSize.Y.Scale);
+if math.abs(B-s.X)<1.0E-4 then if math.abs(_-s.Y)<1.0E-4 then return;
+end;
+end;
+s.X=B;
+s.Y=_;
+for v=#s.Listeners,1,-1 do r=s.Listeners[v];
+    local C,w=pcall(r,B,_);
+    if C then if w==false then table.remove(s.Listeners,v);
+    end;
+end;
+end;
+if s.ReflowTabs then s.ReflowTabs();
+end;
+end};
+do d[13]=d[19].obj24;
+    d[18]=d[13].AspectRatio;
+    d[13].Parent=nil;
+    d[16]=d[6]and d[6].ViewportSize or Vector2.new(1280,720);
+    d[16]=if d[16].X<1 or d[16].Y<1 then Vector2.new(1280,720)
+    else d[16];
+        local r=Vector2.new(0,0);
+        local B=Vector2.new(0,0);
+        pcall(function()
+            r,B=game:GetService("GuiService"):GetGuiInset();
+        end);
+        Z=(math.max(d[16].X-r.X-B.X,1));
+        d[14]=(math.max(d[16].Y-r.Y-B.Y,1));
+        m=i.menuSize.X.Scale*Z;
+        d[9]=i.menuSize.Y.Scale*d[14];
+        if d[18]>0 then if m/d[9]>d[18]then d[117]=d[18];
+            m=d[9]*d[117];
+        else d[9]=m/d[18];
+        end;
+    else end;
+        if d[3].TouchEnabled then if d[3].KeyboardEnabled then else if d[3].MouseEnabled then else d[2]=(math.min(1.3,Z*0.98/math.max(m,1),d[14]*0.98/math.max(d[9],1)));
+            d[10]=m*d[2];
+            d[118]=d[2];
+            d[1]=d[9]*d[118];
+            m=d[10];
+            d[9]=d[1];
+        end;
+    end;
+else end;
+    d[120]=UDim2.fromScale;
+    d[121]=m/Z;
+    d[119]=d[14];
+    d[122]=(d[120](d[121],d[9]/d[119]));
+    i.menuSize=d[122];
+    I:SetAttribute("MenuSize",i.menuSize);
+    o.Size=i.menuSize;
+    s.Base=i.menuSize;
+end;
+local function Z(m)local r={};
+    g+=1;
+    local B=g;
+    M();
+    if m then local _=f:GetAttribute("HudRestorePosition");
+        local v=typeof(_)=="UDim2";
+        if v then X=_;
+        end;
+        while true do v=X.X.Scale;
+            if not(v<=-0.5)then break;
+            end;
+            X=UDim2.new(X.X.Scale+1,X.X.Offset,X.Y.Scale,X.Y.Offset);
+        end;
+        f:SetAttribute("HudRestorePosition",X);
+    else local _=j;
+        if _ then local _=f:GetAttribute("LeftCenterHiddenByLibrary")==true;
+            if _ then j.Visible=true;
+                f:SetAttribute("LeftCenterHiddenByLibrary",nil);
+                local _=e;
+                if _ then local _=f:GetAttribute("LeftCenterScreenDisabledByLibrary")==true;
+                    if _ then e.Enabled=true;
+                        f:SetAttribute("LeftCenterScreenDisabledByLibrary",nil);
+                    end;
+                end;
+            end;
+        end;
+    end;
+    local _=m and q(X)or X;
+    K();
+    local m,v=TweenInfo.new(0.5,Enum.EasingStyle.Quint),j;
+    if v then r[1]=(d[4]:Create(j,m,{Position=_}));
+        U=r[1];
+        d[4]:Create(T,m,{Position=X}):Play();
+    else r[2]=(d[4]:Create(T,m,{Position=X}));
+        U=r[2];
+    end;
+    local m=U;
+    a=m.Completed:Connect(function()
+        local r=B~=g;
+        if r then return;
+        else local B=U;
+            if B~=m then return;
+            end;
+        end;
+        r=a;
+        if r then a:Disconnect();
+            a=nil;
+        end;
+        U=nil;
+        r=f:GetAttribute("QuickHudHidden")==true;
+        local U=r or i.chilliIsOpen;
+        if U then local U=j;
+            if U then local a=j;
+                a.Position=q(X);
+                if r then j.Visible=false;
+                    f:SetAttribute("LeftCenterHiddenByLibrary",true);
+                end;
+            end;
+            f:SetAttribute("HudRestorePosition",X);
+            if r then U=e;
+                if U then e.Enabled=false;
+                    f:SetAttribute("LeftCenterScreenDisabledByLibrary",true);
+                end;
+            end;
+        else local U=j;
+            if U then j.Position=X;
+                local a=f:GetAttribute("LeftCenterHiddenByLibrary")==true;
+                if a then j.Visible=true;
+                    f:SetAttribute("LeftCenterHiddenByLibrary",nil);
+                end;
+            end;
+            U=e;
+            if U then local U=f:GetAttribute("LeftCenterScreenDisabledByLibrary")==true;
+                if U then e.Enabled=true;
+                    f:SetAttribute("LeftCenterScreenDisabledByLibrary",nil);
+                end;
+            end;
+            f:SetAttribute("HudRestorePosition",nil);
+        end;
+        T.Position=X;
+        K();
+        c();
+    end);
+    m:Play();
+end;
+local function m()p+=1;
+    local U=P;
+    if U then P:Disconnect();
+        P=nil;
+    end;
+    U=V;
+    if U then V:Cancel();
+        V=nil;
+    end;
+end;
+local function U(a,T,r)m();
+    local B=p;
+    local _=d[4]:Create(o,T,{Position=a});
+    V=_;
+    P=_.Completed:Connect(function(a)
+        local T=B~=p;
+        if T then return;
+        else local p=V;
+            if p~=_ then return;
+            end;
+        end;
+        T=P;
+        if T then P:Disconnect();
+            P=nil;
+        end;
+        V=nil;
+        if a==Enum.PlaybackState.Completed then r();
+        end;
+    end);
+    _:Play();
+end;
+local function a(T)if i.chilliIsOpen then return;
+end;
+local P=V~=nil;
+J=true;
+i.windowAnimating=true;
+i.chilliIsOpen=true;
+Z(true);
+if not(P)then o.Position=S();
+end;
+o.Size=i.menuSize;
+U(i.windowRestPosition,TweenInfo.new(E,Enum.EasingStyle.Quart,Enum.EasingDirection.Out),function()
+    J=false;
+    i.windowAnimating=false;
+    if T then T();
+    end;
+end);
+end;
+local function T()if not(i.chilliIsOpen)then return;
+end;
+if i.windowDragController then i.windowDragController.Cancel();
+end;
+J=true;
+i.windowAnimating=true;
+i.chilliIsOpen=false;
+Z(f:GetAttribute("QuickHudHidden")==true);
+o.Size=i.menuSize;
+U(h(),TweenInfo.new(D,Enum.EasingStyle.Quart,Enum.EasingDirection.In),function()
+    J=false;
+    i.windowAnimating=false;
+end);
+end;
+local U,S={MinWidth=0.2,MaxWidth=0.98,MinHeight=0.22,MaxHeight=0.98},false;
+local E=Instance.new("TextButton");
+E.Name="ResizeGrip";
+E.Active=true;
+E.AutoButtonColor=false;
+E.AnchorPoint=Vector2.new(1,1);
+E.BackgroundTransparency=1;
+E.BorderSizePixel=0;
+E.Position=UDim2.fromScale(0.998,0.995);
+E.Selectable=false;
+E.Size=UDim2.fromScale(0.05,0.05);
+E.Text="";
+E.ZIndex=120;
+E.Parent=o;
+d[2]=(Instance.new("UIAspectRatioConstraint"));
+d[2].AspectRatio=1;
+d[123]=Enum.AspectType.FitWithinMaxSize;
+d[2].AspectType=d[123];
+d[124]=Enum.DominantAxis.Width;
+d[2].DominantAxis=d[124];
+d[2].Parent=E;
+local D,J={},{{0.5,0.5,0.9},{0.68,0.68,0.54},{0.84,0.84,0.22}};
+for V,V in ipairs(J)do d[2]=(Instance.new("Frame"));
+    d[2].Name="GripBar";
+    d[2].Active=false;
+    d[125]=(Vector2.new(0.5,0.5));
+    d[2].AnchorPoint=d[125];
+    d[126]=(Color3.fromRGB(255,255,255));
+    d[2].BackgroundColor3=d[126];
+    d[2].BackgroundTransparency=0.35;
+    d[2].BorderSizePixel=0;
+    d[127]=(UDim2.fromScale(V[1],V[2]));
+    d[2].Position=d[127];
+    d[2].Rotation=-45;
+    d[128]=(UDim2.fromScale(V[3],0.13));
+    d[2].Size=d[128];
+    d[2].ZIndex=121;
+    d[2].Parent=E;
+    table.insert(D,d[2]);
+end;
+local function J(V)for P,P in ipairs(D)do local D,p=TweenInfo.new(0.1),{};
+    p.BackgroundTransparency=V and 0.05 or 0.35;
+    d[4]:Create(P,D,p):Play();
+end;
+end;
+local D,V=false;
+local P=Vector2.new(0,0);
+local p=Vector2.new(0,0);
+local function r(B,_)local q=I.AbsoluteSize;
+    if q.X<=0 then return;
+    elseif q.Y<=0 then return;
+    end;
+    i.menuSize=UDim2.fromScale(math.clamp(B/q.X,U.MinWidth,U.MaxWidth),math.clamp(_/q.Y,U.MinHeight,U.MaxHeight));
+    I:SetAttribute("MenuSize",i.menuSize);
+    o.Size=i.menuSize;
+    s.Refresh();
+end;
+local function U(B)local _=Vector2.new(B.X,B.Y)-P;
+    r(p.X+_.X*2,p.Y+_.Y*2);
+end;
+local function B()J(true);
+end;
+E.MouseEnter:Connect(B);
+E.MouseLeave:Connect(function()
+    local B=D;
+    if not(B)then J(false);
+    end;
+end);
+E.InputBegan:Connect(function(B)
+    local _=D;
+    if _ then return;
+    elseif B.UserInputState~=Enum.UserInputState.Begin then return;
+    end;
+    if B.UserInputType~=Enum.UserInputType.MouseButton1 then if B.UserInputType~=Enum.UserInputType.Touch then return;
+    end;
+end;
+local _,q,v=Vector2.new(B.Position.X,B.Position.Y),E.AbsolutePosition,E.AbsoluteSize;
+if _.X<q.X then return;
+elseif _.X>q.X+v.X then return;
+elseif _.Y<q.Y then return;
+elseif _.Y>q.Y+v.Y then return;
+end;
+D=true;
+V=B.UserInputType==Enum.UserInputType.Touch and B or nil;
+P=Vector2.new(B.Position.X,B.Position.Y);
+p=o.AbsoluteSize;
+J(true);
+end);
+z(d[3].InputChanged:Connect(function(P)
+    local p=D;
+    if not(p)then return;
+    end;
+    p=V;
+    if p then local p=V;
+        if P==p then U(P.Position);
+        end;
+    elseif P.UserInputType==Enum.UserInputType.MouseMovement then U(P.Position);
+    end;
+end));
+z(d[3].InputEnded:Connect(function(U)
+    local P=U.UserInputType==Enum.UserInputType.MouseButton1 or U==V;
+    if P then U=D;
+        if U then D,V=false,nil;
+            J(false);
+        end;
+    end;
+end));
+s.OnChanged(function(U,D)
+    E.Position=UDim2.fromScale(1-0.002/U,1-0.005/D);
+    E.Size=UDim2.fromScale(0.05/U,0.05/D);
+end);
+s.OnChanged(function(U,E)
+    local D={};
+    N.Size=UDim2.new(1,0,0.125/E,0);
+    D[1]=d[19].obj12;
+    D[2]=(UDim2.new(0.06700000166893005/U,0,0.44999998807907104,0));
+    D[1].Position=D[2];
+    D[3]=d[19].obj12;
+    D[4]=(UDim2.new(0.11656716465950012/U,0,1.1833335161209106,0));
+    D[3].Size=D[4];
+    D[5]=d[19].obj9;
+    D[6]=(UDim2.new(0.5687711238861084/U,0,0.5,0));
+    D[5].Position=D[6];
+    D[7]=d[19].obj9;
+    D[8]=(UDim2.new(0.8620089292526245/U,0,0.7499999403953552,0));
+    D[7].Size=D[8];
+    D[9]=d[19].obj14;
+    D[10]=(UDim2.new(1-0.04500001668930054/U,0,0.4339999854564667,0));
+    D[9].Position=D[10];
+    D[11]=d[19].obj14;
+    D[12]=(UDim2.new(0.06637302041053772/U,0,0.6588137149810791,0));
+    D[11].Size=D[12];
+end);
+local U=Font.new("rbxasset://fonts/families/GothamSSm.json",Enum.FontWeight.ExtraBold,Enum.FontStyle.Normal);
+local E=Font.new("rbxasset://fonts/families/GothamSSm.json",Enum.FontWeight.ExtraBold,Enum.FontStyle.Italic);
+local D=ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(255,255,255)),ColorSequenceKeypoint.new(0.486159176,Color3.fromRGB(255,255,255)),ColorSequenceKeypoint.new(0.519031167,Color3.fromRGB(221,221,221)),ColorSequenceKeypoint.new(1,Color3.fromRGB(236,236,236))});
+local J=ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(0,36,84)),ColorSequenceKeypoint.new(1,Color3.fromRGB(0,31,54))});
+local function V(P)for p,p in ipairs(P:GetChildren())do if p:IsA("UIGradient")then p:Destroy();
+end;
+end;
+end;
+local function P(p)local B=p:FindFirstChildOfClass("UIStroke");
+    if B then else B=Instance.new("UIStroke");
+        B.Name="UIStroke";
+        B.Parent=p;
+    end;
+    return B;
+end;
+local function p(B,_,q)B.ApplyStrokeMode=Enum.ApplyStrokeMode.Contextual;
+    B.Color=_;
+    B.Enabled=true;
+    B.LineJoinMode=Enum.LineJoinMode.Round;
+    B.Thickness=q;
+    B.Transparency=0;
+    pcall(function()
+        B.BorderOffset=UDim.new(0,0);
+        B.BorderStrokePosition=Enum.BorderStrokePosition.Outer;
+        B.StrokeSizingMode=Enum.StrokeSizingMode.ScaledSize;
+    end);
+end;
+local function B(_,q)if q then _.FontFace=q;
+end;
+_.TextColor3=Color3.fromRGB(255,255,255);
+_.TextTransparency=0;
+_.TextStrokeColor3=Color3.fromRGB(0,0,0);
+_.TextStrokeTransparency=1;
+_.TextScaled=true;
+_.LineHeight=1;
+V(_);
+q=P(_);
+V(q);
+p(q,Color3.fromRGB(255,255,255),0.06499999761581421);
+local v=Instance.new("UIGradient");
+v.Name="StrokeStyleGradient";
+v.Color=J;
+v.Offset=Vector2.new(0,0);
+v.Rotation=90;
+v.Transparency=NumberSequence.new(0);
+v.Parent=q;
+v=Instance.new("UIGradient");
+v.Name="TextStyleGradient";
+v.Color=D;
+v.Offset=Vector2.new(0,0);
+v.Rotation=90;
+v.Transparency=NumberSequence.new(0);
+v.Parent=_;
+end;
+local function _(q)q.FontFace=U;
+    q.TextColor3=Color3.fromRGB(255,255,255);
+    q.TextTransparency=0;
+    q.TextStrokeColor3=Color3.fromRGB(0,0,0);
+    q.TextStrokeTransparency=1;
+    q.TextScaled=true;
+    q.LineHeight=1;
+    V(q);
+    local v=P(q);
+    V(v);
+    p(v,Color3.fromRGB(0,0,0),0.07999999821186066);
+end;
+local V=ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(255,193,194)),ColorSequenceKeypoint.new(0.0570934266,Color3.fromRGB(255,132,123)),ColorSequenceKeypoint.new(1,Color3.fromRGB(239,28,28))});
+local P=ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(255,193,194)),ColorSequenceKeypoint.new(0.0155709349,Color3.fromRGB(255,132,123)),ColorSequenceKeypoint.new(1,Color3.fromRGB(239,28,28))});
+local function p(q,v,c)local C=Instance.new("UIGradient");
+    C.Name=v;
+    C.Color=c;
+    C.Rotation=90;
+    C.Parent=q;
+    return C;
+end;
+local function q(v,c,C)local K=Instance.new("UIStroke");
+    K.ApplyStrokeMode=c;
+    K.Color=Color3.fromRGB(0,0,0);
+    K.LineJoinMode=Enum.LineJoinMode.Round;
+    K.Thickness=C;
+    K.Transparency=0;
+    pcall(function()
+        K.BorderOffset=UDim.new(0,0);
+        K.BorderStrokePosition=Enum.BorderStrokePosition.Outer;
+        K.StrokeSizingMode=Enum.StrokeSizingMode.ScaledSize;
+    end);
+    K.Parent=v;
+    return K;
+end;
+local function v(c,C,K)local w=Instance.new("TextButton");
+    w.Name=C;
+    w.Active=true;
+    w.AnchorPoint=Vector2.new(0.5,0.5);
+    w.AutoButtonColor=false;
+    w.BackgroundTransparency=1;
+    w.BorderSizePixel=0;
+    w.LayoutOrder=K;
+    w.Size=UDim2.new(1,0,0.13,0);
+    w.Text="";
+    w.ZIndex=99;
+    w.Parent=c;
+    local l=Instance.new("UIScale");
+    l.Scale=1;
+    l.Parent=w;
+    c=Instance.new("Frame");
+    c.Name="Main";
+    c.Active=false;
+    c.AnchorPoint=Vector2.new(0.5,0.5);
+    c.BackgroundColor3=Color3.fromRGB(175,0,0);
+    c.BorderSizePixel=0;
+    c.Position=UDim2.fromScale(0.5,0.5);
+    c.Size=UDim2.fromScale(1,0.92);
+    c.ZIndex=1;
+    c.Parent=w;
+    q(c,Enum.ApplyStrokeMode.Border,0.0599999987);
+    K=Instance.new("Frame");
+    K.Name="ColorFrame";
+    K.Active=false;
+    K.AnchorPoint=Vector2.new(0.5,0);
+    K.BackgroundColor3=Color3.fromRGB(255,255,255);
+    K.BorderSizePixel=0;
+    K.Position=UDim2.fromScale(0.5,0);
+    K.Size=UDim2.fromScale(1,0.9);
+    K.ZIndex=1;
+    K.Parent=c;
+    p(K,"RedGradient",V);
+    c=Instance.new("Frame");
+    c.Name="Transparent";
+    c.Active=false;
+    c.AnchorPoint=Vector2.new(0.5,0.5);
+    c.BackgroundColor3=Color3.fromRGB(255,255,255);
+    c.BorderSizePixel=0;
+    c.Position=UDim2.fromScale(0.5,0.5);
+    c.Size=UDim2.fromScale(0.965,0.88);
+    c.ZIndex=2;
+    c.Parent=K;
+    p(c,"RedGradient",P);
+    c=Instance.new("TextLabel");
+    c.Name="Label";
+    c.Active=false;
+    c.AnchorPoint=Vector2.new(0.5,0.5);
+    c.BackgroundTransparency=1;
+    c.BorderSizePixel=0;
+    c.Position=UDim2.fromScale(0.5,0.5);
+    c.Size=UDim2.fromScale(0.94,0.72);
+    c.Text=C;
+    c.ZIndex=6;
+    c.Parent=K;
+    B(c,U);
+    local c;
+    local C=false;
+    local function K(Q,n)local x={};
+        local b=c;
+        if b then c:Cancel();
+        end;
+        x[1]=(d[4]:Create(l,TweenInfo.new(n,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Scale=Q}));
+        c=x[1];
+        c:Play();
+    end;
+    w.MouseEnter:Connect(function()
+        C=true;
+        K(1.035,0.1);
+    end);
+    w.MouseLeave:Connect(function()
+        C=false;
+        K(1,0.1);
+    end);
+    local function c()K(0.96,0.055);
+    end;
+    w.MouseButton1Down:Connect(c);
+    w.MouseButton1Up:Connect(function()
+        K(C and 1.035 or 1,0.08);
+    end);
+    return w;
+end;
+d[14]=(Instance.new("Frame"));
+d[14].Name="SideButtons";
+d[14].Active=false;
+d[129]=(Vector2.new(1,0.5));
+d[14].AnchorPoint=d[129];
+d[14].BackgroundTransparency=1;
+d[14].BorderSizePixel=0;
+d[130]=(UDim2.new(-0.025,0,0.558,0));
+d[14].Position=d[130];
+d[131]=(UDim2.new(0.2612044513,0,1,0));
+d[14].Size=d[131];
+d[14].ZIndex=99;
+d[14].Parent=o;
+local c,C,K,w=ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(58,255,55)),ColorSequenceKeypoint.new(1,Color3.fromRGB(20,109,0))}),10,0.97,{NarrowWidth=0.20062215626239777,NarrowCenterX=0.8846889218690012,WideWidth=0.28,WideCenterX=0.845};
+local l=Color3.fromRGB(58,255,55);
+local Q,n,x,b,u,y,Fr=Color3.fromRGB(255,255,255),4,false,0.17,5,7.5,0.9;
+local function Or(Ir)local dr=Instance.new("UIGradient");
+    dr.Name="AccentGradient";
+    dr.Color=c;
+    dr.Rotation=90;
+    dr.Parent=Ir;
+    return dr;
+end;
+local function Ir(dr,Nr,tr)local ir=dr:FindFirstChildOfClass("UIScale");
+    local kr;
+    if ir then kr=ir;
+    else ir=Instance.new("UIScale");
+        ir.Name="InteractionScale";
+        ir.Scale=1;
+        ir.Parent=dr;
+        kr=ir;
+    end;
+    local ir;
+    local Yr=false;
+    local function zr(Ar,er)local Zr={};
+        local Rr=ir;
+        if Rr then ir:Cancel();
+        end;
+        Zr[1]=(d[4]:Create(kr,TweenInfo.new(er,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Scale=Ar}));
+        ir=Zr[1];
+        ir:Play();
+    end;
+    dr.MouseEnter:Connect(function()
+        Yr=true;
+        zr(Nr,0.1);
+    end);
+    dr.MouseLeave:Connect(function()
+        Yr=false;
+        zr(1,0.1);
+    end);
+    local function ir()zr(tr,0.055);
+    end;
+    dr.MouseButton1Down:Connect(ir);
+    dr.MouseButton1Up:Connect(function()
+        zr(Yr and Nr or 1,0.08);
+    end);
+    return kr;
+end;
+local function dr(Nr,tr)local ir=Instance.new("Frame");
+    ir.Name="Main";
+    ir.Active=false;
+    ir.AnchorPoint=Vector2.new(0.5,0.5);
+    ir.BackgroundColor3=Color3.fromRGB(0,0,0);
+    ir.BackgroundTransparency=0.5;
+    ir.BorderSizePixel=0;
+    ir.Position=UDim2.fromScale(0.5,0.5);
+    ir.Size=UDim2.fromScale(1,0.85);
+    ir.ZIndex=3;
+    ir.Parent=Nr;
+    q(ir,Enum.ApplyStrokeMode.Border,0.05);
+    Nr=Instance.new("TextLabel");
+    Nr.Name="Label";
+    Nr.Active=false;
+    Nr.AnchorPoint=Vector2.new(0,0.5);
+    Nr.BackgroundTransparency=1;
+    Nr.BorderSizePixel=0;
+    Nr.Position=UDim2.fromScale(0.025,0.5);
+    Nr.Size=UDim2.fromScale(0.65,0.64);
+    Nr.Text=tr;
+    Nr.TextWrapped=true;
+    Nr.TextXAlignment=Enum.TextXAlignment.Left;
+    Nr.TextYAlignment=Enum.TextYAlignment.Center;
+    Nr.ZIndex=5;
+    Nr.Parent=ir;
+    _(Nr);
+    return ir,Nr;
+end;
+local function Nr(tr,ir)local kr=Instance.new("Frame");
+    kr.Name=tr;
+    kr.Active=false;
+    kr.AnchorPoint=Vector2.new(0.5,0.5);
+    kr.BackgroundTransparency=1;
+    kr.BorderSizePixel=0;
+    kr.Position=UDim2.fromScale(0.5,0.5);
+    kr.Size=UDim2.fromScale(K,0.6);
+    kr.ZIndex=3;
+    tr=Instance.new("UIAspectRatioConstraint");
+    tr.AspectRatio=C;
+    tr.AspectType=Enum.AspectType.FitWithinMaxSize;
+    tr.DominantAxis=Enum.DominantAxis.Width;
+    tr.Parent=kr;
+    local tr,Yr=dr(kr,ir);
+    return kr,tr,Yr;
+end;
+i.activeDropdownCloser=nil;
+local function tr()if i.activeDropdownCloser then i.activeDropdownCloser();
+end;
+end;
+local function ir(kr,Yr,zr,Ar,er,Zr,Rr)local Wr=Instance.new("Frame");
+    Wr.Name=kr;
+    Wr.Active=false;
+    Wr.AnchorPoint=Vector2.new(0.5,0.5);
+    Wr.BackgroundTransparency=1;
+    Wr.BorderSizePixel=0;
+    Wr.ClipsDescendants=false;
+    Wr.Position=UDim2.fromScale(0.5,0.5);
+    Wr.Size=UDim2.new(K,0,0,0);
+    Wr.ZIndex=3;
+    local mr=Instance.new("Frame");
+    mr.Name="Head";
+    mr.Active=false;
+    mr.AnchorPoint=Vector2.new(0.5,0);
+    mr.BackgroundTransparency=1;
+    mr.BorderSizePixel=0;
+    mr.Position=UDim2.fromScale(0.5,0);
+    mr.Size=UDim2.new(1,0,0,0);
+    mr.ZIndex=3;
+    mr.Parent=Wr;
+    local Lr,jr=dr(mr,Yr);
+    local dr=Instance.new("TextButton");
+    dr.Name="Dropdown";
+    dr.Active=true;
+    dr.AutoButtonColor=false;
+    dr.AnchorPoint=Vector2.new(0.5,0.5);
+    dr.BackgroundColor3=Color3.fromRGB(0,0,0);
+    dr.BackgroundTransparency=0.6;
+    dr.BorderSizePixel=0;
+    dr.Position=UDim2.fromScale(w.WideCenterX,0.5);
+    dr.Size=UDim2.fromScale(w.WideWidth,0.62);
+    dr.Text="";
+    dr.ZIndex=6;
+    dr.Parent=Lr;
+    q(dr,Enum.ApplyStrokeMode.Border,0.1);
+    Ir(dr,1.025,0.975);
+    local Xr=tostring(Rr or"");
+    local Ur=y/C;
+    local ar,gr=w.WideCenterX-w.WideWidth/2,Instance.new("TextLabel");
+    gr.Name="Note";
+    gr.Active=false;
+    gr.AnchorPoint=Vector2.new(0,0.5);
+    gr.BackgroundTransparency=1;
+    gr.BorderSizePixel=0;
+    gr.Position=UDim2.fromScale(0.025,0.755);
+    gr.Size=UDim2.fromScale(math.max(0.3,ar-0.045),0.3);
+    gr.Text=Xr;
+    gr.TextWrapped=false;
+    gr.TextXAlignment=Enum.TextXAlignment.Left;
+    gr.TextYAlignment=Enum.TextYAlignment.Center;
+    gr.Visible=false;
+    gr.ZIndex=5;
+    gr.Parent=Lr;
+    _(gr);
+    gr.TextTransparency=0.32;
+    Yr=gr:FindFirstChildOfClass("UIStroke");
+    if Yr then Yr.Thickness=0.06;
+        Yr.Transparency=0.2;
+    end;
+    local function Mr()local fr=Xr~="";
+        gr.Text=Xr;
+        gr.Visible=fr;
+        if fr then jr.Position=UDim2.fromScale(0.025,0.34);
+            jr.Size=UDim2.fromScale(0.65,0.64*Ur*Fr);
+            dr.Size=UDim2.fromScale(w.WideWidth,0.62*Ur);
+        else jr.Position=UDim2.fromScale(0.025,0.5);
+            jr.Size=UDim2.fromScale(0.65,0.64);
+            dr.Size=UDim2.fromScale(w.WideWidth,0.62);
+        end;
+    end;
+    Mr();
+    local jr=Instance.new("TextLabel");
+    jr.Name="Value";
+    jr.Active=false;
+    jr.AnchorPoint=Vector2.new(0.5,0.5);
+    jr.BackgroundTransparency=1;
+    jr.BorderSizePixel=0;
+    jr.Position=UDim2.fromScale(0.405,0.5);
+    jr.Size=UDim2.fromScale(0.7,0.58);
+    jr.Text=zr[Ar]or zr[1];
+    jr.TextWrapped=true;
+    jr.TextXAlignment=Enum.TextXAlignment.Center;
+    jr.TextYAlignment=Enum.TextYAlignment.Center;
+    jr.ZIndex=7;
+    jr.Parent=dr;
+    _(jr);
+    kr=Instance.new("Frame");
+    kr.Name="Divider";
+    kr.Active=false;
+    kr.AnchorPoint=Vector2.new(0.5,0.5);
+    kr.BackgroundColor3=Color3.fromRGB(0,0,0);
+    kr.BackgroundTransparency=0.3;
+    kr.BorderSizePixel=0;
+    kr.Position=UDim2.fromScale(0.8,0.5);
+    kr.Size=UDim2.fromScale(0.014,0.66);
+    kr.ZIndex=7;
+    kr.Parent=dr;
+    local Ur=Instance.new("Frame");
+    Ur.Name="Caret";
+    Ur.Active=false;
+    Ur.AnchorPoint=Vector2.new(0.5,0.5);
+    Ur.BackgroundTransparency=1;
+    Ur.BorderSizePixel=0;
+    Ur.Position=UDim2.fromScale(0.888,0.5);
+    Ur.Size=UDim2.fromScale(0.16,0.56);
+    Ur.ZIndex=7;
+    Ur.Parent=dr;
+    Lr=Instance.new("UIAspectRatioConstraint");
+    Lr.AspectRatio=1;
+    Lr.AspectType=Enum.AspectType.FitWithinMaxSize;
+    Lr.DominantAxis=Enum.DominantAxis.Height;
+    Lr.Parent=Ur;
+    ar={{0.335355,45},{0.664645,-45}};
+    for gr,gr in ipairs(ar)do Yr=Instance.new("Frame");
+        Yr.Name="Arm";
+        Yr.Active=false;
+        Yr.AnchorPoint=Vector2.new(0.5,0.5);
+        Yr.BackgroundColor3=l;
+        Yr.BorderSizePixel=0;
+        Yr.Position=UDim2.fromScale(gr[1],0.535355);
+        Yr.Rotation=gr[2];
+        Yr.Size=UDim2.fromScale(0.6657,0.2);
+        Yr.ZIndex=8;
+        Yr.Parent=Ur;
+    end;
+    local ar=Instance.new("Frame");
+    ar.Name="Menu";
+    ar.Active=false;
+    ar.AnchorPoint=Vector2.new(0.5,0);
+    ar.BackgroundTransparency=1;
+    ar.BorderSizePixel=0;
+    ar.ClipsDescendants=true;
+    ar.Position=UDim2.new(0.5,0,0,0);
+    ar.Size=UDim2.new(1,0,0,0);
+    ar.ZIndex=6;
+    ar.Parent=Wr;
+    local gr,fr,Tr,hr;
+    if#zr>=u then gr=Instance.new("Frame");
+        gr.Name="Search";
+        gr.Active=false;
+        gr.BackgroundColor3=Color3.fromRGB(0,0,0);
+        gr.BackgroundTransparency=0.6;
+        gr.BorderSizePixel=0;
+        gr.Position=UDim2.new(0,0,0,0);
+        gr.Size=UDim2.new(0,0,0,0);
+        gr.ZIndex=7;
+        gr.Parent=ar;
+        q(gr,Enum.ApplyStrokeMode.Border,0.07);
+        fr=Instance.new("TextBox");
+        fr.Name="Input";
+        fr.Active=true;
+        fr.AnchorPoint=Vector2.new(0.5,0.5);
+        fr.BackgroundTransparency=1;
+        fr.BorderSizePixel=0;
+        fr.ClearTextOnFocus=false;
+        fr.MultiLine=false;
+        fr.Position=UDim2.fromScale(0.5,0.5);
+        fr.Size=UDim2.fromScale(0.94,0.56);
+        fr.Text="";
+        fr.PlaceholderText="Search...";
+        fr.PlaceholderColor3=Color3.fromRGB(198,198,198);
+        fr.TextXAlignment=Enum.TextXAlignment.Center;
+        fr.TextYAlignment=Enum.TextYAlignment.Center;
+        fr.ZIndex=9;
+        fr.Parent=gr;
+        _(fr);
+        Tr,hr=gr,fr;
+    else Tr,hr=gr,fr;
+    end;
+    local u=Instance.new("TextLabel");
+    u.Name="Empty";
+    u.Active=false;
+    u.BackgroundTransparency=1;
+    u.BorderSizePixel=0;
+    u.Position=UDim2.new(0,0,0,0);
+    u.Size=UDim2.new(0,0,0,0);
+    u.Text="No match";
+    u.Visible=false;
+    u.ZIndex=9;
+    u.Parent=ar;
+    _(u);
+    u.TextTransparency=0.4;
+    local gr,fr=type(Ar)=="number"and Ar or 1,{};
+    Yr=er and type(Ar)=="table";
+    if Yr then for Sr,Sr in ipairs(Ar)do Lr=nil;
+        if type(Sr)=="number"then Lr=math.clamp(math.floor(Sr),1,#zr);
+        else for Er,Dr in ipairs(zr)do if Dr==tostring(Sr)then Lr=Er;
+            break;
+        end;
+    end;
+end;
+if Lr then fr[Lr]=true;
+end;
+end;
+else fr[gr]=true;
+end;
+local function Sr()if not(er)then local Er,Dr=zr[gr],gr;
+    return Er,Dr;
+end;
+local Er,Dr,Jr={},{},#zr;
+for Gr=1,Jr,1 do local Jr=fr;
+    if Jr[Gr]then table.insert(Er,zr[Gr]);
+        table.insert(Dr,Gr);
+    end;
+end;
+return Er,Dr;
+end;
+local Er,Dr,Jr,Gr,Vr,Pr={},{},"",false;
+local pr,sr,rr,Br,_r,qr=0;
+local vr,cr,Hr,Cr,Kr,wr,lr,Qr="",true;
+if Zr then vr=tostring(Zr.ButtonText or"Apply");
+    sr=Instance.new("TextLabel");
+    sr.Name="Hint";
+    sr.Active=false;
+    sr.BackgroundTransparency=1;
+    sr.BorderSizePixel=0;
+    sr.Position=UDim2.new(0,0,0,0);
+    sr.Size=UDim2.new(0,0,0,0);
+    sr.Text=tostring(Zr.Hint or"");
+    sr.TextWrapped=true;
+    sr.TextXAlignment=Enum.TextXAlignment.Center;
+    sr.TextYAlignment=Enum.TextYAlignment.Center;
+    sr.ZIndex=9;
+    sr.Parent=ar;
+    _(sr);
+    sr.TextTransparency=0.28;
+    rr=Instance.new("TextButton");
+    rr.Name="Apply";
+    rr.Active=true;
+    rr.AutoButtonColor=false;
+    rr.AnchorPoint=Vector2.new(0.5,0.5);
+    rr.BackgroundTransparency=1;
+    rr.BorderSizePixel=0;
+    rr.Position=UDim2.new(0,0,0,0);
+    rr.Size=UDim2.new(0,0,0,0);
+    rr.Text="";
+    rr.ZIndex=9;
+    rr.Parent=ar;
+    Ir(rr,1.03,0.96);
+    Ar=Instance.new("Frame");
+    Ar.Name="Main";
+    Ar.Active=false;
+    Ar.AnchorPoint=Vector2.new(0.5,0.5);
+    Ar.BackgroundColor3=Color3.fromRGB(175,0,0);
+    Ar.BorderSizePixel=0;
+    Ar.Position=UDim2.fromScale(0.5,0.5);
+    Ar.Size=UDim2.fromScale(1,1);
+    Ar.ZIndex=10;
+    Ar.Parent=rr;
+    q(Ar,Enum.ApplyStrokeMode.Border,0.07);
+    kr=Instance.new("Frame");
+    kr.Name="ColorFrame";
+    kr.Active=false;
+    kr.AnchorPoint=Vector2.new(0.5,0);
+    kr.BackgroundColor3=Color3.fromRGB(255,255,255);
+    kr.BorderSizePixel=0;
+    kr.Position=UDim2.fromScale(0.5,0);
+    kr.Size=UDim2.fromScale(1,0.9);
+    kr.ZIndex=11;
+    kr.Parent=Ar;
+    p(kr,"RedGradient",V);
+    Yr=Instance.new("Frame");
+    Yr.Name="Transparent";
+    Yr.Active=false;
+    Yr.AnchorPoint=Vector2.new(0.5,0.5);
+    Yr.BackgroundColor3=Color3.fromRGB(255,255,255);
+    Yr.BorderSizePixel=0;
+    Yr.Position=UDim2.fromScale(0.5,0.5);
+    Yr.Size=UDim2.fromScale(0.965,0.88);
+    Yr.ZIndex=12;
+    Yr.Parent=kr;
+    p(Yr,"RedGradient",P);
+    Br=Instance.new("TextLabel");
+    Br.Name="Label";
+    Br.Active=false;
+    Br.AnchorPoint=Vector2.new(0.5,0.5);
+    Br.BackgroundTransparency=1;
+    Br.BorderSizePixel=0;
+    Br.Position=UDim2.fromScale(0.5,0.5);
+    Br.Size=UDim2.fromScale(0.88,0.56);
+    Br.Text=vr;
+    Br.TextWrapped=true;
+    Br.ZIndex=13;
+    Br.Parent=kr;
+    B(Br,U);
+    _r,qr=Br:FindFirstChildOfClass("UIStroke"),{kr,Yr};
+    W(rr,function()
+        if er then local kr=cr;
+            if not(kr)then return;
+            end;
+        end;
+        local kr,Ar=Sr();
+        Vr(false);
+        if type(Zr.OnApply)=="function"then Zr.OnApply(kr,Ar);
+        end;
+    end);
+    Hr,Cr,Kr,wr,lr,Qr=sr,rr,Br,_r,qr,vr;
+else Hr,Cr,Kr,wr,lr,Qr=sr,rr,Br,_r,qr,vr;
+end;
+local function kr()if not(er)then local Ar=zr[gr]or"";
+    return Ar;
+end;
+local Ar,sr={},#zr;
+for rr=1,sr,1 do local sr=fr;
+    if sr[rr]then table.insert(Ar,zr[rr]);
+    end;
+end;
+if#Ar==0 then return"None";
+elseif#Ar==1 then return Ar[1];
+end;
+return#Ar.." selected";
+end;
+for Ar,sr in ipairs(zr)do local rr=Instance.new("TextButton");
+    rr.Name="Option"..Ar;
+    rr.Active=true;
+    rr.AutoButtonColor=false;
+    rr.AnchorPoint=Vector2.new(0,0);
+    rr.BackgroundColor3=Color3.fromRGB(0,0,0);
+    rr.BackgroundTransparency=0.45;
+    rr.BorderSizePixel=0;
+    rr.LayoutOrder=Ar;
+    rr.Position=UDim2.new(0,0,0,0);
+    rr.Size=UDim2.new(0,0,0,0);
+    rr.Text="";
+    rr.ZIndex=7;
+    rr.Parent=ar;
+    q(rr,Enum.ApplyStrokeMode.Border,0.07);
+    local Br;
+    if not er then Br=Instance.new("Frame");
+        Br.Name="Accent";
+        Br.Active=false;
+        Br.AnchorPoint=Vector2.new(0,0.5);
+        Br.BackgroundColor3=Color3.fromRGB(255,255,255);
+        Br.BorderSizePixel=0;
+        Br.Position=UDim2.fromScale(0,0.5);
+        Br.Size=UDim2.fromScale(0,1);
+        Br.ZIndex=8;
+        Br.Parent=rr;
+        Or(Br);
+    else end;
+        local _r;
+        if er then Rr=Instance.new("Frame");
+            Rr.Name="Tick";
+            Rr.Active=false;
+            Rr.AnchorPoint=Vector2.new(0,0.5);
+            Rr.BackgroundColor3=Color3.fromRGB(0,0,0);
+            Rr.BackgroundTransparency=0.3;
+            Rr.BorderSizePixel=0;
+            Rr.Position=UDim2.fromScale(0.055,0.5);
+            Rr.Size=UDim2.fromScale(0.16,0.44);
+       
