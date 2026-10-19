@@ -1,7 +1,7 @@
 
 local SniperArena = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/Sniper_Arena.lua"
 local Rivals = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/Rivals.lua"
-local StealAnEgg = "https://raw.githubusercontent.com/tienkhanh1/Chilli-Hub-Script/refs/heads/main/StealAnEgg"
+local StealAnEgg = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/Steal%20An%20Egg.lua"
 local MurderMystery2 = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/Murder%20Mystery%202.lua"
 local DeadRails = "https://darahub.pages.dev/api/script/Darahub-DeadRail/Lobby.lua"
 local Nights99 = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/99%20Nights%20in%20the%20Forest.lua"
