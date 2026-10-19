@@ -1,4 +1,3 @@
-
 local SniperArena = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/Sniper_Arena.lua"
 local Rivals = "https://raw.githubusercontent.com/StarFutXZ/Eclipse/refs/heads/main/Rivals.lua"
 local StealAnEgg = "https://raw.githubusercontent.com/tienkhanh1/Chilli-Hub-Script/refs/heads/main/StealAnEgg"
