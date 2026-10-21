@@ -1,2141 +1,1891 @@
--- local function v0()
--- 	warn("❌ This script must only be executed from the offical NoxHub loader");
--- 	return;
--- end
--- local v1 = game:GetService("HttpService");
--- local v2 = "YourSecretSecondaryToken";
--- local function v3(v81, v82)
--- 	return v1:UrlEncode(v81   .. v82 );
--- end
--- if ( not _G._secondaryData or  not _G._secondaryData.nonce or  not _G._secondaryData.timestamp or  not _G._secondaryData.signature or  not _G._secondaryData.userKey or  not _G.__userKey) then
--- 	local v226 = 0;
--- 	while true do
--- 		if (v226 == (470 - (159 + 310))) then
--- 			return;
--- 		end
--- 		if (v226 == 0) then
--- 			print("❌ Security verification failed: missing token data or user key.");
--- 			v0();
--- 			v226 = 2 - 1 ;
--- 		end
--- 	end
--- end
--- if (_G._secondaryData.userKey ~= _G.__userKey) then
--- 	local v227 = 935 - (39 + 896) ;
--- 	while true do
--- 		if (v227 == (0 - 0)) then
--- 			print("❌ Security verification failed: user key mismatch.");
--- 			return;
--- 		end
--- 	end
--- end
--- local v4 = _G._secondaryData.nonce   .. ":"   .. _G._secondaryData.timestamp   .. ":"   .. _G.__userKey ;
--- local v5 = v3(v4, v2);
--- if (v5 ~= _G._secondaryData.signature) then
--- 	local v228 = 0 - 0 ;
--- 	while true do
--- 		if (v228 == 0) then
--- 			print("❌ Security verification failed: token signature mismatch.");
--- 			return;
--- 		end
--- 	end
--- end
--- local v6 = 300;
--- local v7 = os.time();
--- if (math.abs(v7 - tonumber(_G._secondaryData.timestamp) ) > v6) then
--- 	local v229 = 0;
--- 	while true do
--- 		if (v229 == 0) then
--- 			print("❌ Security verification failed: token expired.");
--- 			return;
--- 		end
--- 	end
--- end
--- _G._secondaryData = nil;
--- _G.__userKey = nil;
-print("✅ Security verification passed. Loading NoxHub...");
-local v8 = loadstring(game:HttpGet("https://sirius.menu/rayfield"))();
-local v9 = {
-	Flags = {},
-	Theme = {
-		Default = {
-			TextColor = Color3.fromRGB(673 - 433 , 129 + 111 , 240),
-			Background = Color3.fromRGB(25, 16 + 9 , 25),
-			Topbar = Color3.fromRGB(430 - (115 + 281) , 78 - 44 , 29 + 5 ),
-			Shadow = Color3.fromRGB(48 - 28 , 20, 20),
-			NotificationBackground = Color3.fromRGB(73 - 53 , 20, 887 - (550 + 317) ),
-			NotificationActionsBackground = Color3.fromRGB(332 - 102 , 323 - 93 , 230),
-			TabBackground = Color3.fromRGB(80, 223 - 143 , 365 - (134 + 151) ),
-			TabStroke = Color3.fromRGB(1750 - (970 + 695) , 162 - 77 , 85),
-			TabBackgroundSelected = Color3.fromRGB(210, 210, 2200 - (582 + 1408) ),
-			TabTextColor = Color3.fromRGB(832 - 592 , 301 - 61 , 240),
-			SelectedTabTextColor = Color3.fromRGB(50, 188 - 138 , 1874 - (1195 + 629) ),
-			ElementBackground = Color3.fromRGB(35, 45 - 10 , 276 - (187 + 54) ),
-			ElementBackgroundHover = Color3.fromRGB(40, 820 - (162 + 618) , 40),
-			SecondaryElementBackground = Color3.fromRGB(25, 18 + 7 , 17 + 8 ),
-			ElementStroke = Color3.fromRGB(106 - 56 , 50, 84 - 34 ),
-			SecondaryElementStroke = Color3.fromRGB(4 + 36 , 1676 - (1373 + 263) , 1040 - (451 + 549) ),
-			SliderBackground = Color3.fromRGB(16 + 34 , 214 - 76 , 220),
-			SliderProgress = Color3.fromRGB(84 - 34 , 138, 1604 - (746 + 638) ),
-			SliderStroke = Color3.fromRGB(22 + 36 , 247 - 84 , 255),
-			ToggleBackground = Color3.fromRGB(371 - (218 + 123) , 30, 30),
-			ToggleEnabled = Color3.fromRGB(0, 1727 - (1535 + 46) , 213 + 1 ),
-			ToggleDisabled = Color3.fromRGB(100, 15 + 85 , 660 - (306 + 254) ),
-			ToggleEnabledStroke = Color3.fromRGB(0, 11 + 159 , 255),
-			ToggleDisabledStroke = Color3.fromRGB(244 - 119 , 1592 - (899 + 568) , 83 + 42 ),
-			ToggleEnabledOuterStroke = Color3.fromRGB(241 - 141 , 703 - (268 + 335) , 390 - (60 + 230) ),
-			ToggleDisabledOuterStroke = Color3.fromRGB(637 - (426 + 146) , 65, 8 + 57 ),
-			DropdownSelected = Color3.fromRGB(40, 40, 40),
-			DropdownUnselected = Color3.fromRGB(1486 - (282 + 1174) , 841 - (569 + 242) , 30),
-			InputBackground = Color3.fromRGB(30, 30, 30),
-			InputStroke = Color3.fromRGB(65, 187 - 122 , 4 + 61 ),
-			PlaceholderColor = Color3.fromRGB(1202 - (706 + 318) , 178, 1429 - (721 + 530) )
-		},
-		Ocean = {
-			TextColor = Color3.fromRGB(1501 - (945 + 326) , 599 - 359 , 214 + 26 ),
-			Background = Color3.fromRGB(720 - (271 + 429) , 28 + 2 , 30),
-			Topbar = Color3.fromRGB(25, 1540 - (1408 + 92) , 1126 - (461 + 625) ),
-			Shadow = Color3.fromRGB(1303 - (993 + 295) , 2 + 18 , 1191 - (418 + 753) ),
-			NotificationBackground = Color3.fromRGB(10 + 15 , 4 + 31 , 35),
-			NotificationActionsBackground = Color3.fromRGB(68 + 162 , 240, 61 + 179 ),
-			TabBackground = Color3.fromRGB(40, 589 - (406 + 123) , 1829 - (1749 + 20) ),
-			TabStroke = Color3.fromRGB(50, 17 + 53 , 1392 - (1249 + 73) ),
-			TabBackgroundSelected = Color3.fromRGB(36 + 64 , 1325 - (466 + 679) , 180),
-			TabTextColor = Color3.fromRGB(505 - 295 , 657 - 427 , 230),
-			SelectedTabTextColor = Color3.fromRGB(1920 - (106 + 1794) , 16 + 34 , 13 + 37 ),
-			ElementBackground = Color3.fromRGB(88 - 58 , 135 - 85 , 50),
-			ElementBackgroundHover = Color3.fromRGB(154 - (4 + 110) , 644 - (57 + 527) , 60),
-			SecondaryElementBackground = Color3.fromRGB(1457 - (41 + 1386) , 148 - (17 + 86) , 45),
-			ElementStroke = Color3.fromRGB(31 + 14 , 156 - 86 , 202 - 132 ),
-			SecondaryElementStroke = Color3.fromRGB(206 - (122 + 44) , 65, 112 - 47 ),
-			SliderBackground = Color3.fromRGB(0 - 0 , 110, 110),
-			SliderProgress = Color3.fromRGB(0, 140, 114 + 26 ),
-			SliderStroke = Color3.fromRGB(0, 24 + 136 , 324 - 164 ),
-			ToggleBackground = Color3.fromRGB(95 - (30 + 35) , 50, 35 + 15 ),
-			ToggleEnabled = Color3.fromRGB(1257 - (1043 + 214) , 130, 130),
-			ToggleDisabled = Color3.fromRGB(264 - 194 , 90, 1302 - (323 + 889) ),
-			ToggleEnabledStroke = Color3.fromRGB(0 - 0 , 740 - (361 + 219) , 480 - (53 + 267) ),
-			ToggleDisabledStroke = Color3.fromRGB(20 + 65 , 518 - (15 + 398) , 1087 - (18 + 964) ),
-			ToggleEnabledOuterStroke = Color3.fromRGB(50, 100, 376 - 276 ),
-			ToggleDisabledOuterStroke = Color3.fromRGB(27 + 18 , 41 + 24 , 65),
-			DropdownSelected = Color3.fromRGB(880 - (20 + 830) , 60, 47 + 13 ),
-			DropdownUnselected = Color3.fromRGB(151 - (116 + 10) , 3 + 37 , 778 - (542 + 196) ),
-			InputBackground = Color3.fromRGB(64 - 34 , 15 + 35 , 26 + 24 ),
-			InputStroke = Color3.fromRGB(50, 26 + 44 , 70),
-			PlaceholderColor = Color3.fromRGB(368 - 228 , 410 - 250 , 1711 - (1126 + 425) )
-		},
-		AmberGlow = {
-			TextColor = Color3.fromRGB(660 - (118 + 287) , 960 - 715 , 1351 - (118 + 1003) ),
-			Background = Color3.fromRGB(45, 87 - 57 , 20),
-			Topbar = Color3.fromRGB(432 - (142 + 235) , 181 - 141 , 25),
-			Shadow = Color3.fromRGB(8 + 27 , 1002 - (553 + 424) , 28 - 13 ),
-			NotificationBackground = Color3.fromRGB(50, 35, 25),
-			NotificationActionsBackground = Color3.fromRGB(216 + 29 , 229 + 1 , 215),
-			TabBackground = Color3.fromRGB(75, 50, 21 + 14 ),
-			TabStroke = Color3.fromRGB(39 + 51 , 60, 26 + 19 ),
-			TabBackgroundSelected = Color3.fromRGB(498 - 268 , 501 - 321 , 223 - 123 ),
-			TabTextColor = Color3.fromRGB(73 + 177 , 1063 - 843 , 953 - (239 + 514) ),
-			SelectedTabTextColor = Color3.fromRGB(50, 11 + 19 , 10),
-			ElementBackground = Color3.fromRGB(1389 - (797 + 532) , 45, 26 + 9 ),
-			ElementBackgroundHover = Color3.fromRGB(24 + 46 , 117 - 67 , 1242 - (373 + 829) ),
-			SecondaryElementBackground = Color3.fromRGB(786 - (476 + 255) , 1170 - (369 + 761) , 18 + 12 ),
-			ElementStroke = Color3.fromRGB(154 - 69 , 113 - 53 , 283 - (64 + 174) ),
-			SecondaryElementStroke = Color3.fromRGB(75, 50, 35),
-			SliderBackground = Color3.fromRGB(220, 19 + 111 , 60),
-			SliderProgress = Color3.fromRGB(250, 222 - 72 , 411 - (144 + 192) ),
-			SliderStroke = Color3.fromRGB(471 - (42 + 174) , 128 + 42 , 71 + 14 ),
-			ToggleBackground = Color3.fromRGB(24 + 31 , 40, 1534 - (363 + 1141) ),
-			ToggleEnabled = Color3.fromRGB(1820 - (1183 + 397) , 395 - 265 , 30),
-			ToggleDisabled = Color3.fromRGB(66 + 24 , 53 + 17 , 2035 - (1913 + 62) ),
-			ToggleEnabledStroke = Color3.fromRGB(255, 160, 32 + 18 ),
-			ToggleDisabledStroke = Color3.fromRGB(291 - 181 , 2018 - (565 + 1368) , 282 - 207 ),
-			ToggleEnabledOuterStroke = Color3.fromRGB(200, 1761 - (1477 + 184) , 68 - 18 ),
-			ToggleDisabledOuterStroke = Color3.fromRGB(70 + 5 , 916 - (564 + 292) , 94 - 39 ),
-			DropdownSelected = Color3.fromRGB(70, 150 - 100 , 344 - (244 + 60) ),
-			DropdownUnselected = Color3.fromRGB(43 + 12 , 516 - (41 + 435) , 1031 - (938 + 63) ),
-			InputBackground = Color3.fromRGB(60, 35 + 10 , 35),
-			InputStroke = Color3.fromRGB(90, 1190 - (936 + 189) , 17 + 33 ),
-			PlaceholderColor = Color3.fromRGB(1803 - (1565 + 48) , 93 + 57 , 130)
-		},
-		Light = {
-			TextColor = Color3.fromRGB(40, 1178 - (782 + 356) , 307 - (176 + 91) ),
-			Background = Color3.fromRGB(245, 638 - 393 , 361 - 116 ),
-			Topbar = Color3.fromRGB(230, 1322 - (975 + 117) , 2105 - (157 + 1718) ),
-			Shadow = Color3.fromRGB(163 + 37 , 709 - 509 , 200),
-			NotificationBackground = Color3.fromRGB(854 - 604 , 250, 250),
-			NotificationActionsBackground = Color3.fromRGB(1258 - (697 + 321) , 653 - 413 , 240),
-			TabBackground = Color3.fromRGB(497 - 262 , 235, 541 - 306 ),
-			TabStroke = Color3.fromRGB(84 + 131 , 215, 402 - 187 ),
-			TabBackgroundSelected = Color3.fromRGB(683 - 428 , 1482 - (322 + 905) , 866 - (602 + 9) ),
-			TabTextColor = Color3.fromRGB(1269 - (449 + 740) , 80, 952 - (826 + 46) ),
-			SelectedTabTextColor = Color3.fromRGB(947 - (245 + 702) , 0 - 0 , 0 + 0 ),
-			ElementBackground = Color3.fromRGB(2138 - (260 + 1638) , 680 - (382 + 58) , 769 - 529 ),
-			ElementBackgroundHover = Color3.fromRGB(187 + 38 , 464 - 239 , 668 - 443 ),
-			SecondaryElementBackground = Color3.fromRGB(1440 - (902 + 303) , 515 - 280 , 565 - 330 ),
-			ElementStroke = Color3.fromRGB(19 + 191 , 1900 - (1121 + 569) , 210),
-			SecondaryElementStroke = Color3.fromRGB(210, 424 - (22 + 192) , 893 - (483 + 200) ),
-			SliderBackground = Color3.fromRGB(1613 - (1404 + 59) , 180, 602 - 382 ),
-			SliderProgress = Color3.fromRGB(100, 201 - 51 , 965 - (468 + 297) ),
-			SliderStroke = Color3.fromRGB(682 - (334 + 228) , 170, 742 - 522 ),
-			ToggleBackground = Color3.fromRGB(220, 509 - 289 , 399 - 179 ),
-			ToggleEnabled = Color3.fromRGB(0 + 0 , 146, 214),
-			ToggleDisabled = Color3.fromRGB(386 - (141 + 95) , 150, 148 + 2 ),
-			ToggleEnabledStroke = Color3.fromRGB(0 - 0 , 408 - 238 , 255),
-			ToggleDisabledStroke = Color3.fromRGB(170, 40 + 130 , 465 - 295 ),
-			ToggleEnabledOuterStroke = Color3.fromRGB(71 + 29 , 100, 53 + 47 ),
-			ToggleDisabledOuterStroke = Color3.fromRGB(253 - 73 , 107 + 73 , 343 - (92 + 71) ),
-			DropdownSelected = Color3.fromRGB(114 + 116 , 230, 386 - 156 ),
-			DropdownUnselected = Color3.fromRGB(220, 985 - (574 + 191) , 182 + 38 ),
-			InputBackground = Color3.fromRGB(240, 601 - 361 , 123 + 117 ),
-			InputStroke = Color3.fromRGB(180, 1029 - (254 + 595) , 180),
-			PlaceholderColor = Color3.fromRGB(266 - (55 + 71) , 184 - 44 , 140)
-		},
-		Amethyst = {
-			TextColor = Color3.fromRGB(2030 - (573 + 1217) , 664 - 424 , 19 + 221 ),
-			Background = Color3.fromRGB(48 - 18 , 20, 979 - (714 + 225) ),
-			Topbar = Color3.fromRGB(40, 72 - 47 , 69 - 19 ),
-			Shadow = Color3.fromRGB(3 + 17 , 21 - 6 , 836 - (118 + 688) ),
-			NotificationBackground = Color3.fromRGB(83 - (25 + 23) , 4 + 16 , 1926 - (927 + 959) ),
-			NotificationActionsBackground = Color3.fromRGB(809 - 569 , 240, 250),
-			TabBackground = Color3.fromRGB(60, 40, 80),
-			TabStroke = Color3.fromRGB(802 - (16 + 716) , 45, 90),
-			TabBackgroundSelected = Color3.fromRGB(347 - 167 , 140, 200),
-			TabTextColor = Color3.fromRGB(230, 230, 337 - (11 + 86) ),
-			SelectedTabTextColor = Color3.fromRGB(121 - 71 , 20, 335 - (175 + 110) ),
-			ElementBackground = Color3.fromRGB(113 - 68 , 147 - 117 , 60),
-			ElementBackgroundHover = Color3.fromRGB(1846 - (503 + 1293) , 97 - 62 , 51 + 19 ),
-			SecondaryElementBackground = Color3.fromRGB(1101 - (810 + 251) , 21 + 9 , 55),
-			ElementStroke = Color3.fromRGB(70, 16 + 34 , 77 + 8 ),
-			SecondaryElementStroke = Color3.fromRGB(598 - (43 + 490) , 778 - (711 + 22) , 309 - 229 ),
-			SliderBackground = Color3.fromRGB(959 - (240 + 619) , 15 + 45 , 150),
-			SliderProgress = Color3.fromRGB(206 - 76 , 80, 12 + 168 ),
-			SliderStroke = Color3.fromRGB(1894 - (1344 + 400) , 505 - (255 + 150) , 158 + 42 ),
-			ToggleBackground = Color3.fromRGB(25 + 20 , 30, 234 - 179 ),
-			ToggleEnabled = Color3.fromRGB(387 - 267 , 60, 1889 - (404 + 1335) ),
-			ToggleDisabled = Color3.fromRGB(500 - (183 + 223) , 56 - 9 , 78 + 39 ),
-			ToggleEnabledStroke = Color3.fromRGB(51 + 89 , 417 - (10 + 327) , 119 + 51 ),
-			ToggleDisabledStroke = Color3.fromRGB(124, 71, 150),
-			ToggleEnabledOuterStroke = Color3.fromRGB(428 - (118 + 220) , 14 + 26 , 569 - (108 + 341) ),
-			ToggleDisabledOuterStroke = Color3.fromRGB(80, 50, 50 + 60 ),
-			DropdownSelected = Color3.fromRGB(50, 35, 295 - 225 ),
-			DropdownUnselected = Color3.fromRGB(1528 - (711 + 782) , 47 - 22 , 519 - (270 + 199) ),
-			InputBackground = Color3.fromRGB(15 + 30 , 1849 - (580 + 1239) , 60),
-			InputStroke = Color3.fromRGB(80, 50, 327 - 217 ),
-			PlaceholderColor = Color3.fromRGB(171 + 7 , 6 + 144 , 88 + 112 )
-		},
-		Green = {
-			TextColor = Color3.fromRGB(30, 60, 78 - 48 ),
-			Background = Color3.fromRGB(235, 153 + 92 , 235),
-			Topbar = Color3.fromRGB(1377 - (645 + 522) , 230, 2000 - (1010 + 780) ),
-			Shadow = Color3.fromRGB(200, 220 + 0 , 952 - 752 ),
-			NotificationBackground = Color3.fromRGB(703 - 463 , 2086 - (1045 + 791) , 607 - 367 ),
-			NotificationActionsBackground = Color3.fromRGB(335 - 115 , 740 - (351 + 154) , 1794 - (1281 + 293) ),
-			TabBackground = Color3.fromRGB(215, 501 - (28 + 238) , 480 - 265 ),
-			TabStroke = Color3.fromRGB(1749 - (1381 + 178) , 210, 179 + 11 ),
-			TabBackgroundSelected = Color3.fromRGB(198 + 47 , 255, 245),
-			TabTextColor = Color3.fromRGB(50, 35 + 45 , 172 - 122 ),
-			SelectedTabTextColor = Color3.fromRGB(20, 60, 11 + 9 ),
-			ElementBackground = Color3.fromRGB(225, 240, 225),
-			ElementBackgroundHover = Color3.fromRGB(210, 695 - (381 + 89) , 187 + 23 ),
-			SecondaryElementBackground = Color3.fromRGB(159 + 76 , 419 - 174 , 235),
-			ElementStroke = Color3.fromRGB(1336 - (1074 + 82) , 438 - 238 , 1964 - (214 + 1570) ),
-			SecondaryElementStroke = Color3.fromRGB(1635 - (990 + 465) , 83 + 117 , 79 + 101 ),
-			SliderBackground = Color3.fromRGB(88 + 2 , 160, 90),
-			SliderProgress = Color3.fromRGB(275 - 205 , 130, 1796 - (1668 + 58) ),
-			SliderStroke = Color3.fromRGB(100, 806 - (512 + 114) , 260 - 160 ),
-			ToggleBackground = Color3.fromRGB(444 - 229 , 817 - 582 , 101 + 114 ),
-			ToggleEnabled = Color3.fromRGB(12 + 48 , 114 + 16 , 60),
-			ToggleDisabled = Color3.fromRGB(505 - 355 , 2169 - (109 + 1885) , 1619 - (1269 + 200) ),
-			ToggleEnabledStroke = Color3.fromRGB(80, 150, 153 - 73 ),
-			ToggleDisabledStroke = Color3.fromRGB(945 - (98 + 717) , 976 - (802 + 24) , 130),
-			ToggleEnabledOuterStroke = Color3.fromRGB(100, 275 - 115 , 126 - 26 ),
-			ToggleDisabledOuterStroke = Color3.fromRGB(160, 27 + 153 , 123 + 37 ),
-			DropdownSelected = Color3.fromRGB(37 + 188 , 240, 225),
-			DropdownUnselected = Color3.fromRGB(210, 49 + 176 , 584 - 374 ),
-			InputBackground = Color3.fromRGB(783 - 548 , 88 + 157 , 96 + 139 ),
-			InputStroke = Color3.fromRGB(149 + 31 , 200, 131 + 49 ),
-			PlaceholderColor = Color3.fromRGB(57 + 63 , 1573 - (797 + 636) , 582 - 462 )
-		},
-		Bloom = {
-			TextColor = Color3.fromRGB(60, 1659 - (1427 + 192) , 18 + 32 ),
-			Background = Color3.fromRGB(255, 557 - 317 , 221 + 24 ),
-			Topbar = Color3.fromRGB(114 + 136 , 546 - (192 + 134) , 225),
-			Shadow = Color3.fromRGB(1506 - (316 + 960) , 106 + 84 , 195),
-			NotificationBackground = Color3.fromRGB(255, 182 + 53 , 222 + 18 ),
-			NotificationActionsBackground = Color3.fromRGB(936 - 691 , 215, 776 - (83 + 468) ),
-			TabBackground = Color3.fromRGB(240, 2016 - (1202 + 604) , 1027 - 807 ),
-			TabStroke = Color3.fromRGB(230, 332 - 132 , 581 - 371 ),
-			TabBackgroundSelected = Color3.fromRGB(255, 550 - (45 + 280) , 227 + 8 ),
-			TabTextColor = Color3.fromRGB(80, 35 + 5 , 22 + 38 ),
-			SelectedTabTextColor = Color3.fromRGB(28 + 22 , 30, 9 + 41 ),
-			ElementBackground = Color3.fromRGB(472 - 217 , 2146 - (340 + 1571) , 95 + 145 ),
-			ElementBackgroundHover = Color3.fromRGB(245, 220, 2002 - (1733 + 39) ),
-			SecondaryElementBackground = Color3.fromRGB(255, 235, 240),
-			ElementStroke = Color3.fromRGB(632 - 402 , 200, 1244 - (125 + 909) ),
-			SecondaryElementStroke = Color3.fromRGB(2178 - (1096 + 852) , 90 + 110 , 299 - 89 ),
-			SliderBackground = Color3.fromRGB(233 + 7 , 130, 672 - (409 + 103) ),
-			SliderProgress = Color3.fromRGB(486 - (46 + 190) , 255 - (51 + 44) , 51 + 129 ),
-			SliderStroke = Color3.fromRGB(255, 1497 - (1114 + 203) , 926 - (228 + 498) ),
-			ToggleBackground = Color3.fromRGB(240, 210, 48 + 172 ),
-			ToggleEnabled = Color3.fromRGB(141 + 114 , 140, 833 - (174 + 489) ),
-			ToggleDisabled = Color3.fromRGB(521 - 321 , 180, 2090 - (830 + 1075) ),
-			ToggleEnabledStroke = Color3.fromRGB(250, 684 - (303 + 221) , 190),
-			ToggleDisabledStroke = Color3.fromRGB(1479 - (231 + 1038) , 150 + 30 , 1352 - (171 + 991) ),
-			ToggleEnabledOuterStroke = Color3.fromRGB(220, 659 - 499 , 483 - 303 ),
-			ToggleDisabledOuterStroke = Color3.fromRGB(190, 170, 180),
-			DropdownSelected = Color3.fromRGB(250, 549 - 329 , 181 + 44 ),
-			DropdownUnselected = Color3.fromRGB(240, 736 - 526 , 634 - 414 ),
-			InputBackground = Color3.fromRGB(411 - 156 , 235, 741 - 501 ),
-			InputStroke = Color3.fromRGB(1468 - (111 + 1137) , 348 - (91 + 67) , 595 - 395 ),
-			PlaceholderColor = Color3.fromRGB(170, 130, 35 + 105 )
-		},
-		DarkBlue = {
-			TextColor = Color3.fromRGB(753 - (423 + 100) , 2 + 228 , 636 - 406 ),
-			Background = Color3.fromRGB(11 + 9 , 796 - (326 + 445) , 130 - 100 ),
-			Topbar = Color3.fromRGB(30, 35, 40),
-			Shadow = Color3.fromRGB(15, 44 - 24 , 25),
-			NotificationBackground = Color3.fromRGB(25, 70 - 40 , 746 - (530 + 181) ),
-			NotificationActionsBackground = Color3.fromRGB(926 - (614 + 267) , 82 - (19 + 13) , 55),
-			TabBackground = Color3.fromRGB(56 - 21 , 93 - 53 , 128 - 83 ),
-			TabStroke = Color3.fromRGB(45, 13 + 37 , 105 - 45 ),
-			TabBackgroundSelected = Color3.fromRGB(40, 70, 207 - 107 ),
-			TabTextColor = Color3.fromRGB(200, 2012 - (1293 + 519) , 408 - 208 ),
-			SelectedTabTextColor = Color3.fromRGB(255, 665 - 410 , 487 - 232 ),
-			ElementBackground = Color3.fromRGB(30, 150 - 115 , 40),
-			ElementBackgroundHover = Color3.fromRGB(94 - 54 , 24 + 21 , 11 + 39 ),
-			SecondaryElementBackground = Color3.fromRGB(35, 40, 104 - 59 ),
-			ElementStroke = Color3.fromRGB(11 + 34 , 50, 20 + 40 ),
-			SecondaryElementStroke = Color3.fromRGB(40, 29 + 16 , 1151 - (709 + 387) ),
-			SliderBackground = Color3.fromRGB(0, 1948 - (673 + 1185) , 522 - 342 ),
-			SliderProgress = Color3.fromRGB(0 - 0 , 120, 345 - 135 ),
-			SliderStroke = Color3.fromRGB(0 + 0 , 150, 240),
-			ToggleBackground = Color3.fromRGB(27 + 8 , 40, 60 - 15 ),
-			ToggleEnabled = Color3.fromRGB(0, 30 + 90 , 418 - 208 ),
-			ToggleDisabled = Color3.fromRGB(137 - 67 , 1950 - (446 + 1434) , 80),
-			ToggleEnabledStroke = Color3.fromRGB(0, 150, 240),
-			ToggleDisabledStroke = Color3.fromRGB(1358 - (1040 + 243) , 75, 253 - 168 ),
-			ToggleEnabledOuterStroke = Color3.fromRGB(1867 - (559 + 1288) , 2031 - (609 + 1322) , 634 - (13 + 441) ),
-			ToggleDisabledOuterStroke = Color3.fromRGB(205 - 150 , 55, 65),
-			DropdownSelected = Color3.fromRGB(78 - 48 , 70, 448 - 358 ),
-			DropdownUnselected = Color3.fromRGB(1 + 24 , 30, 127 - 92 ),
-			InputBackground = Color3.fromRGB(9 + 16 , 30, 35),
-			InputStroke = Color3.fromRGB(45, 22 + 28 , 178 - 118 ),
-			PlaceholderColor = Color3.fromRGB(83 + 67 , 150, 160)
-		},
-		Serenity = {
-			TextColor = Color3.fromRGB(91 - 41 , 55, 40 + 20 ),
-			Background = Color3.fromRGB(134 + 106 , 245, 180 + 70 ),
-			Topbar = Color3.fromRGB(181 + 34 , 221 + 4 , 668 - (153 + 280) ),
-			Shadow = Color3.fromRGB(577 - 377 , 189 + 21 , 220),
-			NotificationBackground = Color3.fromRGB(210, 220, 230),
-			NotificationActionsBackground = Color3.fromRGB(89 + 136 , 121 + 109 , 240),
-			TabBackground = Color3.fromRGB(200, 191 + 19 , 220),
-			TabStroke = Color3.fromRGB(131 + 49 , 289 - 99 , 200),
-			TabBackgroundSelected = Color3.fromRGB(109 + 66 , 185, 200),
-			TabTextColor = Color3.fromRGB(717 - (89 + 578) , 40 + 15 , 124 - 64 ),
-			SelectedTabTextColor = Color3.fromRGB(1079 - (572 + 477) , 5 + 30 , 25 + 15 ),
-			ElementBackground = Color3.fromRGB(210, 27 + 193 , 316 - (84 + 2) ),
-			ElementBackgroundHover = Color3.fromRGB(362 - 142 , 166 + 64 , 240),
-			SecondaryElementBackground = Color3.fromRGB(200, 1052 - (497 + 345) , 6 + 214 ),
-			ElementStroke = Color3.fromRGB(190, 34 + 166 , 1543 - (605 + 728) ),
-			SecondaryElementStroke = Color3.fromRGB(180, 136 + 54 , 444 - 244 ),
-			SliderBackground = Color3.fromRGB(200, 11 + 209 , 235),
-			SliderProgress = Color3.fromRGB(258 - 188 , 118 + 12 , 180),
-			SliderStroke = Color3.fromRGB(150, 498 - 318 , 167 + 53 ),
-			ToggleBackground = Color3.fromRGB(699 - (457 + 32) , 220, 230),
-			ToggleEnabled = Color3.fromRGB(70, 160, 90 + 120 ),
-			ToggleDisabled = Color3.fromRGB(180, 1582 - (832 + 570) , 170 + 10 ),
-			ToggleEnabledStroke = Color3.fromRGB(16 + 44 , 530 - 380 , 97 + 103 ),
-			ToggleDisabledStroke = Color3.fromRGB(936 - (588 + 208) , 377 - 237 , 140),
-			ToggleEnabledOuterStroke = Color3.fromRGB(1900 - (884 + 916) , 120, 293 - 153 ),
-			ToggleDisabledOuterStroke = Color3.fromRGB(70 + 50 , 773 - (232 + 421) , 2019 - (1569 + 320) ),
-			DropdownSelected = Color3.fromRGB(54 + 166 , 230, 46 + 194 ),
-			DropdownUnselected = Color3.fromRGB(673 - 473 , 210, 825 - (316 + 289) ),
-			InputBackground = Color3.fromRGB(575 - 355 , 11 + 219 , 240),
-			InputStroke = Color3.fromRGB(1633 - (666 + 787) , 615 - (360 + 65) , 187 + 13 ),
-			PlaceholderColor = Color3.fromRGB(150, 404 - (79 + 175) , 150)
-		}
-	}
-};
-local v10 = v8:CreateWindow({
-	Name = "Dead Rails | NoxHub - Premium Roblox Scripts",
-	Icon = 0 - 0 ,
-	LoadingTitle = "Loading Dead Rails",
-	LoadingSubtitle = "NoxHub - Premium Roblox Scripts",
-	Theme = "Amethyst",
-	DisableRayfieldPrompts = false,
-	DisableBuildWarnings = false,
-	ConfigurationSaving = {
-		Enabled = true,
-		FolderName = "NoxHub",
-		FileName = "DeadRails"
-	}
-});
-local v11 = game:GetService("Players");
-local v12 = game:GetService("RunService");
-local v13 = workspace.CurrentCamera;
-local v14 = v11.LocalPlayer;
-local v15 = game:GetService("UserInputService");
-local v16 = game:GetService("Workspace");
-local v17 = game:GetService("TweenService");
-local v18 = game:GetService("Lighting");
-local v19 = v14:GetMouse();
-local v20 = v16:FindFirstChild("RuntimeItems");
-local v21 = {};
-local v22 = {};
-local v23 = nil;
-local v24 = 4 + 1 ;
-local v25 = v10:CreateTab("Main", 4371070988 -  -112291470 );
-local v26 = v10:CreateTab("Combat", 4483362458 - 0 );
-local v27 = v10:CreateTab("Visuals", 4483363357 - (503 + 396) );
-local v28 = v10:CreateTab("Misc", 4483362639 - (92 + 89) );
-v25:CreateSection("Movement");
-local v29 = false;
-local v30 = 193 - 93 ;
-local v31 = 9 + 7 ;
-local v32 = 30 + 20 ;
-v25:CreateToggle({
-	Name = "Small Movement Boost (speed/jump)",
-	Flag = "movementBoost",
-	CurrentValue = false,
-	Callback = function(v83)
-		v29 = v83;
-		local v84 = v11.LocalPlayer.Character or v11.LocalPlayer.CharacterAdded:Wait() ;
-		local v85 = v84:FindFirstChildWhichIsA("Humanoid");
-		if v85 then
-			v85.UseJumpPower = true;
-			if v29 then
-				local v313 = 0 - 0 ;
-				local v314;
-				local v315;
-				while true do
-					if (v313 == 0) then
-						v314 = (v30 * (0.1 + 0)) / 100 ;
-						v315 = (v30 * 0.4) / 100 ;
-						v313 = 1;
-					end
-					if (v313 == (2 - 1)) then
-						v85.WalkSpeed = v31 * (1 + v314) ;
-						v85.JumpPower = v32 * (1 + 0 + v315) ;
-						break;
-					end
-				end
-			else
-				local v316 = 0 + 0 ;
-				while true do
-					if (v316 == 0) then
-						v85.WalkSpeed = v31;
-						v85.JumpPower = v32;
-						break;
-					end
-				end
-			end
-		end
-	end
-});
-v25:CreateSlider({
-	Name = "Boost Strength (%)",
-	Flag = "boostStrength",
-	Range = {
-		0 - 0 ,
-		152 - 52
-	},
-	Increment = 1245 - (485 + 759) ,
-	CurrentValue = v30,
-	Suffix = "%",
-	Callback = function(v86)
-		local v87 = 0 - 0 ;
-		while true do
-			if (v87 == (1189 - (442 + 747))) then
-				v30 = v86;
-				if v29 then
-					local v343 = v11.LocalPlayer.Character or v11.LocalPlayer.CharacterAdded:Wait() ;
-					local v344 = v343:FindFirstChildWhichIsA("Humanoid");
-					if v344 then
-						local v417 = 0;
-						local v418;
-						local v419;
-						while true do
-							if (v417 == 1) then
-								v344.WalkSpeed = v31 * ((1136 - (832 + 303)) + v418) ;
-								v344.JumpPower = v32 * ((947 - (88 + 858)) + v419) ;
-								break;
-							end
-							if (v417 == (0 + 0)) then
-								v418 = (v30 * 0.1) / (83 + 17) ;
-								v419 = (v30 * (0.4 + 0)) / 100 ;
-								v417 = 790 - (766 + 23) ;
-							end
-						end
-					end
-				end
-				break;
-			end
-		end
-	end
-});
-v25:CreateSection("Toggles");
-local v33 = false;
-local function v34(v88)
-	local v89 = 0 - 0 ;
-	local v90;
-	while true do
-		if (v89 == (1 - 0)) then
-			for v317, v318 in ipairs(v90:GetDescendants()) do
-				if v318:IsA("BasePart") then
-					v318.Transparency = (v88 and (0.7 - 0)) or (0 - 0) ;
-					v318.CanCollide = not v88;
-				elseif (v318:IsA("Decal") or v318:IsA("Texture")) then
-					v318.Transparency = (v88 and 1) or (1073 - (1036 + 37)) ;
-				end
-			end
-			break;
-		end
-		if ((0 + 0) == v89) then
-			v90 = workspace:FindFirstChild("RandomBuildings");
-			if  not v90 then
-				return;
-			end
-			v89 = 1;
-		end
-	end
+if getgenv().DaraHubExecuted then
+    NotifyToast({ title="WARNING!", content="Script Is Already Loaded, rejoin if you want to re-execute.", duration=8, icon="triangle-exclamation", iconColor="#FFFF00" })
+    return
 end
-v25:CreateToggle({
-	Name = "Transparent Buildings",
-	Flag = "transBuild",
-	CurrentValue = false,
-	Callback = function(v91)
-		v33 = v91;
-		v34(v33);
-	end
-});
-local v35 = false;
-local v36;
-local function v37()
-	local v92 = 0 - 0 ;
-	local v93;
-	local v94;
-	while true do
-		if (v92 == (0 + 0)) then
-			v93 = v14.Character or v14.CharacterAdded:Wait() ;
-			v94 = v93:WaitForChild("Humanoid");
-			v92 = 1481 - (641 + 839) ;
-		end
-		if (v92 == (914 - (910 + 3))) then
-			v36 = v12.RenderStepped:Connect(function()
-				if  not v35 then
-					return;
-				end
-				if (v13.CameraType ~= Enum.CameraType.Custom) then
-					v13.CameraType = Enum.CameraType.Custom;
-				end
-				if (v13.CameraSubject ~= v94) then
-					v13.CameraSubject = v94;
-				end
-				v14.CameraMode = Enum.CameraMode.Classic;
-				v14.CameraMaxZoomDistance = 128;
-				v14.CameraMinZoomDistance = 0.5;
-			end);
-			break;
-		end
-	end
+getgenv().DaraHubExecuted = true
+
+local BaseURL = "https://darahub.pages.dev"
+WindUI = loadstring(game:HttpGet(BaseURL .. "/Module/Library/GUI/WindUI-Moded/main.lua"))()
+loadstring(game:HttpGet(BaseURL .. "/Module/Library/GUI/LoadAll.lua"))()
+
+Window = WindUI:CreateWindow({
+    Title = "Darahub | Dead Rail (Game)",
+    Icon = BaseURL .. "/icon.png",
+    Author = "Made By Pnsdg",
+    Folder = "Darahub/DeadRail-Game",
+    Size = UDim2.fromOffset(580, 490),
+    Theme = "Dark", HidePanelBackground = false, NewElements = true, Acrylic = false,
+    HideSearchBar = false, SideBarWidth = 200,
+    OpenButton = { ShowIconOnly = true }
+})
+WindUI.TransparencyValue = 0.7
+Window:ToggleTransparency(true)
+Window:DisableTopbarButtons({ "Fullscreen" })
+executor = identifyexecutor()
+if type(executor) == "string" then Window:Tag({ Title = executor }) end
+Window:Tag({ Title = "v1" })
+
+Tabs = {
+    Main     = Window:Tab({ Title = "Main",     Icon = "layout-grid" }),
+    Player   = Window:Tab({ Title = "Player",   Icon = "user" }),
+    Visuals  = Window:Tab({ Title = "Visuals",  Icon = "camera" }),
+    ESP      = Window:Tab({ Title = "ESP",      Icon = "eye" }),
+    Combat   = Window:Tab({ Title = "Combat",   Icon = "swords" }),
+    Misc     = Window:Tab({ Title = "Misc",     Icon = "wrench" }),
+    Settings = Window:Tab({ Title = "Settings", Icon = "settings" }),
+    info     = Window:Tab({ Title = "info",     Icon = "info" }),
+}
+
+local Players           = game:GetService("Players")
+local RunService        = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local VirtualUser       = game:GetService("VirtualUser")
+local UserInputService  = game:GetService("UserInputService")
+local Lighting          = game:GetService("Lighting")
+local HttpService       = game:GetService("HttpService")
+local MarketplaceService= game:GetService("MarketplaceService")
+local Stats             = game:GetService("Stats")
+local LocalPlayer       = Players.LocalPlayer
+
+socialsModule = loadstring(game:HttpGet(BaseURL .. "/Module/info.lua"))()
+socialsModule(Tabs)
+
+local jobId, placeId, StartTime = game.JobId, game.PlaceId, tick()
+local EngineTargetMegaBytes = 3000
+local FrameCount, LastTime, CurrentFPS = 0, tick(), 0
+RunService.RenderStepped:Connect(function()
+    FrameCount += 1
+    local now = tick()
+    if now - LastTime >= 1 then CurrentFPS = FrameCount; FrameCount = 0; LastTime = now end
+end)
+
+local function loadECS()
+    local ok, result = pcall(function()
+        local universe = ReplicatedStorage.Shared.Universe
+        return {
+            world      = require(universe.ECS.world),
+            comps      = require(universe.ECS.components),
+            replicator = require(ReplicatedStorage.Client.Universe.Replication.clientReplicator),
+            remotes    = require(universe.Remotes),
+            actionable = universe.Network.RemoteEvent.Actionable,
+            pickup     = universe.Network.RemoteEvent.Pickup,
+        }
+    end)
+    if not ok then return nil end
+    local shopOk, shopFn = pcall(function()
+        return require(ReplicatedStorage.Shared.Game.Shop.isShopItem)
+    end)
+    result.isShopItem = shopOk and shopFn or function() return false end
+    return result
 end
-if v14.Character then
-	v37();
-else
-	local v230 = 0;
-	while true do
-		if (v230 == (0 - 0)) then
-			v14.CharacterAdded:Wait();
-			v37();
-			break;
-		end
-	end
+
+local ECS = loadECS()
+local function ecsGet(id, comp)
+    if not ECS then return nil end
+    local ok, v = pcall(ECS.world.get, ECS.world, id, comp)
+    return ok and v or nil
 end
-v25:CreateToggle({
-	Name = "Unlock Camera",
-	Flag = "unlockCam",
-	CurrentValue = true,
-	Callback = function(v95)
-		v35 = v95;
-		if ( not v95 and v36) then
-			v36:Disconnect();
-			v36 = nil;
-		elseif (v95 and  not v36) then
-			v37();
-		end
-	end
-});
-local v38 = {};
-local v39 = false;
-local v40;
-v25:CreateToggle({
-	Name = "Fullbright",
-	Flag = "Fullbright",
-	CurrentValue = false,
-	Callback = function(v96)
-		local v97 = 0;
-		while true do
-			if (v97 == (1684 - (1466 + 218))) then
-				v39 = v96;
-				if v96 then
-					local v345 = 0;
-					while true do
-						if (v345 == (1 + 0)) then
-							v38.Brightness = v18.Brightness;
-							v38.ClockTime = v18.ClockTime;
-							v345 = 2;
-						end
-						if (v345 == (1148 - (556 + 592))) then
-							v38.Ambient = v18.Ambient;
-							v38.OutdoorAmbient = v18.OutdoorAmbient;
-							v345 = 1 + 0 ;
-						end
-						if (v345 == (810 - (329 + 479))) then
-							v38.GlobalShadows = v18.GlobalShadows;
-							if  not v40 then
-								v40 = v12.RenderStepped:Connect(function()
-									v18.Ambient = Color3.new(855 - (174 + 680) , 3 - 2 , 1 - 0 );
-									v18.OutdoorAmbient = Color3.new(1 + 0 , 740 - (396 + 343) , 1 + 0 );
-									v18.Brightness = 1.5;
-									v18.ClockTime = 1491 - (29 + 1448) ;
-									v18.GlobalShadows = false;
-								end);
-							end
-							break;
-						end
-					end
-				else
-					if v40 then
-						local v420 = 1389 - (135 + 1254) ;
-						while true do
-							if (v420 == (0 - 0)) then
-								v40:Disconnect();
-								v40 = nil;
-								break;
-							end
-						end
-					end
-					for v394, v395 in pairs(v38) do
-						v18[v394] = v395;
-					end
-				end
-				break;
-			end
-		end
-	end
-});
-v25:CreateToggle({
-	Name = "No Fog",
-	Flag = "noFog",
-	CurrentValue = false,
-	Callback = function(v98)
-		local v99 = 0 - 0 ;
-		local v100;
-		while true do
-			if (v99 == 0) then
-				v100 = game:GetService("Lighting");
-				if v98 then
-					v100.FogEnd = 10000001527 - (389 + 1138) ;
-					v100.FogStart = (10000000574 - (102 + 472)) - (1 + 0) ;
-					local v348 = v100:FindFirstChildOfClass("Atmosphere");
-					if v348 then
-						local v421 = 0 + 0 ;
-						while true do
-							if (v421 == (0 + 0)) then
-								v348.Density = 0;
-								v348.Haze = 0;
-								break;
-							end
-						end
-					end
-				else
-					v100.FogEnd = 2545 - (320 + 1225) ;
-					v100.FogStart = 0 - 0 ;
-					local v351 = v100:FindFirstChildOfClass("Atmosphere");
-					if v351 then
-						local v422 = 0 + 0 ;
-						while true do
-							if (v422 == 0) then
-								v351.Density = 1464.3 - (157 + 1307) ;
-								v351.Haze = 1860 - (821 + 1038) ;
-								break;
-							end
-						end
-					end
-				end
-				break;
-			end
-		end
-	end
-});
-v25:CreateSlider({
-	Name = "Camera FOV",
-	Flag = "camFOV",
-	Range = {
-		40,
-		14 + 106
-	},
-	Increment = 1 - 0 ,
-	Suffix = "°",
-	CurrentValue = workspace.CurrentCamera.FieldOfView,
-	Callback = function(v101)
-		workspace.CurrentCamera.FieldOfView = v101;
-	end
-});
-local v41;
-v25:CreateToggle({
-	Name = "No Clip",
-	Flag = "noClip",
-	CurrentValue = false,
-	Callback = function(v103)
-		local v104 = 0 + 0 ;
-		local v105;
-		while true do
-			if (v104 == 0) then
-				v105 = v11.LocalPlayer.Character;
-				if v103 then
-					v41 = v12.Stepped:Connect(function()
-						if (v105 and v105:FindFirstChild("HumanoidRootPart")) then
-							for v464, v465 in pairs(v105:GetDescendants()) do
-								if v465:IsA("BasePart") then
-									v465.CanCollide = false;
-								end
-							end
-						end
-					end);
-				elseif v41 then
-					local v423 = 0 - 0 ;
-					while true do
-						if (v423 == (1026 - (834 + 192))) then
-							v41:Disconnect();
-							v41 = nil;
-							break;
-						end
-					end
-				end
-				break;
-			end
-		end
-	end
-});
-local v42 = workspace;
-local v43 = false;
-local v44 = false;
-local v45 = 50;
-local v46;
-local function v47(v106)
-	return v106:IsA("Model") and v106:FindFirstChild("HumanoidRootPart") and v106:FindFirstChildOfClass("Humanoid") and  not v11:GetPlayerFromCharacter(v106) and  not v11:FindFirstChild(v106.Name) ;
+local function ecsHas(id, comp)
+    if not ECS then return false end
+    local ok, v = pcall(ECS.world.has, ECS.world, id, comp)
+    return ok and v or false
 end
-local function v48(v107)
-	local v108 = 0;
-	local v109;
-	local v110;
-	while true do
-		if (v108 == (1 + 2)) then
-			v110.PlatformStand = true;
-			v110.AutoRotate = false;
-			break;
-		end
-		if (v108 == 2) then
-			v110.WalkSpeed = 0 + 0 ;
-			v110.JumpPower = 0;
-			v108 = 1 + 2 ;
-		end
-		if (v108 == 0) then
-			v109 = v107:FindFirstChild("HumanoidRootPart");
-			v110 = v107:FindFirstChildOfClass("Humanoid");
-			v108 = 1 - 0 ;
-		end
-		if (v108 == (305 - (300 + 4))) then
-			if ( not v109 or  not v110 or (v110.Health <= (0 + 0))) then
-				return;
-			end
-			v109.Anchored = true;
-			v108 = 2;
-		end
-	end
+local function ecsMyPosition()
+    if not ECS then return nil end
+    local state = ECS.world:get_resource(ECS.comps.ClientStateResource)
+    local char = state and state.localCharacter
+    if not char then return nil end
+    local t = ecsGet(char, ECS.comps.Transform)
+    if not t then return nil end
+    return t.Position or t.p
 end
-local function v49(v111)
-	local v112 = v111:FindFirstChild("HumanoidRootPart");
-	local v113 = v111:FindFirstChildOfClass("Humanoid");
-	if ( not v112 or  not v113) then
-		return;
-	end
-	v112.Anchored = false;
-	v113.WalkSpeed = 41 - 25 ;
-	v113.JumpPower = 412 - (112 + 250) ;
-	v113.PlatformStand = false;
-	v113.AutoRotate = true;
+
+function convertToDetailedTime(S, ms)
+    local y = math.floor(S/31536000); S%=31536000
+    local mo= math.floor(S/2592000);  S%=2592000
+    local w = math.floor(S/604800);   S%=604800
+    local d = math.floor(S/86400);    S%=86400
+    local h = math.floor(S/3600);     S%=3600
+    local m = math.floor(S/60);       local s = S%60
+    return {Years=y,Months=mo,Weeks=w,Days=d,Hours=h,Minutes=m,Seconds=s,Milliseconds=ms or 0}
 end
-v15.InputBegan:Connect(function(v119, v120)
-	local v121 = 0 + 0 ;
-	local v122;
-	local v123;
-	local v124;
-	local v125;
-	local v126;
-	local v127;
-	local v128;
-	while true do
-		if ((0 - 0) == v121) then
-			if (v120 or (v119.UserInputType ~= Enum.UserInputType.MouseButton1)) then
-				return;
-			end
-			v122 = v14.Character;
-			v123 = v122 and v122:FindFirstChild("HumanoidRootPart") ;
-			v121 = 1 + 0 ;
-		end
-		if (v121 == 1) then
-			if  not v123 then
-				return;
-			end
-			v124 = v19.Target;
-			if  not v124 then
-				return;
-			end
-			v121 = 2 + 0 ;
-		end
-		if (3 == v121) then
-			v127 = v125:FindFirstChildOfClass("Humanoid");
-			if ( not v126 or  not v127) then
-				return;
-			end
-			v128 = (v123.Position - v126.Position).Magnitude;
-			v121 = 3 + 1 ;
-		end
-		if (v121 == 2) then
-			v125 = v124:FindFirstAncestorOfClass("Model");
-			if ( not v125 or  not v47(v125)) then
-				return;
-			end
-			v126 = v125:FindFirstChild("HumanoidRootPart");
-			v121 = 2 + 1 ;
-		end
-		if (v121 == (3 + 1)) then
-			if (v128 > v45) then
-				return;
-			end
-			if v43 then
-				if (v126.Anchored or (v127.WalkSpeed == (1414 - (1001 + 413)))) then
-					v49(v125);
-				else
-					v48(v125);
-				end
-			end
-			if v44 then
-				v127.Health = 0 - 0 ;
-			end
-			break;
-		end
-	end
-end);
-v26:CreateSection("InstaKill & Freeze");
-v26:CreateParagraph({
-	Title = "Kill and Freeze Limitations",
-	Content = "InstaKill and Freeze Mobs will only work on monument mobs (at structures), other mobs will show a false freeze and health. Don't have both on at the same time or InstaKill won't work properly."
-});
-local v50 = v26:CreateToggle({
-	Name = "Freeze Mobs (on click)",
-	Flag = "freezeMobs",
-	CurrentValue = false,
-	Callback = function(v129)
-		v43 = v129;
-		if  not v129 then
-			for v289, v290 in ipairs(v42:GetDescendants()) do
-				if v47(v290) then
-					v49(v290);
-				end
-			end
-		end
-	end
-});
-v26:CreateKeybind({
-	Name = "Toggle Freeze Mobs",
-	Flag = "toggleFreezeMobs",
-	CurrentKeybind = "V",
-	HoldToInteract = false,
-	Callback = function()
-		v50:Set( not v50.CurrentValue);
-	end
-});
-local v51 = v26:CreateToggle({
-	Name = "InstaKill Mobs (on click)",
-	Flag = "instaKill",
-	CurrentValue = false,
-	Callback = function(v130)
-		v44 = v130;
-	end
-});
-v26:CreateKeybind({
-	Name = "Toggle InstaKill Mobs",
-	Flag = "toggleInstakill",
-	CurrentKeybind = "B",
-	HoldToInteract = false,
-	Callback = function()
-		v51:Set( not v51.CurrentValue);
-	end
-});
-v26:CreateSlider({
-	Name = "Range",
-	Flag = "killRange",
-	Range = {
-		882 - (244 + 638) ,
-		744 - 494
-	},
-	Increment = 603 - (512 + 90) ,
-	Suffix = " studs",
-	CurrentValue = 50,
-	Callback = function(v131)
-		v45 = v131;
-	end
-});
-local function v47(v132)
-	return v132:IsA("Model") and v132:FindFirstChild("HumanoidRootPart") and v132:FindFirstChildOfClass("Humanoid") and  not v11:GetPlayerFromCharacter(v132) and  not v11:FindFirstChild(v132.Name) ;
+function GetServerUptimeString()
+    local t=time(); local ms=math.floor((t-math.floor(t))*1000)
+    local u=convertToDetailedTime(math.floor(t),ms)
+    return string.format("<font color='#FFD700'>%dY</font> <font color='#FFA500'>%dMth</font> <font color='#FF8C00'>%dW</font> <font color='#32CD32'>%dD</font> <font color='#00CED1'>%dH</font> <font color='#1E90FF'>%dMin</font> <font color='#9370DB'>%dSec</font> <font color='#FF69B4'>%dMS</font>",u.Years,u.Months,u.Weeks,u.Days,u.Hours,u.Minutes,u.Seconds,u.Milliseconds)
 end
-local function v52(v133, v134)
-	local v135 = v14.Character;
-	local v136 = v135 and v135:FindFirstChild("HumanoidRootPart") ;
-	if  not v136 then
-		return nil;
-	end
-	local v137, v138 = nil, v133 or math.huge ;
-	for v231, v232 in ipairs(workspace:GetDescendants()) do
-		if v47(v232) then
-			local v291 = v232:FindFirstChild("HumanoidRootPart");
-			if v291 then
-				local v353 = 0;
-				local v354;
-				local v355;
-				local v356;
-				local v357;
-				local v358;
-				local v359;
-				while true do
-					if (v353 == (1908 - (1665 + 241))) then
-						v359 = (v136.Position - v291.Position).Magnitude;
-						if (v355 and (v358 <= v134) and (v359 < v138)) then
-							local v483 = 0;
-							while true do
-								if (v483 == (717 - (373 + 344))) then
-									v137 = v232;
-									v138 = v359;
-									break;
-								end
-							end
-						end
-						break;
-					end
-					if ((0 + 0) == v353) then
-						v354, v355 = v13:WorldToViewportPoint(v291.Position);
-						v356 = Vector2.new(v13.ViewportSize.X / 2 , v13.ViewportSize.Y / (1 + 1) );
-						v353 = 2 - 1 ;
-					end
-					if (v353 == (1 - 0)) then
-						v357 = Vector2.new(v354.X, v354.Y);
-						v358 = (v356 - v357).Magnitude;
-						v353 = 2;
-					end
-				end
-			end
-		end
-	end
-	return v137;
+function GetLastJoinedString()
+    local c=os.time(); local j=c-math.floor(time()); local jt=os.date("*t",j)
+    local ap=jt.hour>=12 and "PM" or "AM"; local h12=jt.hour%12; if h12==0 then h12=12 end
+    local ms=math.floor((time()-math.floor(time()))*1000)
+    local mn={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"}
+    return string.format("<font color='#87CEEB'>%02d:%02d:%02d.%03d %s</font> - <font color='#98FB98'>%s %d, %d</font>",h12,jt.min,jt.sec,ms,ap,mn[jt.month],jt.day,jt.year)
 end
-local v53 = false;
-local v54 = 60;
-local v55 = 1199 - (35 + 1064) ;
-local v56 = 0.15;
-local function v52(v139, v140)
-	local v141 = v14.Character;
-	local v142 = v141 and v141:FindFirstChild("HumanoidRootPart") ;
-	if  not v142 then
-		return nil;
-	end
-	local v143, v144 = nil, v139 or math.huge ;
-	for v233, v234 in ipairs(workspace:GetDescendants()) do
-		if v47(v234) then
-			local v292 = v234:FindFirstChildOfClass("Humanoid");
-			local v293 = v234:FindFirstChild("Head") or v234:FindFirstChild("HumanoidRootPart") ;
-			if (v292 and v293 and (v292.Health > 0) and (v292:GetState() ~= Enum.HumanoidStateType.Dead)) then
-				local v360 = 0 + 0 ;
-				local v361;
-				local v362;
-				local v363;
-				local v364;
-				local v365;
-				local v366;
-				while true do
-					if (v360 == 0) then
-						v361, v362 = v13:WorldToViewportPoint(v293.Position);
-						v363 = Vector2.new(v13.ViewportSize.X / 2 , v13.ViewportSize.Y / 2 );
-						v360 = 2 - 1 ;
-					end
-					if ((1 + 1) == v360) then
-						v366 = (v142.Position - v293.Position).Magnitude;
-						if (v362 and (v365 <= v140) and (v366 < v144)) then
-							local v484 = 1236 - (298 + 938) ;
-							while true do
-								if (v484 == (1259 - (233 + 1026))) then
-									v143 = v293;
-									v144 = v366;
-									break;
-								end
-							end
-						end
-						break;
-					end
-					if (v360 == (1667 - (636 + 1030))) then
-						v364 = Vector2.new(v361.X, v361.Y);
-						v365 = (v363 - v364).Magnitude;
-						v360 = 2;
-					end
-				end
-			end
-		end
-	end
-	return v143;
+function GetScriptRuntime()
+    local e=tick()-StartTime; local ms=math.floor((e-math.floor(e))*1000)
+    local r=convertToDetailedTime(math.floor(e),ms)
+    return string.format("<font color='#FFD700'>%dY</font> <font color='#FFA500'>%dMth</font> <font color='#FF8C00'>%dW</font> <font color='#32CD32'>%dD</font> <font color='#00CED1'>%dH</font> <font color='#1E90FF'>%dMin</font> <font color='#9370DB'>%dSec</font> <font color='#FF69B4'>%dMS</font>",r.Years,r.Months,r.Weeks,r.Days,r.Hours,r.Minutes,r.Seconds,r.Milliseconds)
 end
-local v57;
-if Drawing then
-	local v235 = 0 + 0 ;
-	while true do
-		if (v235 == 0) then
-			v57 = Drawing.new("Circle");
-			v57.Color = Color3.fromRGB(100, 200, 255);
-			v235 = 1 + 0 ;
-		end
-		if (v235 == (1 + 0)) then
-			v57.Thickness = 1 + 1 ;
-			v57.Filled = false;
-			v235 = 2;
-		end
-		if (v235 == (223 - (55 + 166))) then
-			v57.Visible = false;
-			break;
-		end
-	end
+function GetExecutedSince() return string.format("<font color='#87CEEB'>%s</font>", os.date("%I:%M:%S %p", StartTime)) end
+function GetOSClock()
+    local n=os.date("*t"); local ap=n.hour>=12 and "PM" or "AM"; local h12=n.hour%12; if h12==0 then h12=12 end
+    return string.format("<font color='#FFD700'>%02d:%02d:%02d %s</font>",h12,n.min,n.sec,ap)
 end
-v15.InputBegan:Connect(function(v145, v146)
-	if ( not v146 and (v145.KeyCode == aimbotBind)) then
-		v53 = not v53;
-	end
-end);
-v12.RenderStepped:Connect(function(v147)
-	local v148 = 0;
-	while true do
-		if (v148 == (0 + 0)) then
-			if v57 then
-				local v367 = 0 + 0 ;
-				while true do
-					if (v367 == (0 - 0)) then
-						v57.Position = Vector2.new(v13.ViewportSize.X / 2 , v13.ViewportSize.Y / 2 );
-						v57.Radius = v54;
-						v367 = 298 - (36 + 261) ;
-					end
-					if (v367 == (1 - 0)) then
-						v57.Visible = v53;
-						break;
-					end
-				end
-			end
-			if v53 then
-				local v368 = 1368 - (34 + 1334) ;
-				local v369;
-				while true do
-					if (v368 == (0 + 0)) then
-						v369 = v52(v55, v54);
-						if v369 then
-							local v485 = v13.CFrame.Position;
-							local v486 = v369.Position;
-							local v487 = CFrame.new(v485, v486);
-							v13.CFrame = v13.CFrame:Lerp(v487, v56);
-						end
-						break;
-					end
-				end
-			end
-			break;
-		end
-	end
-end);
-v26:CreateSection("Aimbot");
-local v58 = nil;
-v58 = v26:CreateToggle({
-	Name = "Aimbot",
-	Flag = "Aimbot",
-	CurrentValue = false,
-	Set = true,
-	Callback = function(v149)
-		v53 = v149;
-	end
-});
-v26:CreateKeybind({
-	Name = "Toggle Aimbot",
-	Flag = "toggleAimbot",
-	CurrentKeybind = "N",
-	HoldToInteract = false,
-	Callback = function()
-		if v58 then
-			v58:Set( not v53);
-		end
-	end
-});
-v26:CreateSlider({
-	Name = "Aimbot FOV",
-	Flag = "aimbotFOV",
-	Range = {
-		1308 - (1035 + 248) ,
-		221 - (20 + 1)
-	},
-	Increment = 1,
-	CurrentValue = v54,
-	Callback = function(v150)
-		v54 = v150;
-	end
-});
-v26:CreateSlider({
-	Name = "Aimbot Range",
-	Flag = "aimbotRange",
-	Range = {
-		329 - (134 + 185) ,
-		250
-	},
-	Increment = 1,
-	CurrentValue = v55,
-	Callback = function(v151)
-		v55 = v151;
-	end
-});
-v26:CreateSlider({
-	Name = "Tracking Speed",
-	Flag = "trackingSpeed",
-	Range = {
-		686 - (314 + 371) ,
-		100
-	},
-	Increment = 969 - (478 + 490) ,
-	Suffix = "%",
-	CurrentValue = math.floor(v56 * (53 + 47) ),
-	Callback = function(v152)
-		v56 = math.clamp(v152 / 100 , 0.01, 1);
-	end
-});
-local v59 = false;
-local v60 = 20;
-local v61 = 0.3;
-local function v62(v153)
-	local v154 = 1172 - (786 + 386) ;
-	local v155;
-	local v156;
-	local v157;
-	local v158;
-	while true do
-		if (v154 == (0 - 0)) then
-			v155 = v14.Character or v14.CharacterAdded:Wait() ;
-			v156 = v155 and v155:FindFirstChild("HumanoidRootPart") ;
-			v154 = 1;
-		end
-		if (2 == v154) then
-			for v327, v328 in ipairs(workspace:GetDescendants()) do
-				if v47(v328) then
-					local v397 = 0;
-					local v398;
-					while true do
-						if (v397 == (1379 - (1055 + 324))) then
-							v398 = v328:FindFirstChild("HumanoidRootPart");
-							if v398 then
-								local v510 = (v156.Position - v398.Position).Magnitude;
-								if ((v510 < v158) and (v510 <= v153)) then
-									v157 = v328;
-									v158 = v510;
-								end
-							end
-							break;
-						end
-					end
-				end
-			end
-			return v157;
-		end
-		if (v154 == 1) then
-			if  not v156 then
-				return nil;
-			end
-			v157, v158 = nil, v153 or math.huge ;
-			v154 = 1342 - (1093 + 247) ;
-		end
-	end
+function GetCalendarDate()
+    local n=os.date("*t")
+    local mn={"January","February","March","April","May","June","July","August","September","October","November","December"}
+    local sf="th"
+    if n.day==1 or n.day==21 or n.day==31 then sf="st"
+    elseif n.day==2 or n.day==22 then sf="nd"
+    elseif n.day==3 or n.day==23 then sf="rd" end
+    return string.format("<font color='#98FB98'>%s %d%s, %d</font>",mn[n.month],n.day,sf,n.year)
 end
-local function v63()
-	local v159 = v62(v60);
-	if  not v159 then
-		return;
-	end
-	local v160 = workspace:FindFirstChild(v14.Name);
-	if  not v160 then
-		return;
-	end
-	local v161;
-	for v236, v237 in ipairs(v160:GetChildren()) do
-		if (v237:IsA("Tool") and v237:FindFirstChild("SwingEvent")) then
-			v161 = v237;
-			break;
-		end
-	end
-	if  not v161 then
-		return;
-	end
-	local v162 = v160:FindFirstChild("HumanoidRootPart");
-	local v163 = v159:FindFirstChild("HumanoidRootPart");
-	if ( not v162 or  not v163) then
-		return;
-	end
-	local v164 = (v163.Position - v162.Position).Unit;
-	v161.SwingEvent:FireServer(v164);
+function GetGPUInfo() local v=string.format("%.2f",Stats.RenderGPUFrameTime*1000); local c=tonumber(v)<10 and "#32CD32" or (tonumber(v)<30 and "#FFD700" or "#FF6666"); return string.format("<font color='%s'>%s ms</font>",c,v) end
+function GetCPUInfo() local v=string.format("%.2f",Stats.RenderCPUFrameTime*1000); local c=tonumber(v)<10 and "#32CD32" or (tonumber(v)<30 and "#FFD700" or "#FF6666"); return string.format("<font color='%s'>%s ms</font>",c,v) end
+function GetRAMInfo() local r=Stats:GetTotalMemoryUsageMb(); local p=math.floor((r/EngineTargetMegaBytes)*100); local c=p<50 and "#32CD32" or (p<80 and "#FFD700" or "#FF6666"); return string.format("<font color='%s'>%.2f MB / %d MB (%d%%)</font>",c,r,EngineTargetMegaBytes,p) end
+function GetNetworkSent() local s=Stats.DataSendKbps; local c=s<100 and "#32CD32" or (s<500 and "#FFD700" or "#FF6666"); return string.format("<font color='%s'>%.2f KB/s</font>",c,s) end
+function GetNetworkReceived() local s=Stats.DataReceiveKbps; local c=s<100 and "#32CD32" or (s<500 and "#FFD700" or "#FF6666"); return string.format("<font color='%s'>%.2f KB/s</font>",c,s) end
+function GetPing() local p=math.clamp(Stats.Network.ServerStatsItem["Data Ping"]:GetValue(),10,700); local c=p<100 and "#32CD32" or (p<200 and "#FFD700" or "#FF6666"); return string.format("<font color='%s'>%d ms</font>",c,math.floor(p)) end
+function GetFPS() local c=CurrentFPS>=60 and "#32CD32" or (CurrentFPS>=30 and "#FFD700" or "#FF6666"); return string.format("<font color='%s'>%d fps</font>",c,CurrentFPS) end
+
+local TotalFriends, OnlineFriends, OfflineFriends = 0, 0, 0
+function UpdateFriendData()
+    pcall(function()
+        local total, online = 0, 0
+        local list = Players:GetFriendsAsync(LocalPlayer.UserId)
+        while true do
+            for _ in list:GetCurrentPage() do total += 1 end
+            if list.IsFinished then break else list:AdvanceToNextPageAsync() end
+        end
+        for _ in pairs(LocalPlayer:GetFriendsOnline()) do online += 1 end
+        TotalFriends, OnlineFriends, OfflineFriends = total, online, total-online
+    end)
 end
+
+Tabs.Main:Section({ Title = "Server Information", TextSize = 20 })
+Tabs.Main:Divider()
+ServerInfoParagraph = Tabs.Main:Paragraph({ Title = "In Server For", Desc = GetServerUptimeString() })
+task.spawn(function() while task.wait() do pcall(function() ServerInfoParagraph:SetDesc(GetServerUptimeString()) end) end end)
+Tabs.Main:Paragraph({ Title = "Joinned Started", Desc = GetLastJoinedString() })
+local placeName = "Unknown"
+pcall(function() local p = MarketplaceService:GetProductInfo(placeId); if p and p.Name then placeName = p.Name end end)
+Tabs.Main:Paragraph({ Title = "Game", Desc = placeName })
+local maxPlayers = Players.MaxPlayers
+CurrentPlayersParagraph = Tabs.Main:Paragraph({ Title = "Current Players", Desc = #Players:GetPlayers() .. " / " .. maxPlayers })
+task.spawn(function() while task.wait(1) do pcall(function() CurrentPlayersParagraph:SetDesc(#Players:GetPlayers() .. " / " .. maxPlayers) end) end end)
+Tabs.Main:Paragraph({ Title = "Server ID", Desc = string.sub(jobId, 1, 30) .. "..." })
+Tabs.Main:Space()
+Tabs.Main:Section({ Title = "Client Information", TextSize = 20 })
+Tabs.Main:Divider()
+ScriptRuntimeParagraph = Tabs.Main:Paragraph({ Title = "Script Running For", Desc = GetScriptRuntime() })
+task.spawn(function() while task.wait() do pcall(function() ScriptRuntimeParagraph:SetDesc(GetScriptRuntime()) end) end end)
+Tabs.Main:Paragraph({ Title = "Executed Since", Desc = GetExecutedSince() })
+Tabs.Main:Space()
+Tabs.Main:Section({ Title = "System Information", TextSize = 20 })
+Tabs.Main:Divider()
+OSClockParagraph = Tabs.Main:Paragraph({ Title = "OS Clock", Desc = GetOSClock() })
+task.spawn(function() while task.wait() do pcall(function() OSClockParagraph:SetDesc(GetOSClock()) end) end end)
+CalendarParagraph = Tabs.Main:Paragraph({ Title = "Calendar", Desc = GetCalendarDate() })
+task.spawn(function() while task.wait(60) do pcall(function() CalendarParagraph:SetDesc(GetCalendarDate()) end) end end)
+GPUParagraph = Tabs.Main:Paragraph({ Title = "GPU", Desc = GetGPUInfo() })
+CPUParagraph = Tabs.Main:Paragraph({ Title = "CPU", Desc = GetCPUInfo() })
+RAMParagraph = Tabs.Main:Paragraph({ Title = "RAM", Desc = GetRAMInfo() })
+SentParagraph = Tabs.Main:Paragraph({ Title = "Sent", Desc = GetNetworkSent() })
+ReceivedParagraph = Tabs.Main:Paragraph({ Title = "Received", Desc = GetNetworkReceived() })
+PingParagraph = Tabs.Main:Paragraph({ Title = "Ping", Desc = GetPing() })
+FPSParagraph = Tabs.Main:Paragraph({ Title = "FPS", Desc = GetFPS() })
 task.spawn(function()
-	while true do
-		if v59 then
-			pcall(v63);
-		end
-		task.wait(v61);
-	end
-end);
-v26:CreateSection("Mob Aura");
-v26:CreateParagraph({
-	Title = "How to use Melee Aura",
-	Content = "To use Melee Aura equip a weapon and stand close to a mob, it will automatically attack them."
-});
-v26:CreateToggle({
-	Name = "Melee Aura",
-	Flag = "meleeAura",
-	CurrentValue = false,
-	Callback = function(v165)
-		v59 = v165;
-	end
-});
-local v64 = {
-	PlayerESP = false,
-	TrainESP = false,
-	ItemESP = false,
-	MobESP = false,
-	OreESP = false,
-	EnableBox = false,
-	EnableHighlight = true,
-	EnableTracer = false,
-	ShowNames = false,
-	ShowDistance = false,
-	ShowHealth = false,
-	Colors = {
-		Player = Color3.fromRGB(0, 255, 227 + 28 ),
-		Train = Color3.fromRGB(27 + 228 , 1012 - 757 , 0 - 0 ),
-		Item = Color3.fromRGB(725 - 470 , 251 - 151 , 36 + 64 ),
-		Mob = Color3.fromRGB(982 - 727 , 0, 878 - 623 ),
-		Ore = Color3.fromRGB(255, 125 + 40 , 0)
-	}
-};
-local v65 = {
-	Player = {},
-	Train = {},
-	Item = {},
-	Mob = {},
-	Ore = {}
-};
-local function v66()
-	local v166 = 0 - 0 ;
-	local v167;
-	while true do
-		if ((689 - (364 + 324)) == v166) then
-			return v167;
-		end
-		if (v166 == (0 - 0)) then
-			v167 = {};
-			for v329, v330 in ipairs(workspace:GetDescendants()) do
-				if v47(v330) then
-					table.insert(v167, v330);
-				end
-			end
-			v166 = 2 - 1 ;
-		end
-	end
+    while task.wait(0.2) do
+        pcall(function()
+            GPUParagraph:SetDesc(GetGPUInfo()); CPUParagraph:SetDesc(GetCPUInfo()); RAMParagraph:SetDesc(GetRAMInfo())
+            SentParagraph:SetDesc(GetNetworkSent()); ReceivedParagraph:SetDesc(GetNetworkReceived())
+            PingParagraph:SetDesc(GetPing()); FPSParagraph:SetDesc(GetFPS())
+        end)
+    end
+end)
+Tabs.Main:Space()
+Tabs.Main:Section({ Title = "Player Information", TextSize = 20 })
+Tabs.Main:Divider()
+Tabs.Main:Paragraph({ Title = "Username", Desc = LocalPlayer.Name })
+Tabs.Main:Paragraph({ Title = "Display Name", Desc = LocalPlayer.DisplayName })
+Tabs.Main:Paragraph({ Title = "User ID", Desc = tostring(LocalPlayer.UserId) })
+local accStr = "Unknown"
+pcall(function() local a = LocalPlayer.AccountAge; if a then accStr = os.date("%B %d, %Y", os.time() - a*86400) end end)
+Tabs.Main:Paragraph({ Title = "Account Created", Desc = accStr })
+Tabs.Main:Space()
+Tabs.Main:Section({ Title = "Friends Data", TextSize = 20 })
+Tabs.Main:Divider()
+FriendsOnlineParagraph = Tabs.Main:Paragraph({ Title = "Online Friends", Desc = "0" })
+FriendsOfflineParagraph = Tabs.Main:Paragraph({ Title = "Offline Friends", Desc = "0" })
+FriendsTotalParagraph = Tabs.Main:Paragraph({ Title = "Total Friends", Desc = "0" })
+local function refreshFriendParagraphs() UpdateFriendData(); FriendsOnlineParagraph:SetDesc(tostring(OnlineFriends)); FriendsOfflineParagraph:SetDesc(tostring(OfflineFriends)); FriendsTotalParagraph:SetDesc(tostring(TotalFriends)) end
+task.spawn(function() pcall(refreshFriendParagraphs); while task.wait(30) do pcall(refreshFriendParagraphs) end end)
+Tabs.Main:Space()
+Tabs.Main:Section({ Title = "Server Tools", TextSize = 20 })
+Tabs.Main:Divider()
+Tabs.Main:Button({
+    Title = "Advanced Server Hop", Icon = "server",
+    Callback = function()
+        pcall(function() loadstring(game:HttpGet("https://darahub.pages.dev/raw-script/Tools/Advanced%20Server%20Hop.lua"))() end)
+        WindUI:Notify({ Title = "Success", Content = "Advanced Server Hop Loaded", Duration = 3 })
+    end
+})
+
+Tabs.Player:Section({ Title = "Movement", TextSize = 20 })
+Tabs.Player:Divider()
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+local function getRootPart(character)
+    return character and (character:FindFirstChild("HumanoidRootPart") or character:FindFirstChild("Torso") or character:FindFirstChild("UpperTorso"))
 end
-local function v67(v168)
-	for v238, v239 in pairs(v168) do
-		if (typeof(v239) == "Instance") then
-			v239:Destroy();
-		elseif ((typeof(v239) == "table") or (typeof(v239) == "userdata")) then
-			v239:Remove();
-		end
-	end
+
+local doubleJumpAvailable, doubleJumpGroundedAt = true, 0
+local doubleJumpRequestConnection, doubleJumpGroundConnection
+local function stopDoubleJump()
+    if doubleJumpRequestConnection then doubleJumpRequestConnection:Disconnect(); doubleJumpRequestConnection=nil end
+    if doubleJumpGroundConnection then doubleJumpGroundConnection:Disconnect(); doubleJumpGroundConnection=nil end
 end
-local function v68(v169)
-	local v170 = 0 + 0 ;
-	while true do
-		if (v170 == (0 - 0)) then
-			for v331, v332 in pairs(v65[v169]) do
-				v67(v332);
-			end
-			v65[v169] = {};
-			break;
-		end
-	end
+local function startDoubleJump()
+    stopDoubleJump(); doubleJumpAvailable=true; doubleJumpGroundedAt=tick()
+    doubleJumpGroundConnection = RunService.Heartbeat:Connect(function()
+        local c=LocalPlayer.Character; local h=c and c:FindFirstChildOfClass("Humanoid")
+        if h and h.FloorMaterial ~= Enum.Material.Air then doubleJumpAvailable=true; doubleJumpGroundedAt=tick() end
+    end)
+    doubleJumpRequestConnection = UserInputService.JumpRequest:Connect(function()
+        local c=LocalPlayer.Character; local h=c and c:FindFirstChildOfClass("Humanoid")
+        if h and doubleJumpAvailable and h.FloorMaterial == Enum.Material.Air and tick()-doubleJumpGroundedAt > 0.2 then
+            doubleJumpAvailable=false; h:ChangeState(Enum.HumanoidStateType.Jumping)
+        end
+    end)
 end
-local function v69(v171)
-	local v172 = 0 - 0 ;
-	local v173;
-	local v174;
-	local v175;
-	local v176;
-	local v177;
-	while true do
-		if ((8 - 5) == v172) then
-			for v333, v334 in pairs(v175) do
-				local v335 = 1268 - (1249 + 19) ;
-				local v336;
-				local v337;
-				while true do
-					if (v335 == 0) then
-						v336, v337 = v13:WorldToViewportPoint(v334);
-						if v337 then
-							local v466 = 0 + 0 ;
-							local v467;
-							while true do
-								if (v466 == 1) then
-									v177 = Vector2.new(math.max(v177.X, v467.X), math.max(v177.Y, v467.Y));
-									break;
-								end
-								if ((0 - 0) == v466) then
-									v467 = Vector2.new(v336.X, v336.Y);
-									v176 = Vector2.new(math.min(v176.X, v467.X), math.min(v176.Y, v467.Y));
-									v466 = 1087 - (686 + 400) ;
-								end
-							end
-						end
-						break;
-					end
-				end
-			end
-			return v176, v177;
-		end
-		if (v172 == (2 + 0)) then
-			for v338 = -(230 - (73 + 156)), 1 + 0 , 813 - (721 + 90)  do
-				for v370 = -1, 1 + 0 , 6 - 4  do
-					for v399 = -1, 471 - (224 + 246) , 2 do
-						table.insert(v175, v173.Position + (((v173.RightVector * v174.X) / 2) * v338) + (((v173.UpVector * v174.Y) / (2 - 0)) * v370) + (((v173.LookVector * v174.Z) / (3 - 1)) * v399) );
-					end
-				end
-			end
-			v176, v177 = Vector2.new(math.huge, math.huge), Vector2.new( -math.huge, -math.huge);
-			v172 = 3;
-		end
-		if (v172 == (0 + 0)) then
-			if  not v171.PrimaryPart then
-				local v371 = 0;
-				local v372;
-				while true do
-					if (v371 == 0) then
-						v372 = v171:GetDescendants();
-						for v468, v469 in pairs(v372) do
-							if v469:IsA("BasePart") then
-								v171.PrimaryPart = v469;
-								break;
-							end
-						end
-						break;
-					end
-				end
-			end
-			if  not v171.PrimaryPart then
-				return nil;
-			end
-			v172 = 1 + 0 ;
-		end
-		if (v172 == 1) then
-			v173, v174 = v171:GetBoundingBox();
-			v175 = {};
-			v172 = 2;
-		end
-	end
+DoubleJumpToggle = Tabs.Player:Toggle({ Title="Double Jump", Flag="DoubleJumpToggle", Value=false,
+    Callback=function(s) if s then startDoubleJump() else stopDoubleJump() end end })
+Tabs.Player:Space()
+
+local noclipConnection
+local function setNoclip(state)
+    if noclipConnection then noclipConnection:Disconnect(); noclipConnection=nil end
+    if state then
+        noclipConnection = RunService.Stepped:Connect(function()
+            local c=LocalPlayer.Character
+            if c then for _,p in ipairs(c:GetChildren()) do if p:IsA("BasePart") then p.CanCollide=false end end end
+        end)
+    else
+        local c=LocalPlayer.Character
+        if c then for _,p in ipairs(c:GetChildren()) do if p:IsA("BasePart") then p.CanCollide=true end end end
+    end
 end
-local function v70(v178, v179)
-	if v65[v179][v178] then
-		local v244 = 0 + 0 ;
-		while true do
-			if (v244 == (0 - 0)) then
-				for v400, v401 in pairs(v65[v179][v178]) do
-					if (typeof(v401) == "Instance") then
-						v401:Destroy();
-					elseif ((typeof(v401) == "table") or (typeof(v401) == "userdata")) then
-						v401:Remove();
-					end
-				end
-				v65[v179][v178] = nil;
-				break;
-			end
-		end
-	end
-	local v180 = v64.Colors[v179];
-	local v181 = {};
-	if v64.EnableBox then
-		local v245 = 0;
-		local v246;
-		while true do
-			if (v245 == (0 - 0)) then
-				v246 = Drawing.new("Square");
-				v246.Color = v180;
-				v245 = 514 - (203 + 310) ;
-			end
-			if (v245 == (1995 - (1238 + 755))) then
-				v246.Visible = true;
-				v181.Box = v246;
-				break;
-			end
-			if (v245 == 1) then
-				v246.Thickness = 1 + 0 ;
-				v246.Filled = false;
-				v245 = 1536 - (709 + 825) ;
-			end
-		end
-	end
-	if v64.EnableTracer then
-		local v247 = 0 - 0 ;
-		local v248;
-		while true do
-			if (2 == v247) then
-				v181.Tracer = v248;
-				break;
-			end
-			if (v247 == (1 - 0)) then
-				v248.Thickness = 1;
-				v248.Visible = true;
-				v247 = 866 - (196 + 668) ;
-			end
-			if (v247 == 0) then
-				v248 = Drawing.new("Line");
-				v248.Color = v180;
-				v247 = 1;
-			end
-		end
-	end
-	if (v64.EnableHighlight and v178:IsA("Model")) then
-		local v249 = Instance.new("Highlight");
-		v249.FillColor = v180;
-		v249.FillTransparency = 0.5 - 0 ;
-		v249.OutlineColor = Color3.new(0 - 0 , 833 - (171 + 662) , 93 - (4 + 89) );
-		v249.OutlineTransparency = 0 - 0 ;
-		v249.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop;
-		v249.Adornee = v178;
-		v249.Parent = game:GetService("CoreGui");
-		v181.Highlight = v249;
-	end
-	if (v64.ShowNames or v64.ShowDistance) then
-		local v259 = Drawing.new("Text");
-		v259.Size = 16;
-		v259.Center = true;
-		v259.Outline = true;
-		v259.Font = 1 + 1 ;
-		v259.Color = Color3.fromRGB(255, 1119 - 864 , 100 + 155 );
-		v259.Visible = true;
-		v181.Label = v259;
-	end
-	if v64.ShowHealth then
-		local v267 = Drawing.new("Square");
-		v267.Thickness = 1;
-		v267.Filled = true;
-		v267.Visible = true;
-		v181.HealthBar = v267;
-	end
-	v65[v179][v178] = v181;
+NoclipToggle = Tabs.Player:Toggle({ Title="Noclip", Flag="NoclipToggle", Value=false, Callback=function(s) setNoclip(s) end })
+Tabs.Player:Space()
+
+local isOnMobile = false
+pcall(function() isOnMobile = table.find({ Enum.Platform.Android, Enum.Platform.IOS }, UserInputService:GetPlatform()) ~= nil end)
+local vflySpeed, vflyQE = 5, false
+local vflyConnection, vflyKeyDown, vflyKeyUp, vflyControlModule
+local vflyKeys, vflyUp, vflyDown = {}, false, false
+local vflyVelocityName = "VFlyVelocity_" .. math.random(1000, 9999)
+local vflyGyroName = "VFlyGyro_" .. math.random(1000, 9999)
+local mobileConnections, mobileJumpButton, mobileJumpRect, downButton = {}, nil, nil, nil
+
+local function destroyMobileButtons()
+    for _, c in ipairs(mobileConnections) do c:Disconnect() end
+    table.clear(mobileConnections)
+    if mobileJumpButton and mobileJumpButton.Parent and mobileJumpRect then mobileJumpButton.ImageRectOffset = mobileJumpRect end
+    mobileJumpButton, mobileJumpRect = nil, nil
+    if downButton then downButton:Destroy(); downButton = nil end
+    vflyUp, vflyDown = false, false
 end
-v12.RenderStepped:Connect(function()
-	for v240, v241 in pairs(v65) do
-		for v272, v273 in pairs(v241) do
-			local v274 = false;
-			if ( not v272 or  not v272.Parent) then
-				local v339 = 0;
-				while true do
-					if (v339 == (1487 - (35 + 1451))) then
-						v274 = true;
-						break;
-					end
-					if ((1453 - (28 + 1425)) == v339) then
-						v67(v273);
-						v65[v240][v272] = nil;
-						v339 = 1994 - (941 + 1052) ;
-					end
-				end
-			end
-			local v275 = ( not v274 and v272:IsA("Model") and v272) or nil ;
-			local v276 = ( not v274 and ((v275 and v275.PrimaryPart) or v272)) or nil ;
-			if  not v276 then
-				if  not v274 then
-					v67(v273);
-					v65[v240][v272] = nil;
-				end
-				v274 = true;
-			end
-			if  not v274 then
-				local v340, v341 = v13:WorldToViewportPoint(v276.Position);
-				local v342 = Vector2.new(v340.X, v340.Y);
-				if v341 then
-					if (v273.Box and v275) then
-						local v445, v446 = v69(v275);
-						if (v445 and v446) then
-							local v489 = 0;
-							while true do
-								if (v489 == 1) then
-									v273.Box.Visible = true;
-									break;
-								end
-								if (v489 == (0 + 0)) then
-									v273.Box.Position = v445;
-									v273.Box.Size = v446 - v445 ;
-									v489 = 1515 - (822 + 692) ;
-								end
-							end
-						else
-							v273.Box.Visible = false;
-						end
-					end
-					if v273.Tracer then
-						v273.Tracer.From = Vector2.new(v13.ViewportSize.X / 2 , v13.ViewportSize.Y);
-						v273.Tracer.To = v342;
-						v273.Tracer.Visible = true;
-					end
-					if v273.Label then
-						local v450 = "";
-						if v64.ShowNames then
-							v450 = v272.Name;
-						end
-						if v64.ShowDistance then
-							local v492 = 0;
-							local v493;
-							while true do
-								if (0 == v492) then
-									v493 = (v13.CFrame.Position - v276.Position).Magnitude;
-									v450 = v450   .. string.format(" [%.0fm]", v493) ;
-									break;
-								end
-							end
-						end
-						v273.Label.Text = v450;
-						v273.Label.Position = v342 - Vector2.new(0, 63 - 18 ) ;
-						v273.Label.Visible = true;
-					end
-					if (v273.HealthBar and v272:FindFirstChild("Humanoid")) then
-						local v454 = v272:FindFirstChild("Humanoid");
-						local v455 = v454.Health;
-						local v456 = v454.MaxHealth;
-						if (v455 <= 0) then
-							v67(v273);
-							v65[v240][v272] = nil;
-						else
-							local v495 = math.clamp(v455 / v456 , 0 + 0 , 1);
-							local v496 = ((v495 > (297.6 - (45 + 252))) and Color3.new(0 + 0 , 1 + 0 , 0)) or ((v495 > 0.3) and Color3.new(2 - 1 , 434 - (114 + 319) , 0 - 0 )) or Color3.new(1 - 0 , 0 + 0 , 0 - 0 ) ;
-							v273.HealthBar.Color = v496;
-							v273.HealthBar.Size = Vector2.new(4, 40 * v495 );
-							v273.HealthBar.Position = v342 - Vector2.new(62 - 32 , (1983 - (556 + 1407)) - (20 * (1 - v495)) ) ;
-							v273.HealthBar.Visible = true;
-						end
-					elseif v273.HealthBar then
-						v273.HealthBar.Visible = false;
-					end
-				else
-					local v403 = 1206 - (741 + 465) ;
-					while true do
-						if (v403 == 0) then
-							if v273.Box then
-								v273.Box.Visible = false;
-							end
-							if v273.Tracer then
-								v273.Tracer.Visible = false;
-							end
-							v403 = 1;
-						end
-						if (v403 == (466 - (170 + 295))) then
-							if v273.Label then
-								v273.Label.Visible = false;
-							end
-							if v273.HealthBar then
-								v273.HealthBar.Visible = false;
-							end
-							break;
-						end
-					end
-				end
-			end
-		end
-	end
-end);
-local function v71()
-	local v183 = 0 + 0 ;
-	while true do
-		if (v183 == (0 + 0)) then
-			if v64.PlayerESP then
-				for v404, v405 in v11:GetPlayers() do
-					local v406 = 0 - 0 ;
-					while true do
-						if (v406 == 0) then
-							if ((v405 ~= v14) and v405.Character) then
-								v70(v405.Character, "Player");
-							end
-							v405.CharacterAdded:Connect(function(v502)
-								local v503 = 0 + 0 ;
-								while true do
-									if (v503 == (0 + 0)) then
-										repeat
-											task.wait();
-										until v502:FindFirstChild("HumanoidRootPart")
-										if v64.PlayerESP then
-											v70(v502, "Player");
-										end
-										break;
-									end
-								end
-							end);
-							break;
-						end
-					end
-				end
-			end
-			if v64.TrainESP then
-				local v383 = 0 + 0 ;
-				local v384;
-				while true do
-					if (v383 == (1230 - (957 + 273))) then
-						v384 = workspace:FindFirstChild("Train");
-						if v384 then
-							v70(v384, "Train");
-						end
-						break;
-					end
-				end
-			end
-			v183 = 1;
-		end
-		if (v183 == 1) then
-			if v64.ItemESP then
-				local v385 = 0 + 0 ;
-				local v386;
-				while true do
-					if (v385 == 0) then
-						v386 = workspace:FindFirstChild("RuntimeItems");
-						if v386 then
-							for v516, v517 in v386:GetChildren() do
-								local v518 = 0 + 0 ;
-								local v519;
-								while true do
-									if (v518 == (0 - 0)) then
-										v519 = (v517:IsA("Model") and v517.PrimaryPart) or v517 ;
-										if v519 then
-											v70(v517, "Item");
-										end
-										break;
-									end
-								end
-							end
-							v386.ChildAdded:Connect(function(v520)
-								local v521 = 0 - 0 ;
-								local v522;
-								while true do
-									if (v521 == (2 - 1)) then
-										if (v522 and v64.ItemESP) then
-											v70(v520, "Item");
-										end
-										break;
-									end
-									if (v521 == 0) then
-										task.wait();
-										v522 = (v520:IsA("Model") and v520.PrimaryPart) or v520 ;
-										v521 = 4 - 3 ;
-									end
-								end
-							end);
-						end
-						break;
-					end
-				end
-			end
-			if v64.OreESP then
-				local v387 = workspace:FindFirstChild("Ore");
-				if v387 then
-					for v457, v458 in v387:GetChildren() do
-						local v459 = 1780 - (389 + 1391) ;
-						local v460;
-						while true do
-							if (v459 == 0) then
-								v460 = (v458:IsA("Model") and v458.PrimaryPart) or v458 ;
-								if v460 then
-									v70(v458, "Ore");
-								end
-								break;
-							end
-						end
-					end
-					v387.ChildAdded:Connect(function(v461)
-						task.wait();
-						local v462 = (v461:IsA("Model") and v461.PrimaryPart) or v461 ;
-						if (v462 and v64.OreESP) then
-							v70(v461, "Ore");
-						end
-					end);
-				end
-			end
-			v183 = 2 + 0 ;
-		end
-		if (v183 == (1 + 1)) then
-			if v64.MobESP then
-				local v388 = 0 - 0 ;
-				while true do
-					if (v388 == (951 - (783 + 168))) then
-						for v470, v471 in ipairs(v66()) do
-							local v472 = 0;
-							local v473;
-							while true do
-								if ((0 - 0) == v472) then
-									v473 = (v471:IsA("Model") and v471.PrimaryPart) or v471 ;
-									if v473 then
-										v70(v471, "Mob");
-									end
-									break;
-								end
-							end
-						end
-						workspace.DescendantAdded:Connect(function(v474)
-							local v475 = 0 + 0 ;
-							while true do
-								if (v475 == 0) then
-									task.wait(312 - (309 + 2) );
-									if (v64.MobESP and v47(v474)) then
-										v70(v474, "Mob");
-									end
-									break;
-								end
-							end
-						end);
-						break;
-					end
-				end
-			end
-			break;
-		end
-	end
+
+local function createMobileButtons()
+    destroyMobileButtons()
+    local tg = PlayerGui:FindFirstChild("TouchGui") or PlayerGui:WaitForChild("TouchGui", 5)
+    local cf = tg and tg:FindFirstChild("TouchControlFrame")
+    local jb = cf and cf:FindFirstChild("JumpButton")
+    if not jb then return end
+    mobileJumpButton = jb; mobileJumpRect = jb.ImageRectOffset
+    local pressed = Vector2.new(146, 146)
+    local b = Instance.new("ImageButton")
+    b.Name = "DownWardJumpBtn"; b.Size = jb.Size; b.Image = jb.Image
+    b.ImageRectOffset = mobileJumpRect; b.ImageRectSize = jb.ImageRectSize
+    b.BackgroundTransparency = 1; b.AnchorPoint = Vector2.new(1, 0); b.AutoButtonColor = false
+    b.Position = UDim2.new(1, 0, jb.Position.Y.Scale, jb.Position.Y.Offset); b.Rotation = 180
+    b.Parent = cf; downButton = b
+    local function align()
+        if not b.Parent or not jb.Parent then return end
+        local d = b.AbsolutePosition.X - (jb.AbsolutePosition.X + jb.AbsoluteSize.X)
+        b.Position = UDim2.new(1, b.Position.X.Offset + (d - 1), b.Position.Y.Scale, b.Position.Y.Offset)
+    end
+    local function bind(t, dn, up)
+        table.insert(mobileConnections, t.MouseButton1Down:Connect(dn))
+        table.insert(mobileConnections, t.MouseButton1Up:Connect(up))
+        table.insert(mobileConnections, t.MouseLeave:Connect(up))
+    end
+    bind(jb, function() vflyUp = true; jb.ImageRectOffset = pressed end, function() vflyUp = false; jb.ImageRectOffset = mobileJumpRect or jb.ImageRectOffset end)
+    bind(b,  function() vflyDown = true; b.ImageRectOffset = pressed end,  function() vflyDown = false; b.ImageRectOffset = mobileJumpRect or b.ImageRectOffset end)
+    table.insert(mobileConnections, b:GetPropertyChangedSignal("AbsoluteSize"):Connect(align))
+    if workspace.CurrentCamera then table.insert(mobileConnections, workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(align)) end
+    align()
 end
-local function v72()
-	for v242 in pairs(v65) do
-		v68(v242);
-	end
-	v71();
+
+local function getVFlyBodies(root)
+    local v = root:FindFirstChild(vflyVelocityName)
+    if not v then
+        v = Instance.new("BodyVelocity"); v.Name = vflyVelocityName
+        v.MaxForce = Vector3.new(9e9, 9e9, 9e9); v.Velocity = Vector3.zero; v.Parent = root
+    end
+    local g = root:FindFirstChild(vflyGyroName)
+    if not g then
+        g = Instance.new("BodyGyro"); g.Name = vflyGyroName
+        g.MaxTorque = Vector3.new(9e9, 9e9, 9e9); g.P = 9e4; g.CFrame = root.CFrame; g.Parent = root
+    end
+    return v, g
 end
-v27:CreateSection("Targets");
-v27:CreateToggle({
-	Name = "Player ESP",
-	Flag = "PlayerESP",
-	CurrentValue = false,
-	Callback = function(v184)
-		v64.PlayerESP = v184;
-		if v184 then
-			v71();
-		else
-			v68("Player");
-		end
-	end
-});
-v27:CreateToggle({
-	Name = "Train ESP",
-	Flag = "TrainESP",
-	CurrentValue = false,
-	Callback = function(v186)
-		local v187 = 0;
-		while true do
-			if ((0 - 0) == v187) then
-				v64.TrainESP = v186;
-				if v186 then
-					v71();
-				else
-					v68("Train");
-				end
-				break;
-			end
-		end
-	end
-});
-v27:CreateToggle({
-	Name = "Item ESP",
-	Flag = "ItemESP",
-	CurrentValue = false,
-	Callback = function(v188)
-		local v189 = 1212 - (1090 + 122) ;
-		while true do
-			if (v189 == (0 + 0)) then
-				v64.ItemESP = v188;
-				if v188 then
-					v71();
-				else
-					v68("Item");
-				end
-				break;
-			end
-		end
-	end
-});
-v27:CreateToggle({
-	Name = "Mob ESP",
-	Flag = "MobESP",
-	CurrentValue = false,
-	Callback = function(v190)
-		v64.MobESP = v190;
-		if v190 then
-			v71();
-		else
-			v68("Mob");
-		end
-	end
-});
-v27:CreateToggle({
-	Name = "Ore ESP",
-	Flag = "OreESP",
-	CurrentValue = false,
-	Callback = function(v192)
-		local v193 = 0 - 0 ;
-		while true do
-			if (v193 == (0 + 0)) then
-				v64.OreESP = v192;
-				if v192 then
-					v71();
-				else
-					v68("Ore");
-				end
-				break;
-			end
-		end
-	end
-});
-v27:CreateSection("ESP Colors");
-v27:CreateColorPicker({
-	Name = "Player ESP Color",
-	Flag = "PlayerESPColor",
-	Color = v64.Colors.Player,
-	Callback = function(v194)
-		local v195 = 1118 - (628 + 490) ;
-		while true do
-			if (v195 == 1) then
-				if v64.PlayerESP then
-					v71();
-				end
-				break;
-			end
-			if ((0 + 0) == v195) then
-				v64.Colors.Player = v194;
-				v68("Player");
-				v195 = 2 - 1 ;
-			end
-		end
-	end
-});
-v27:CreateColorPicker({
-	Name = "Train ESP Color",
-	Flag = "TrainESPColor",
-	Color = v64.Colors.Train,
-	Callback = function(v196)
-		local v197 = 0;
-		while true do
-			if (v197 == (4 - 3)) then
-				if v64.TrainESP then
-					v71();
-				end
-				break;
-			end
-			if ((774 - (431 + 343)) == v197) then
-				v64.Colors.Train = v196;
-				v68("Train");
-				v197 = 1 - 0 ;
-			end
-		end
-	end
-});
-v27:CreateColorPicker({
-	Name = "Item ESP Color",
-	Flag = "ItemESPColor",
-	Color = v64.Colors.Item,
-	Callback = function(v198)
-		v64.Colors.Item = v198;
-		v68("Item");
-		if v64.ItemESP then
-			v71();
-		end
-	end
-});
-v27:CreateColorPicker({
-	Name = "Mob ESP Color",
-	Flag = "MobESPColor",
-	Color = v64.Colors.Mob,
-	Callback = function(v200)
-		local v201 = 0;
-		while true do
-			if (v201 == (2 - 1)) then
-				if v64.MobESP then
-					v71();
-				end
-				break;
-			end
-			if (v201 == (0 + 0)) then
-				v64.Colors.Mob = v200;
-				v68("Mob");
-				v201 = 1 + 0 ;
-			end
-		end
-	end
-});
-v27:CreateColorPicker({
-	Name = "Ore ESP Color",
-	Flag = "OreESPColor",
-	Color = v64.Colors.Ore,
-	Callback = function(v202)
-		v64.Colors.Ore = v202;
-		v68("Ore");
-		if v64.OreESP then
-			v71();
-		end
-	end
-});
-v27:CreateSection("ESP Settings");
-v27:CreateToggle({
-	Name = "Show Box",
-	Flag = "ESPShowBox",
-	CurrentValue = false,
-	Callback = function(v204)
-		v64.EnableBox = v204;
-		v72();
-	end
-});
-v27:CreateToggle({
-	Name = "Show Highlight",
-	Flag = "ESPShowHighlight",
-	CurrentValue = true,
-	Callback = function(v206)
-		v64.EnableHighlight = v206;
-		v72();
-	end
-});
-v27:CreateToggle({
-	Name = "Show Tracers",
-	Flag = "ESPShowTracers",
-	CurrentValue = false,
-	Callback = function(v208)
-		local v209 = 0;
-		while true do
-			if (v209 == (1695 - (556 + 1139))) then
-				v64.EnableTracer = v208;
-				v72();
-				break;
-			end
-		end
-	end
-});
-v27:CreateSection("ESP Other");
-v27:CreateToggle({
-	Name = "Show Names",
-	Flag = "ESPShowNames",
-	CurrentValue = true,
-	Callback = function(v210)
-		local v211 = 0;
-		while true do
-			if ((15 - (6 + 9)) == v211) then
-				v64.ShowNames = v210;
-				v72();
-				break;
-			end
-		end
-	end
-});
-v27:CreateToggle({
-	Name = "Show Distance",
-	Flag = "ESPShowDistance",
-	CurrentValue = false,
-	Callback = function(v212)
-		local v213 = 0 + 0 ;
-		while true do
-			if ((0 + 0) == v213) then
-				v64.ShowDistance = v212;
-				v72();
-				break;
-			end
-		end
-	end
-});
-v27:CreateToggle({
-	Name = "Show Health",
-	Flag = "ESPShowHealth",
-	CurrentValue = true,
-	Callback = function(v214)
-		v64.ShowHealth = v214;
-		v72();
-	end
-});
-v28:CreateSection("Other Toggles");
-local v73;
-v28:CreateToggle({
-	Name = "Walk to Train",
-	CurrentValue = false,
-	Callback = function(v216)
-		local v217 = 169 - (28 + 141) ;
-		local v218;
-		local v219;
-		local v220;
-		local v221;
-		while true do
-			if (v217 == (0 + 0)) then
-				v218 = v11.LocalPlayer;
-				v219 = v218.Character or v218.CharacterAdded:Wait() ;
-				v217 = 1 - 0 ;
-			end
-			if (v217 == 1) then
-				v220 = v219:WaitForChild("Humanoid");
-				v221 = v219:WaitForChild("HumanoidRootPart");
-				v217 = 2;
-			end
-			if (v217 == (2 + 0)) then
-				if v216 then
-					v73 = v12.Heartbeat:Connect(function()
-						local v407 = workspace:FindFirstChild("Train");
-						if (v407 and v407.PrimaryPart and v220 and v221) then
-							local v463 = (v221.Position - v407.PrimaryPart.Position).Magnitude;
-							if (v463 > (1327 - (486 + 831))) then
-								v220:MoveTo(v407.PrimaryPart.Position);
-							else
-								v220:MoveTo(v221.Position);
-							end
-						end
-					end);
-				elseif v73 then
-					v73:Disconnect();
-					v73 = nil;
-				end
-				break;
-			end
-		end
-	end
-});
-local v74 = false;
-local v75;
-v28:CreateToggle({
-	Name = "Fly Forward (NoClip)",
-	Flag = "FlyLookNoClip",
-	CurrentValue = false,
-	Callback = function(v222)
-		v74 = v222;
-		if v75 then
-			local v277 = 0 - 0 ;
-			while true do
-				if (v277 == (0 - 0)) then
-					v75:Disconnect();
-					v75 = nil;
-					break;
-				end
-			end
-		end
-		if v222 then
-			v75 = v12.Heartbeat:Connect(function(v305)
-				local v306 = 0 + 0 ;
-				local v307;
-				local v308;
-				local v309;
-				local v310;
-				local v311;
-				local v312;
-				while true do
-					if (v306 == 1) then
-						if  not v308 then
-							return;
-						end
-						v309 = v308:FindFirstChildOfClass("Humanoid");
-						v306 = 2;
-					end
-					if (v306 == 0) then
-						v307 = v11.LocalPlayer;
-						v308 = v307.Character;
-						v306 = 3 - 2 ;
-					end
-					if (v306 == 4) then
-						v312 = v309.WalkSpeed;
-						v310.CFrame = v310.CFrame + (v311 * v312 * v305) ;
-						break;
-					end
-					if ((1265 - (668 + 595)) == v306) then
-						v310 = v308:FindFirstChild("HumanoidRootPart");
-						if ( not v309 or  not v310) then
-							return;
-						end
-						v306 = 3 + 0 ;
-					end
-					if (v306 == (1 + 2)) then
-						for v425, v426 in ipairs(v308:GetDescendants()) do
-							if v426:IsA("BasePart") then
-								v426.CanCollide = false;
-							end
-						end
-						v311 = workspace.CurrentCamera.CFrame.LookVector;
-						v306 = 10 - 6 ;
-					end
-				end
-			end);
-		end
-	end
-});
-v28:CreateSection("Themes");
-local v76 = false;
-local v77 = Color3.fromRGB(418 - (23 + 267) , 128, 2072 - (1129 + 815) );
-local v78 = v18.Ambient;
-local function v79()
-	if v76 then
-		v18.Ambient = v77;
-	else
-		v18.Ambient = v78;
-	end
+
+local function stopVFly()
+    if vflyConnection then vflyConnection:Disconnect(); vflyConnection = nil end
+    if vflyKeyDown then vflyKeyDown:Disconnect(); vflyKeyDown = nil end
+    if vflyKeyUp then vflyKeyUp:Disconnect(); vflyKeyUp = nil end
+    table.clear(vflyKeys); vflyControlModule = nil
+    local root = getRootPart(LocalPlayer.Character)
+    if root then
+        local v = root:FindFirstChild(vflyVelocityName); if v then v:Destroy() end
+        local g = root:FindFirstChild(vflyGyroName); if g then g:Destroy() end
+    end
+    destroyMobileButtons()
 end
-v28:CreateToggle({
-	Name = "Custom Ambient",
-	Flag = "Ambient",
-	CurrentValue = false,
-	Callback = function(v223)
-		v76 = v223;
-		v79();
-	end
-});
-v28:CreateColorPicker({
-	Name = "Ambient Color",
-	Flag = "ambientColor",
-	Color = v77,
-	Callback = function(v224)
-		v77 = v224;
-		if v76 then
-			v79();
-		end
-	end
-});
-local v80 = v28:CreateDropdown({
-	Name = "Select Gui Theme",
-	Flag = "guiTheme",
-	Options = {
-		"Default",
-		"AmberGlow",
-		"Amethyst",
-		"Bloom",
-		"DarkBlue",
-		"Green",
-		"Light",
-		"Ocean",
-		"Serenity"
-	},
-	CurrentOption = {
-		"Default"
-	},
-	MultipleOptions = false,
-	Flag = "ThemeDropdown",
-	Callback = function(v225)
-		v10.ModifyTheme(v225[2 - 1 ]);
-	end
-});
-v8:LoadConfiguration();
+
+local function startVFly()
+    stopVFly()
+    if not getRootPart(LocalPlayer.Character) then return false end
+    if isOnMobile then
+        pcall(function()
+            local pm = LocalPlayer.PlayerScripts:WaitForChild("PlayerModule", 5)
+            vflyControlModule = require(pm:WaitForChild("ControlModule", 5))
+        end)
+        createMobileButtons()
+    else
+        vflyKeyDown = UserInputService.InputBegan:Connect(function(i, p) if not p then vflyKeys[i.KeyCode] = true end end)
+        vflyKeyUp   = UserInputService.InputEnded:Connect(function(i) vflyKeys[i.KeyCode] = nil end)
+    end
+    vflyConnection = RunService.RenderStepped:Connect(function()
+        local root = getRootPart(LocalPlayer.Character)
+        local cam = workspace.CurrentCamera
+        if not root or not cam then return end
+        local velocity = getVFlyBodies(root)
+        local ccf = cam.CFrame
+        local move = Vector3.zero
+        local up, down = vflyUp, vflyDown
+        if isOnMobile then
+            if vflyControlModule then
+                local d = vflyControlModule:GetMoveVector()
+                move = ccf.RightVector * d.X - ccf.LookVector * d.Z
+            end
+        else
+            local x = (vflyKeys[Enum.KeyCode.D] and 1 or 0) - (vflyKeys[Enum.KeyCode.A] and 1 or 0)
+            local z = (vflyKeys[Enum.KeyCode.W] and 1 or 0) - (vflyKeys[Enum.KeyCode.S] and 1 or 0)
+            move = ccf.RightVector * x + ccf.LookVector * z
+            if vflyQE then
+                up = up or vflyKeys[Enum.KeyCode.E] == true
+                down = down or vflyKeys[Enum.KeyCode.Q] == true
+            end
+        end
+        local speed = vflySpeed * 50
+        local vert = (up and 1 or 0) - (down and 1 or 0)
+        velocity.Velocity = move * speed + Vector3.new(0, vert * speed, 0)
+    end)
+    return true
+end
+
+VehicleFlyToggle = Tabs.Player:Toggle({ Title = "Vehicle Fly", Flag = "VehicleFlyToggle", Desc = "Fly while seated in a vehicle or on foot", Value = false,
+    Callback = function(s) if s then if not startVFly() then VehicleFlyToggle:Set(false) end else stopVFly() end end })
+VehicleFlySpeedInput = Tabs.Player:Input({ Title = "Vehicle Fly Speed", Flag = "VehicleFlySpeedInput", Placeholder = "Enter speed value", Value = tostring(vflySpeed), NumbersOnly = true,
+    Callback = function(v) local n = tonumber(v); if n and n > 0 then vflySpeed = n end end })
+VehicleQEflyToggle = Tabs.Player:Toggle({ Title = "Q/E Vertical Fly", Flag = "VehicleQEflyToggle", Desc = "E to go up, Q to go down (PC)", Value = false,
+    Callback = function(s) vflyQE = s end })
+
+LocalPlayer.CharacterAdded:Connect(function()
+    if vflyConnection then stopVFly(); if VehicleFlyToggle then VehicleFlyToggle:Set(false) end end
+end)
+
+Tabs.Combat:Section({ Title = "Auto Swing", TextSize = 20 })
+Tabs.Combat:Divider()
+local SWING_RANGE = 15
+local swingPerTime = 1
+local trackedNPCs = {}
+local swingConnection, descendantConnection
+local function getSwingRemote()
+    local ok, r = pcall(function() return ReplicatedStorage.Shared.Universe.Network.RemoteEvent.SwingMelee end)
+    return ok and r or nil
+end
+local descendantUsers = 0
+local function normalizeName(n) return (string.lower(n):gsub("[%s_]", "")) end
+local function getMeleeNames()
+    local ok, f = pcall(function() return ReplicatedStorage.Assets.Tools.Weapon.Melee end)
+    if not ok or not f then return nil, 0 end
+    local names, c = {}, 0
+    for _, t in ipairs(f:GetChildren()) do names[normalizeName(t.Name)] = true; c += 1 end
+    return names, c
+end
+local function findMeleeTool(names)
+    local c = LocalPlayer.Character
+    if not c then return nil end
+    for _, ch in ipairs(c:GetChildren()) do if ch:IsA("Tool") and names[normalizeName(ch.Name)] then return ch end end
+    local bp = LocalPlayer:FindFirstChildOfClass("Backpack")
+    if bp then for _, ch in ipairs(bp:GetChildren()) do if ch:IsA("Tool") and names[normalizeName(ch.Name)] then return ch end end end
+    return nil
+end
+local function trackNPC(h)
+    local m = h.Parent
+    if m and m:IsA("Model") and not trackedNPCs[m] and not Players:GetPlayerFromCharacter(m) then trackedNPCs[m] = h end
+end
+local function startNPCTracking()
+    descendantUsers += 1
+    if descendantUsers > 1 then return end
+    for _, o in ipairs(workspace:GetDescendants()) do if o:IsA("Humanoid") then trackNPC(o) end end
+    descendantConnection = workspace.DescendantAdded:Connect(function(o) if o:IsA("Humanoid") then trackNPC(o) end end)
+end
+local function stopNPCTracking()
+    if descendantUsers == 0 then return end
+    descendantUsers -= 1
+    if descendantUsers > 0 then return end
+    if descendantConnection then descendantConnection:Disconnect(); descendantConnection = nil end
+    table.clear(trackedNPCs)
+end
+local function getClosestNPCId()
+    local c = LocalPlayer.Character
+    local root = c and c:FindFirstChild("HumanoidRootPart")
+    if not root then return nil end
+    local pos = root.Position; local bestId, bestDist
+    for m, h in pairs(trackedNPCs) do
+        if not m.Parent then trackedNPCs[m] = nil
+        elseif h.Health > 0 then
+            local id = m:GetAttribute("ServerEntityId")
+            local nr = m:FindFirstChild("HumanoidRootPart") or m.PrimaryPart
+            if id and nr then
+                local d = (nr.Position - pos).Magnitude
+                if d <= SWING_RANGE and (not bestDist or d < bestDist) then bestId, bestDist = id, d end
+            end
+        end
+    end
+    return bestId
+end
+local autoSwingTracking = false
+local stopAutoSwing, startAutoSwing
+do
+    local swingTool, swingRun = nil, 0
+    local toolConnections = {}
+    local function clearToolConnections()
+        for _, c in ipairs(toolConnections) do c:Disconnect() end
+        table.clear(toolConnections)
+    end
+    local function watchTools(names, run)
+        clearToolConnections()
+        local function refresh()
+            if swingRun == run then swingTool = findMeleeTool(names) end
+        end
+        local function watch(container)
+            if not container then return end
+            table.insert(toolConnections, container.ChildAdded:Connect(function(ch)
+                if ch:IsA("Tool") then refresh() end
+            end))
+            table.insert(toolConnections, container.ChildRemoved:Connect(function(ch)
+                if ch:IsA("Tool") then task.defer(refresh) end
+            end))
+        end
+        watch(LocalPlayer.Character)
+        watch(LocalPlayer:FindFirstChildOfClass("Backpack"))
+        table.insert(toolConnections, LocalPlayer.CharacterAdded:Connect(function()
+            task.spawn(function()
+                LocalPlayer:WaitForChild("Backpack", 5)
+                if swingRun == run then watchTools(names, run) end
+            end)
+        end))
+        refresh()
+    end
+    stopAutoSwing = function()
+        swingRun += 1
+        clearToolConnections(); swingTool = nil
+        if swingConnection then swingConnection:Disconnect(); swingConnection = nil end
+        if autoSwingTracking then autoSwingTracking = false; stopNPCTracking() end
+    end
+    startAutoSwing = function()
+        stopAutoSwing()
+        local R = getSwingRemote()
+        if not R then WindUI:Notify({ Title = "Auto Swing", Content = "SwingMelee remote not found", Duration = 3 }); return false end
+        local names, count = getMeleeNames()
+        if not names or count == 0 then WindUI:Notify({ Title = "Auto Swing", Content = "No melee weapons found", Duration = 3 }); return false end
+        autoSwingTracking = true; startNPCTracking()
+        watchTools(names, swingRun)
+        swingConnection = RunService.Heartbeat:Connect(function()
+            local w = swingTool
+            if not w or not w.Parent then return end
+            local id = getClosestNPCId()
+            if id then for _ = 1, swingPerTime do R:FireServer(w, 0, id) end end
+        end)
+        return true
+    end
+end
+AutoSwingToggle = Tabs.Combat:Toggle({ Title = "Auto Swing", Flag = "AutoSwingToggle", Value = false,
+    Callback = function(s) if s then if not startAutoSwing() then AutoSwingToggle:Set(false) end else stopAutoSwing() end end })
+SwingPerTimeInput = Tabs.Combat:Input({ Title = "Swing Per Time", Flag = "SwingPerTimeInput", Desc = "How many swings are fired per frame", Icon = "swords", Placeholder = "1", Value = tostring(swingPerTime),
+    Callback = function(v) local n = tonumber(v); if n then swingPerTime = math.max(math.floor(n), 1) end end })
+Tabs.Combat:Space()
+
+Tabs.Combat:Section({ Title = "OP Swing", TextSize = 20 })
+Tabs.Combat:Divider()
+local opSwingDelay, opSwingsPerDelay = 0.05, 2
+local opHolding, opLoopId, ClientMeleeHandler, originalMeleeHandler = false, 0, nil, nil
+local opCharacterConnection, opTracking, opSwingEnabled, opHookFn, opInputBegan, opInputEnded
+local function stopOpHolding() opHolding = false; opLoopId += 1 end
+local function startOpHolding()
+    local c = LocalPlayer.Character; if not c then return end
+    local tool = c:FindFirstChildWhichIsA("Tool"); if not tool then return end
+    local R = getSwingRemote(); if not R then return end
+    local at = workspace:GetServerTimeNow()
+    local mouse = LocalPlayer:GetMouse()
+    local lv = mouse.Hit and mouse.Hit.LookVector or c:GetPivot().LookVector
+    opHolding = true; opLoopId += 1; local id = opLoopId
+    task.spawn(function()
+        while opHolding and opLoopId == id and tool.Parent == c do
+            local tid = getClosestNPCId()
+            if tid then
+                for _ = 1, opSwingsPerDelay do
+                    if not opHolding or opLoopId ~= id then break end
+                    R:FireServer(tool, at, lv); R:FireServer(tool, 0, tid)
+                end
+            end
+            task.wait(opSwingDelay)
+        end
+    end)
+end
+local function stopOpSwing()
+    opSwingEnabled = false; stopOpHolding()
+    if ClientMeleeHandler and opHookFn and ClientMeleeHandler._meleeActionHandler == opHookFn then
+        ClientMeleeHandler._meleeActionHandler = originalMeleeHandler
+    end
+    if opTracking then opTracking = false; stopNPCTracking() end
+    if opCharacterConnection then opCharacterConnection:Disconnect(); opCharacterConnection = nil end
+    if opInputBegan then opInputBegan:Disconnect(); opInputBegan = nil end
+    if opInputEnded then opInputEnded:Disconnect(); opInputEnded = nil end
+end
+local function rebindMeleeInput()
+    local c = LocalPlayer.Character
+    local h = c and c:FindFirstChildOfClass("Humanoid")
+    local t = c and c:FindFirstChildWhichIsA("Tool")
+    if h and t then h:UnequipTools(); task.wait(0.15); if opSwingEnabled then h:EquipTool(t) end end
+end
+local function startOpSwing()
+    stopOpSwing()
+    local ok, mod = pcall(function() return require(ReplicatedStorage.Client.Game.Melee.ClientMeleeHandler) end)
+    if not ok or type(mod) ~= "table" then WindUI:Notify({ Title = "OP Swing", Content = "ClientMeleeHandler not found", Duration = 3 }); return false end
+    ClientMeleeHandler = mod
+    if not originalMeleeHandler and mod._meleeActionHandler ~= opHookFn then originalMeleeHandler = mod._meleeActionHandler end
+    if not opHookFn then
+        opHookFn = function(name, state, obj)
+            if opSwingEnabled then
+                if state == Enum.UserInputState.Begin then startOpHolding()
+                elseif state == Enum.UserInputState.End then stopOpHolding() end
+            end
+            if originalMeleeHandler then return originalMeleeHandler(name, state, obj) end
+        end
+    end
+    mod._meleeActionHandler = opHookFn
+    opSwingEnabled = true; opTracking = true; startNPCTracking()
+    opCharacterConnection = LocalPlayer.CharacterAdded:Connect(stopOpHolding)
+    opInputBegan = UserInputService.InputBegan:Connect(function(i, p)
+        if not p and i.UserInputType == Enum.UserInputType.MouseButton1 then startOpHolding() end
+    end)
+    opInputEnded = UserInputService.InputEnded:Connect(function(i)
+        if i.UserInputType == Enum.UserInputType.MouseButton1 then stopOpHolding() end
+    end)
+    task.spawn(rebindMeleeInput); return true
+end
+OpSwingToggle = Tabs.Combat:Toggle({ Title = "OP Swing", Flag = "OpSwingToggle", Value = false,
+    Callback = function(s) if s then if not startOpSwing() then OpSwingToggle:Set(false) end else stopOpSwing() end end })
+OpSwingDelayInput = Tabs.Combat:Input({ Title = "OP Swing Delay", Flag = "OpSwingDelayInput", Desc = "Seconds to wait between bursts (0 = every frame)", Icon = "timer", Placeholder = "0.05", Value = tostring(opSwingDelay),
+    Callback = function(v) local n = tonumber(v); if n then opSwingDelay = math.max(n, 0) end end })
+OpSwingsPerDelayInput = Tabs.Combat:Input({ Title = "OP Swings Per Delay", Flag = "OpSwingsPerDelayInput", Desc = "How many swings are fired in each burst", Icon = "swords", Placeholder = "2", Value = tostring(opSwingsPerDelay),
+    Callback = function(v) local n = tonumber(v); if n then opSwingsPerDelay = math.max(math.floor(n), 1) end end })
+
+Tabs.Visuals:Section({ Title = "Lighting", TextSize = 20 })
+Tabs.Visuals:Divider()
+local fogOriginal, fogConnection
+local function stopLoopNoFog()
+    if fogConnection then fogConnection:Disconnect(); fogConnection = nil end
+    if fogOriginal then
+        Lighting.FogStart = fogOriginal.FogStart; Lighting.FogEnd = fogOriginal.FogEnd
+        local a = Lighting:FindFirstChildOfClass("Atmosphere")
+        if a and fogOriginal.Density then a.Density = fogOriginal.Density; a.Haze = fogOriginal.Haze end
+        fogOriginal = nil
+    end
+end
+local function startLoopNoFog()
+    stopLoopNoFog()
+    local a = Lighting:FindFirstChildOfClass("Atmosphere")
+    fogOriginal = { FogStart = Lighting.FogStart, FogEnd = Lighting.FogEnd, Density = a and a.Density, Haze = a and a.Haze }
+    fogConnection = RunService.Heartbeat:Connect(function()
+        Lighting.FogStart = 100000; Lighting.FogEnd = 100000
+        local c = Lighting:FindFirstChildOfClass("Atmosphere")
+        if c then c.Density = 0; c.Haze = 0 end
+    end)
+end
+LoopNoFogToggle = Tabs.Visuals:Toggle({ Title = "Loop Remove Fog", Flag = "LoopNoFogToggle", Value = false,
+    Callback = function(s) if s then startLoopNoFog() else stopLoopNoFog() end end })
+Tabs.Visuals:Space()
+
+local fbOriginal, fbConnection
+local function stopLoopFullBright()
+    if fbConnection then fbConnection:Disconnect(); fbConnection = nil end
+    if fbOriginal then
+        Lighting.Brightness = fbOriginal.Brightness; Lighting.Ambient = fbOriginal.Ambient
+        Lighting.OutdoorAmbient = fbOriginal.OutdoorAmbient
+        Lighting.ColorShift_Top = fbOriginal.ColorShift_Top; Lighting.ColorShift_Bottom = fbOriginal.ColorShift_Bottom
+        fbOriginal = nil
+    end
+end
+local function startLoopFullBright()
+    stopLoopFullBright()
+    fbOriginal = { Brightness = Lighting.Brightness, Ambient = Lighting.Ambient, OutdoorAmbient = Lighting.OutdoorAmbient, ColorShift_Top = Lighting.ColorShift_Top, ColorShift_Bottom = Lighting.ColorShift_Bottom }
+    local w = Color3.fromRGB(255, 255, 255)
+    fbConnection = RunService.Heartbeat:Connect(function()
+        Lighting.Brightness = 1; Lighting.Ambient = w; Lighting.OutdoorAmbient = w
+        Lighting.ColorShift_Top = w; Lighting.ColorShift_Bottom = w
+    end)
+end
+LoopFullBrightToggle = Tabs.Visuals:Toggle({ Title = "Loop Full Bright", Flag = "LoopFullBrightToggle", Value = false,
+    Callback = function(s) if s then startLoopFullBright() else stopLoopFullBright() end end })
+Tabs.Visuals:Space()
+Tabs.Visuals:Divider()
+Tabs.Visuals:Section({ Title = "Camera", TextSize = 20 })
+Tabs.Visuals:Divider()
+
+local stretchHorizontal, stretchVertical = 0.8, 0.8
+local cameraStretchConnection
+local function stopCameraStretch() if cameraStretchConnection then cameraStretchConnection:Disconnect(); cameraStretchConnection = nil end end
+local function startCameraStretch()
+    stopCameraStretch()
+    cameraStretchConnection = RunService.RenderStepped:Connect(function()
+        local cam = workspace.CurrentCamera
+        if cam then cam.CFrame = cam.CFrame * CFrame.new(0, 0, 0, stretchHorizontal, 0, 0, 0, stretchVertical, 0, 0, 0, 1) end
+    end)
+end
+CameraStretchToggle = Tabs.Visuals:Toggle({ Title = "Camera Stretch", Flag = "CameraStretchToggle", Value = false,
+    Callback = function(s) if s then startCameraStretch() else stopCameraStretch() end end })
+CameraStretchHorizontalInput = Tabs.Visuals:Input({ Title = "Camera Stretch Horizontal", Flag = "CameraStretchHorizontalInput", Placeholder = "0.80", Value = tostring(stretchHorizontal),
+    Callback = function(v) local n = tonumber(v); if n then stretchHorizontal = n end end })
+CameraStretchVerticalInput = Tabs.Visuals:Input({ Title = "Camera Stretch Vertical", Flag = "CameraStretchVerticalInput", Placeholder = "0.80", Value = tostring(stretchVertical),
+    Callback = function(v) local n = tonumber(v); if n then stretchVertical = n end end })
+
+local mobColor = Color3.fromRGB(255, 255, 0)
+local espSettings = {
+    Player = { Names = false, Boxes = false, BoxType = "2D", Distance = false, Health = false, State = false, Highlights = false, Tracers = false },
+    Mob    = { Names = false, Boxes = false, BoxType = "2D", Distance = false, Health = false, State = false, Highlights = false, Tracers = false },
+    Item   = { Names = false, Boxes = false, BoxType = "2D", Distance = false, Highlights = false, Tracers = false }
+}
+local espElements = { Player = {}, Mob = {} }
+local tracerEntries, tracerGui, espConnection = {}, nil, nil
+local mobTrackingActive = false
+
+local function getDistanceFromCamera(pos)
+    local cam = workspace.CurrentCamera; if not cam then return 0 end
+    return (pos - cam.CFrame.Position).Magnitude
+end
+local function calculateBoxScale(d) if d <= 17 then return 1 end return math.max(17/d, 0.013) end
+local function getCharacterState(c)
+    local h = c:FindFirstChildOfClass("Humanoid"); if not h then return "Unknown" end
+    if h.Health <= 0 then return "Dead" end
+    if h.MoveDirection.Magnitude > 0 then return "Moving" end
+    return "Idle"
+end
+local function getHealthColor(h, m) local p = h/math.max(m, 1); if p > 0.6 then return "#00ff00" elseif p > 0.3 then return "#ffa500" end return "#ff0000" end
+local function destroyESPChild(c, n)
+    local d = c:FindFirstChild(n); if d then d:Destroy() end
+    local r = c:FindFirstChild("HumanoidRootPart"); local ir = r and r:FindFirstChild(n); if ir then ir:Destroy() end
+end
+local function create2DBox(c, col, sc)
+    destroyESPChild(c, "ESP_2DBox")
+    local r = c:FindFirstChild("HumanoidRootPart")
+    local bb = Instance.new("BillboardGui"); bb.Name = "ESP_2DBox"; bb.Adornee = r or c; bb.AlwaysOnTop = true
+    bb.Size = UDim2.new(0, 80*sc, 0, 100*sc); bb.StudsOffset = Vector3.zero; bb.ClipsDescendants = false; bb.Parent = r or c
+    local f = Instance.new("Frame"); f.Name = "BoxFrame"; f.Size = UDim2.new(1, 0, 1, 0); f.BackgroundTransparency = 1; f.BorderSizePixel = 0; f.Parent = bb
+    local st = Instance.new("UIStroke"); st.Thickness = math.max(2.5*sc, 2); st.Transparency = 0; st.ApplyStrokeMode = Enum.ApplyStrokeMode.Border; st.Color = col; st.Parent = f
+    return { billboard = bb, stroke = st }
+end
+local function update2DBox(b, col, sc) b.stroke.Color = col; b.stroke.Thickness = math.max(2.5*sc, 2); b.billboard.Size = UDim2.new(0, 80*sc, 0, 100*sc) end
+local function remove2DBox(c) destroyESPChild(c, "ESP_2DBox") end
+local function create3DBox(c, col, sz)
+    local r = c:FindFirstChild("HumanoidRootPart"); if not r then return nil end
+    local e = c:FindFirstChild("ESP_3DBox"); if e then e:Destroy() end
+    local f = Instance.new("Folder"); f.Name = "ESP_3DBox"; f.Parent = c
+    local x, y, z = sz.X/2, sz.Y/2, sz.Z/2
+    local edges = {
+        {Vector3.new(0, y, z),   Vector3.new(sz.X, 0.1, 0.1)}, {Vector3.new(0, y, -z),  Vector3.new(sz.X, 0.1, 0.1)},
+        {Vector3.new(-x, y, 0),  Vector3.new(0.1, 0.1, sz.Z)}, {Vector3.new(x, y, 0),   Vector3.new(0.1, 0.1, sz.Z)},
+        {Vector3.new(0, -y, z),  Vector3.new(sz.X, 0.1, 0.1)}, {Vector3.new(0, -y, -z), Vector3.new(sz.X, 0.1, 0.1)},
+        {Vector3.new(-x, -y, 0), Vector3.new(0.1, 0.1, sz.Z)}, {Vector3.new(x, -y, 0),  Vector3.new(0.1, 0.1, sz.Z)},
+        {Vector3.new(-x, 0, z),  Vector3.new(0.1, sz.Y, 0.1)}, {Vector3.new(x, 0, z),   Vector3.new(0.1, sz.Y, 0.1)},
+        {Vector3.new(-x, 0, -z), Vector3.new(0.1, sz.Y, 0.1)}, {Vector3.new(x, 0, -z),  Vector3.new(0.1, sz.Y, 0.1)}
+    }
+    for _, e2 in ipairs(edges) do
+        local a = Instance.new("BoxHandleAdornment")
+        a.Adornee = r; a.Size = e2[2]; a.CFrame = CFrame.new(e2[1]); a.Color3 = col; a.Transparency = 0.2; a.ZIndex = 10; a.AlwaysOnTop = true; a.Parent = f
+    end
+    return f
+end
+local function update3DBoxColor(c, col) local f = c:FindFirstChild("ESP_3DBox"); if f then for _, a in ipairs(f:GetChildren()) do a.Color3 = col end end end
+local function remove3DBox(c) local f = c:FindFirstChild("ESP_3DBox"); if f then f:Destroy() end end
+local function createHighlight(c, col)
+    local e = c:FindFirstChild("ESP_Highlight"); if e then e:Destroy() end
+    local hl = Instance.new("Highlight"); hl.Name = "ESP_Highlight"; hl.Adornee = c; hl.FillColor = col; hl.OutlineColor = col
+    hl.FillTransparency = 0.5; hl.OutlineTransparency = 0.3; hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop; hl.Parent = c
+    return hl
+end
+local function updateHighlight(hl, col) hl.FillColor = col; hl.OutlineColor = col end
+local function removeHighlight(c) local hl = c:FindFirstChild("ESP_Highlight"); if hl then hl:Destroy() end end
+local function createBillboard(c, col)
+    destroyESPChild(c, "ESP_Billboard")
+    local r = c:FindFirstChild("HumanoidRootPart")
+    local bb = Instance.new("BillboardGui"); bb.Name = "ESP_Billboard"; bb.Adornee = r or c; bb.AlwaysOnTop = true
+    bb.Size = UDim2.new(0, 350, 0, 100); bb.StudsOffset = Vector3.new(0, 3, 0); bb.ClipsDescendants = false
+    bb.ZIndexBehavior = Enum.ZIndexBehavior.Sibling; bb.Parent = r or c
+    local tl = Instance.new("TextLabel"); tl.Name = "InfoLabel"; tl.Size = UDim2.new(1, 0, 1, 0); tl.BackgroundTransparency = 1
+    tl.Text = ""; tl.TextColor3 = col; tl.TextSize = 10; tl.Font = Enum.Font.GothamBold; tl.RichText = true
+    tl.TextStrokeColor3 = Color3.fromRGB(0, 0, 0); tl.TextStrokeTransparency = 0
+    tl.TextXAlignment = Enum.TextXAlignment.Center; tl.TextYAlignment = Enum.TextYAlignment.Top
+    tl.TextWrapped = true; tl.LineHeight = 1.2; tl.Parent = bb
+    return { billboard = bb, textLabel = tl }
+end
+local function updateBillboard(d, name, dist, col, hp, mhp, state)
+    local lines = {}
+    if name then table.insert(lines, name) end
+    local details = {}
+    if hp and mhp then table.insert(details, string.format('<font color="%s">Health: %.0f / %.0f</font>', getHealthColor(hp, mhp), hp, mhp)) end
+    if dist then table.insert(details, "Distance: " .. string.format("%.0f", dist)) end
+    if state then table.insert(details, "State: " .. state) end
+    if #details > 0 then table.insert(lines, table.concat(details, " | ")) end
+    d.textLabel.Text = table.concat(lines, "\n"); d.textLabel.TextColor3 = col
+end
+local function removeTargetESP(c, esp)
+    if esp.box2D then remove2DBox(c) end
+    if esp.box3D then remove3DBox(c) end
+    if esp.highlight then removeHighlight(c) end
+    if esp.billboard then destroyESPChild(c, "ESP_Billboard") end
+end
+
+local ItemESP = {
+    entries = {},
+    active = false,
+    color = Color3.fromRGB(0, 255, 255),
+    connection = nil,
+}
+
+local function iecCreateLabel(part)
+    local bb = Instance.new("BillboardGui")
+    bb.Name = "ESP_ItemLabel"; bb.Adornee = part; bb.AlwaysOnTop = true
+    bb.Size = UDim2.new(0, 200, 0, 50); bb.StudsOffset = Vector3.new(0, 2, 0); bb.ClipsDescendants = false
+    bb.Parent = part
+    local tl = Instance.new("TextLabel"); tl.Name = "InfoLabel"; tl.Size = UDim2.new(1, 0, 1, 0)
+    tl.BackgroundTransparency = 1; tl.TextColor3 = ItemESP.color; tl.TextSize = 10
+    tl.Font = Enum.Font.GothamBold; tl.TextStrokeTransparency = 0; tl.TextWrapped = true; tl.Parent = bb
+    return bb
+end
+local function iecCreateHighlight(inst)
+    local hl = Instance.new("Highlight"); hl.Name = "ESP_ItemHighlight"; hl.Adornee = inst
+    hl.FillColor = ItemESP.color; hl.OutlineColor = ItemESP.color
+    hl.FillTransparency = 0.5; hl.OutlineTransparency = 0.3
+    hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop; hl.Parent = inst
+    return hl
+end
+local function iecCreate2DBox(part)
+    local bb = Instance.new("BillboardGui"); bb.Name = "ESP_ItemBox2D"; bb.Adornee = part
+    bb.AlwaysOnTop = true; bb.Size = UDim2.fromScale(3, 3); bb.ClipsDescendants = false; bb.Parent = part
+    local f = Instance.new("Frame"); f.Size = UDim2.new(1, 0, 1, 0); f.BackgroundTransparency = 1; f.BorderSizePixel = 0; f.Parent = bb
+    local st = Instance.new("UIStroke"); st.Thickness = 2; st.ApplyStrokeMode = Enum.ApplyStrokeMode.Border; st.Color = ItemESP.color; st.Parent = f
+    return bb
+end
+
+local function iecRender(entry, settings, dist, name)
+    local esp = entry.esp or {}; entry.esp = esp
+    local part = entry.part
+    if not part or not part.Parent then return end
+    local function drop(k) if esp[k] then esp[k]:Destroy(); esp[k] = nil end end
+    if settings.Boxes then
+        if not esp.box2D or not esp.box2D.Parent then esp.box2D = iecCreate2DBox(part) end
+    else drop("box2D") end
+    if settings.Highlights then
+        if not esp.highlight or not esp.highlight.Parent then esp.highlight = iecCreateHighlight(entry.model) end
+    else drop("highlight") end
+    if settings.Names or settings.Distance then
+        if not esp.label or not esp.label.Parent then esp.label = iecCreateLabel(part) end
+        local lines = {}
+        if settings.Names then table.insert(lines, name) end
+        if settings.Distance then table.insert(lines, string.format("Distance: %.0f", dist)) end
+        esp.label.InfoLabel.Text = table.concat(lines, "\n")
+    else drop("label") end
+end
+
+local function iecClear(entry)
+    if entry.esp then for _, inst in pairs(entry.esp) do inst:Destroy() end end
+    entry.esp = nil
+end
+
+local function iecUpdate()
+    if not ECS then return end
+    local settings = espSettings.Item
+    local myPos = ecsMyPosition()
+    local alive = {}
+    for id in ECS.world:query(ECS.comps.Storable, ECS.comps.ObjectId, ECS.comps.ModelInstance) do
+        local model = ecsGet(id, ECS.comps.ModelInstance)
+        if model and model.Parent then
+            local name = ecsGet(id, ECS.comps.ObjectId)
+            local t = ecsGet(id, ECS.comps.Transform)
+            local pos = t and (t.Position or t.p) or model:GetPivot().Position
+            local part = model.PrimaryPart or model:FindFirstChildWhichIsA("BasePart", true) or model
+            local dist = myPos and (pos - myPos).Magnitude or getDistanceFromCamera(pos)
+            alive[model] = true
+            local entry = ItemESP.entries[model]
+            if not entry then
+                entry = { model = model, part = part }
+                ItemESP.entries[model] = entry
+            else
+                entry.part = part
+            end
+            iecRender(entry, settings, dist, name or model.Name)
+        end
+    end
+    for model, entry in pairs(ItemESP.entries) do
+        if not alive[model] then
+            iecClear(entry)
+            ItemESP.entries[model] = nil
+        end
+    end
+end
+
+local function iecClearAll()
+    for _, entry in pairs(ItemESP.entries) do iecClear(entry) end
+    ItemESP.entries = {}
+end
+
+local function iecStart()
+    if ItemESP.active then return end
+    ItemESP.active = true
+    ItemESP.connection = RunService.RenderStepped:Connect(function() pcall(iecUpdate) end)
+end
+local function iecStop()
+    if not ItemESP.active then return end
+    ItemESP.active = false
+    if ItemESP.connection then ItemESP.connection:Disconnect(); ItemESP.connection = nil end
+    iecClearAll()
+end
+
+local function cleanupKind(kind) for c, esp in pairs(espElements[kind]) do removeTargetESP(c, esp) end espElements[kind] = {} end
+local function cleanupTracerESP()
+    for _, d in pairs(tracerEntries) do if d.pivot then d.pivot:Destroy() end end
+    tracerEntries = {}
+    if tracerGui then tracerGui:Destroy(); tracerGui = nil end
+end
+local function cleanupAllESP() cleanupKind("Player"); cleanupKind("Mob"); iecClearAll(); cleanupTracerESP() end
+local function getTracerGui()
+    if tracerGui and tracerGui.Parent then return tracerGui end
+    local g = Instance.new("ScreenGui"); g.Name = "Tracer GUI"; g.ResetOnSpawn = false; g.IgnoreGuiInset = true
+    g.DisplayOrder = -2147483648; g.Parent = PlayerGui; tracerGui = g; return g
+end
+local function ensureTracer(key, col)
+    local d = tracerEntries[key]
+    if d and d.pivot and d.pivot.Parent then d.line.BackgroundColor3 = col; return d end
+    local pivot = Instance.new("Frame"); pivot.Name = "Tracer"; pivot.AnchorPoint = Vector2.new(0.5, 0.5)
+    pivot.Position = UDim2.fromScale(0.5, 1); pivot.Size = UDim2.fromOffset(1, 1); pivot.BackgroundTransparency = 1
+    pivot.Visible = false; pivot.ZIndex = -2147483648; pivot.Parent = getTracerGui()
+    local line = Instance.new("Frame"); line.Name = "Line"; line.AnchorPoint = Vector2.new(0.5, 1)
+    line.Position = UDim2.fromScale(0.5, 0.5); line.Size = UDim2.fromOffset(2, 0); line.BackgroundColor3 = col
+    line.BorderSizePixel = 0; line.ZIndex = -2147483648; line.Parent = pivot
+    d = { pivot = pivot, line = line, lastPos = d and d.lastPos or nil }; tracerEntries[key] = d; return d
+end
+local function drawTracer(d, wp, col)
+    local cam = workspace.CurrentCamera
+    if not cam or not wp then d.pivot.Visible = false; return end
+    d.line.BackgroundColor3 = col
+    local sp = cam:WorldToViewportPoint(wp); local vp = cam.ViewportSize
+    local dx = sp.X - vp.X*0.5; local dy = sp.Y - vp.Y
+    if sp.Z < 0 then dx = -dx; dy = -dy end
+    if dx ~= dx or dy ~= dy then d.pivot.Visible = false; return end
+    d.pivot.Visible = true
+    d.pivot.Rotation = math.deg(math.atan2(dx, -dy))
+    d.line.Size = UDim2.fromOffset(2, math.sqrt(dx*dx + dy*dy))
+end
+local function updateTracerESP()
+    local pT, mT, iT = espSettings.Player.Tracers, espSettings.Mob.Tracers, espSettings.Item.Tracers
+    if not pT and not mT and not iT then
+        if next(tracerEntries) or tracerGui then cleanupTracerESP() end
+        return
+    end
+    local alive = {}
+    if pT then
+        for _, pl in ipairs(Players:GetPlayers()) do
+            if pl ~= LocalPlayer then
+                alive[pl] = true
+                local col = pl.TeamColor.Color
+                local d = ensureTracer(pl, col)
+                local r = pl.Character and pl.Character:FindFirstChild("HumanoidRootPart")
+                if r then d.lastPos = r.Position end
+                if d.lastPos then drawTracer(d, d.lastPos, col) else d.pivot.Visible = false end
+            end
+        end
+    end
+    if mT then
+        for m, h in pairs(trackedNPCs) do
+            if m.Parent and h.Health > 0 then
+                alive[m] = true
+                local d = ensureTracer(m, mobColor)
+                local r = m:FindFirstChild("HumanoidRootPart")
+                if r then d.lastPos = r.Position end
+                if d.lastPos then drawTracer(d, d.lastPos, mobColor) else d.pivot.Visible = false end
+            end
+        end
+    end
+    if iT then
+        for model, entry in pairs(ItemESP.entries) do
+            if model.Parent and entry.part and entry.part.Parent then
+                alive[model] = true
+                local d = ensureTracer(model, ItemESP.color)
+                d.lastPos = entry.part.Position
+                drawTracer(d, entry.part.Position, ItemESP.color)
+            end
+        end
+    end
+    for k, d in pairs(tracerEntries) do
+        if not alive[k] then d.pivot:Destroy(); tracerEntries[k] = nil end
+    end
+end
+
+local function updateTarget(kind, c, root, hum, col, dispName)
+    local settings = espSettings[kind]
+    local esp = espElements[kind][c]; if not esp then esp = {}; espElements[kind][c] = esp end
+    local d = getDistanceFromCamera(root.Position)
+    local sc = calculateBoxScale(d)
+    local hp, mhp = hum.Health, hum.MaxHealth
+
+    if settings.Boxes then
+        if settings.BoxType == "2D" then
+            if not esp.box2D or not esp.box2D.billboard.Parent then esp.box2D = create2DBox(c, col, sc) end
+            update2DBox(esp.box2D, col, sc)
+            if esp.box3D then remove3DBox(c); esp.box3D = nil end
+        else
+            if not esp.box3D or not esp.box3D.Parent then esp.box3D = create3DBox(c, col, Vector3.new(2, hum.HipHeight + 5, 2)) end
+            update3DBoxColor(c, col)
+            if esp.box2D then remove2DBox(c); esp.box2D = nil end
+        end
+    else
+        if esp.box2D then remove2DBox(c); esp.box2D = nil end
+        if esp.box3D then remove3DBox(c); esp.box3D = nil end
+    end
+    if settings.Highlights then
+        if not esp.highlight or not esp.highlight.Parent then esp.highlight = createHighlight(c, col) end
+        updateHighlight(esp.highlight, col)
+    elseif esp.highlight then removeHighlight(c); esp.highlight = nil end
+    if settings.Names or settings.Distance or settings.Health or settings.State then
+        if not esp.billboard or not esp.billboard.billboard.Parent then esp.billboard = createBillboard(c, col) end
+        updateBillboard(esp.billboard,
+            settings.Names and dispName or nil,
+            settings.Distance and d or nil,
+            col,
+            settings.Health and hp or nil,
+            settings.Health and mhp or nil,
+            settings.State and getCharacterState(c) or nil)
+    elseif esp.billboard then destroyESPChild(c, "ESP_Billboard"); esp.billboard = nil end
+end
+local function sweepKind(kind, curr) for c, esp in pairs(espElements[kind]) do if not curr[c] then removeTargetESP(c, esp); espElements[kind][c] = nil end end end
+local function updatePlayerESP()
+    local curr = {}
+    for _, pl in ipairs(Players:GetPlayers()) do
+        if pl ~= LocalPlayer then
+            local c = pl.Character; local r = c and c:FindFirstChild("HumanoidRootPart")
+            local h = c and c:FindFirstChildOfClass("Humanoid")
+            if r and h and h.Health > 0 then curr[c] = true; updateTarget("Player", c, r, h, pl.TeamColor.Color, pl.Name) end
+        end
+    end
+    sweepKind("Player", curr)
+end
+local function updateMobESP()
+    local curr = {}
+    for m, h in pairs(trackedNPCs) do
+        if not m.Parent then trackedNPCs[m] = nil else
+            local r = m:FindFirstChild("HumanoidRootPart")
+            if r and h.Health > 0 then curr[m] = true; updateTarget("Mob", m, r, h, mobColor, m:GetAttribute("EntityName") or m.Name) end
+        end
+    end
+    sweepKind("Mob", curr)
+end
+local function hasEnabledOption(s)
+    for k, v in pairs(s) do if k ~= "BoxType" and v then return true end end
+    return false
+end
+local function onESPRenderStepped()
+    if not workspace.CurrentCamera then return end
+    if hasEnabledOption(espSettings.Player) then updatePlayerESP() else cleanupKind("Player") end
+    if hasEnabledOption(espSettings.Mob) then updateMobESP() else cleanupKind("Mob") end
+    updateTracerESP()
+end
+local function refreshESP()
+    local mobNeeded = hasEnabledOption(espSettings.Mob)
+    if mobNeeded and not mobTrackingActive then mobTrackingActive = true; startNPCTracking()
+    elseif not mobNeeded and mobTrackingActive then mobTrackingActive = false; stopNPCTracking(); cleanupKind("Mob") end
+
+    local itemNeeded = hasEnabledOption(espSettings.Item)
+    if itemNeeded then iecStart() else iecStop() end
+
+    local anyEnabled = mobNeeded or itemNeeded or hasEnabledOption(espSettings.Player)
+    if anyEnabled and not espConnection then
+        espConnection = RunService.RenderStepped:Connect(onESPRenderStepped)
+    elseif not anyEnabled and espConnection then
+        espConnection:Disconnect(); espConnection = nil; cleanupAllESP()
+    end
+end
+local function stopESP()
+    for _, s in pairs(espSettings) do for k in pairs(s) do if k ~= "BoxType" then s[k] = false end end end
+    refreshESP(); cleanupAllESP()
+end
+local function addESPToggle(kind, key, title, flag, desc)
+    return Tabs.ESP:Toggle({ Title = title, Flag = flag, Desc = desc, Value = false,
+        Callback = function(s) espSettings[kind][key] = s; refreshESP() end })
+end
+local function addESPBoxType(kind, title, flag)
+    return Tabs.ESP:Dropdown({ Title = title, Flag = flag, Values = { "2D", "3D" }, Value = "2D",
+        Callback = function(v) espSettings[kind].BoxType = v end })
+end
+
+local tracerWarning = "Warning: this may hurt performance and make the game laggy."
+
+Tabs.ESP:Section({ Title = "Player ESP", TextSize = 20 })
+Tabs.ESP:Divider()
+addESPToggle("Player", "Names", "Player Names", "PlayerNames")
+addESPToggle("Player", "Boxes", "Player Boxes", "PlayerBoxes")
+addESPBoxType("Player", "Player Box Type", "PlayerBoxType")
+addESPToggle("Player", "Distance", "Player Distance", "PlayerDistance")
+addESPToggle("Player", "Health", "Player Health", "PlayerHealth")
+addESPToggle("Player", "State", "Player State", "PlayerState")
+addESPToggle("Player", "Highlights", "Player Highlights", "PlayerHighlights")
+addESPToggle("Player", "Tracers", "Player Tracers", "PlayerTracerESP", tracerWarning)
+
+Tabs.ESP:Divider()
+Tabs.ESP:Section({ Title = "Mob ESP", TextSize = 20 })
+Tabs.ESP:Divider()
+addESPToggle("Mob", "Names", "Mob Names", "MobNames")
+addESPToggle("Mob", "Boxes", "Mob Boxes", "MobBoxes")
+addESPBoxType("Mob", "Mob Box Type", "MobBoxType")
+addESPToggle("Mob", "Distance", "Mob Distance", "MobDistance")
+addESPToggle("Mob", "Health", "Mob Health", "MobHealth")
+addESPToggle("Mob", "State", "Mob State", "MobState")
+addESPToggle("Mob", "Highlights", "Mob Highlights", "MobHighlights")
+addESPToggle("Mob", "Tracers", "Mob Tracers", "MobTracerESP", tracerWarning)
+
+Tabs.ESP:Divider()
+Tabs.ESP:Section({ Title = "Item ESP", TextSize = 20 })
+Tabs.ESP:Divider()
+addESPToggle("Item", "Names", "Item Names", "ItemNames")
+addESPToggle("Item", "Boxes", "Item Boxes", "ItemBoxes")
+addESPToggle("Item", "Distance", "Item Distance", "ItemDistance")
+addESPToggle("Item", "Highlights", "Item Highlights", "ItemHighlights")
+addESPToggle("Item", "Tracers", "Item Tracers", "ItemTracerESP", tracerWarning)
+
+local cameraCleanup
+local cameraSensitivityUI
+do
+    local CAMERA_FOV_KEY = "DaraHubFov"
+    local cameraModule
+    local function getCameraController()
+        if cameraModule == nil then
+            local ok, m = pcall(function() return require(ReplicatedStorage.Shared.Universe.Camera) end)
+            cameraModule = ok and m or false
+        end
+        return cameraModule and cameraModule.Instance or nil
+    end
+    Tabs.Visuals:Space(); Tabs.Visuals:Divider()
+    Tabs.Visuals:Section({ Title = "Game Camera", TextSize = 20 })
+    Tabs.Visuals:Divider()
+
+    local thirdPersonConnection, thirdPersonActive, thirdPersonOriginal
+    local function stopThirdPerson()
+        if thirdPersonConnection then thirdPersonConnection:Disconnect(); thirdPersonConnection = nil end
+        if thirdPersonActive then
+            thirdPersonActive = false
+            workspace:SetAttribute("IsThirdpersonAllowed", thirdPersonOriginal)
+            local c = getCameraController(); if c then c:DoZoom(0, true) end
+        end
+    end
+    local function startThirdPerson()
+        stopThirdPerson()
+        local c = getCameraController(); if not c then return false end
+        thirdPersonActive = true
+        thirdPersonOriginal = workspace:GetAttribute("IsThirdpersonAllowed")
+        workspace:SetAttribute("IsThirdpersonAllowed", true)
+        if c.Zoom < c.MinZoom then c:DoZoom(12, true) end
+        thirdPersonConnection = RunService.Heartbeat:Connect(function()
+            if workspace:GetAttribute("IsThirdpersonAllowed") ~= true then workspace:SetAttribute("IsThirdpersonAllowed", true) end
+        end)
+        return true
+    end
+    ForceThirdPersonToggle = Tabs.Visuals:Toggle({ Title = "Force Third Person", Flag = "ForceThirdPersonToggle", Value = false,
+        Callback = function(s) if s then if not startThirdPerson() then WindUI:Notify({ Title = "Third Person", Content = "Game camera not found", Duration = 3 }); ForceThirdPersonToggle:Set(false) end else stopThirdPerson() end end })
+
+    local fovEnabled, fovTarget, fovConnection = false, 70, nil
+    local function stopFov()
+        if fovConnection then fovConnection:Disconnect(); fovConnection = nil end
+        local c = getCameraController(); if c and c.fov then c.fov[CAMERA_FOV_KEY] = nil end
+    end
+    local function startFov()
+        stopFov()
+        fovConnection = RunService.RenderStepped:Connect(function()
+            local c = getCameraController(); if not c or not c.fov then return end
+            local own = c.fov[CAMERA_FOV_KEY]; if type(own) ~= "number" then own = 0 end
+            local others = c:GetFovAll() - own
+            c:SetFov(CAMERA_FOV_KEY, fovTarget - others)
+        end)
+    end
+    CustomFovToggle = Tabs.Visuals:Toggle({ Title = "Custom FOV", Flag = "CustomFovToggle", Value = false,
+        Callback = function(s) fovEnabled = s; if s then startFov() else stopFov() end end })
+    CustomFovSlider = Tabs.Visuals:Slider({ Title = "Field of View", Flag = "CustomFovSlider", Step = 1, Value = { Min = 1, Max = 120, Default = 70 },
+        Callback = function(v) fovTarget = tonumber(v) or 70 end })
+
+    local SENSITIVITY_KEY = "DaraHubSensitivity"
+    local sensitivityValue, sensitivityConnection = 1, nil
+    local function stopSensitivity()
+        if sensitivityConnection then sensitivityConnection:Disconnect(); sensitivityConnection = nil end
+        local c = getCameraController(); if c and c.sensitivities then c.sensitivities[SENSITIVITY_KEY] = nil end
+    end
+    local function startSensitivity()
+        stopSensitivity()
+        sensitivityConnection = RunService.Heartbeat:Connect(function()
+            local c = getCameraController()
+            if c and c.sensitivities and c.sensitivities[SENSITIVITY_KEY] ~= sensitivityValue then c.sensitivities[SENSITIVITY_KEY] = sensitivityValue end
+        end)
+    end
+    cameraSensitivityUI = function()
+        Tabs.Settings:Space()
+        Tabs.Settings:Section({ Title = "Camera Sensitivity", TextSize = 20 })
+        Tabs.Settings:Divider()
+        CameraSensitivityToggle = Tabs.Settings:Toggle({ Title = "Camera Sensitivity", Flag = "CameraSensitivityToggle", Value = false,
+            Callback = function(s) if s then startSensitivity() else stopSensitivity() end end })
+        CameraSensitivitySlider = Tabs.Settings:Slider({ Title = "Sensitivity Multiplier", Flag = "CameraSensitivitySlider", Step = 0.05, Value = { Min = 0.1, Max = 20, Default = 1 },
+            Callback = function(v) sensitivityValue = tonumber(v) or 1 end })
+    end
+
+    local aim = { enabled = false, part = "Head", types = { Mob = true }, smoothness = 10, maxDistance = 1000, wallCheck = false, showFov = false, fovRadius = 100, fovColor = Color3.fromRGB(0, 255, 0), tracking = false, bound = false }
+    local fovGui, fovCircle, fovStroke
+    local function updateFovCircle()
+        if not aim.showFov then if fovGui then fovGui.Enabled = false end return end
+        if not fovGui or not fovGui.Parent then
+            fovGui = Instance.new("ScreenGui"); fovGui.Name = "DaraAimbotFOV"; fovGui.ResetOnSpawn = false; fovGui.IgnoreGuiInset = true; fovGui.Parent = PlayerGui
+            fovCircle = Instance.new("Frame"); fovCircle.AnchorPoint = Vector2.new(0.5, 0.5); fovCircle.Position = UDim2.fromScale(0.5, 0.5)
+            fovCircle.BackgroundTransparency = 1; fovCircle.BorderSizePixel = 0; fovCircle.Parent = fovGui
+            local cr = Instance.new("UICorner"); cr.CornerRadius = UDim.new(1, 0); cr.Parent = fovCircle
+            fovStroke = Instance.new("UIStroke"); fovStroke.Thickness = 2; fovStroke.Parent = fovCircle
+        end
+        fovGui.Enabled = true
+        fovCircle.Size = UDim2.fromOffset(aim.fovRadius*2, aim.fovRadius*2)
+        fovStroke.Color = aim.fovColor
+    end
+    local function syncAimbotTracking()
+        local needed = aim.enabled and aim.types.Mob == true
+        if needed and not aim.tracking then aim.tracking = true; startNPCTracking()
+        elseif not needed and aim.tracking then aim.tracking = false; stopNPCTracking() end
+    end
+    local function selectAimPart(c)
+        if aim.part == "Head" then return c:FindFirstChild("Head") or c:FindFirstChild("HumanoidRootPart")
+        elseif aim.part == "Legs" then return c:FindFirstChild("LowerTorso") or c:FindFirstChild("Left Leg") or c:FindFirstChild("HumanoidRootPart") end
+        return c:FindFirstChild("HumanoidRootPart") or c:FindFirstChild("UpperTorso") or c:FindFirstChild("Torso")
+    end
+    local function isVisible(cam, part, c)
+        if not aim.wallCheck then return true end
+        local ignore = { c }; if LocalPlayer.Character then table.insert(ignore, LocalPlayer.Character) end
+        local params = RaycastParams.new(); params.FilterType = Enum.RaycastFilterType.Exclude; params.FilterDescendantsInstances = ignore
+        local o = cam.CFrame.Position
+        return workspace:Raycast(o, part.Position - o, params) == nil
+    end
+    local function evaluate(cam, center, c, h)
+        if not h or h.Health <= 0 then return nil end
+        local p = selectAimPart(c); if not p then return nil end
+        if (p.Position - cam.CFrame.Position).Magnitude > aim.maxDistance then return nil end
+        local s, on = cam:WorldToViewportPoint(p.Position); if not on then return nil end
+        local d = (Vector2.new(s.X, s.Y) - center).Magnitude
+        if d > aim.fovRadius then return nil end
+        if not isVisible(cam, p, c) then return nil end
+        return p, d
+    end
+    local function aimStep(dt)
+        if not aim.enabled then return end
+        local ctrl = getCameraController(); local cam = workspace.CurrentCamera
+        if not ctrl or not cam or not ctrl.Rotations or not ctrl.Rotations.MouseLook then return end
+        local mh = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+        if not mh or mh.Health <= 0 then return end
+        local center = cam.ViewportSize/2; local bestPart, bestDist
+        if aim.types.Mob then
+            for m, h in pairs(trackedNPCs) do
+                if m.Parent then
+                    local p, d = evaluate(cam, center, m, h)
+                    if p and (not bestDist or d < bestDist) then bestPart, bestDist = p, d end
+                end
+            end
+        end
+        if not bestPart then return end
+        local dir = bestPart.Position - ctrl:GetPositionCharacter()
+        if dir.Magnitude < 0.001 then return end
+        dir = dir.Unit
+        local tPitch = math.deg(math.asin(math.clamp(dir.Y, -1, 1)))
+        local tYaw = math.deg(math.atan2(-dir.X, -dir.Z))
+        local cur = ctrl.Rotations.MouseLook
+        local dYaw = ((tYaw - cur.Y + 180) % 360) - 180
+        local dPitch = tPitch - cur.X
+        local f = math.clamp(1 - (aim.smoothness/20), 0.001, 1)
+        local a = math.clamp(f * math.min(dt*60, 1), 0, 1)
+        ctrl.Rotations.MouseLook = Vector3.new(math.clamp(cur.X + dPitch*a, -80, 80), cur.Y + dYaw*a, cur.Z)
+    end
+    local function startAimbot() if aim.bound then return end aim.bound = true; RunService:BindToRenderStep("DaraHubAimbot", Enum.RenderPriority.Camera.Value - 2, aimStep) end
+    local function stopAimbot() if aim.bound then aim.bound = false; pcall(function() RunService:UnbindFromRenderStep("DaraHubAimbot") end) end end
+
+    Tabs.Combat:Space()
+    Tabs.Combat:Section({ Title = "Aimbot", TextSize = 20 })
+    Tabs.Combat:Divider()
+    AimbotToggle = Tabs.Combat:Toggle({ Title = "Aimbot", Flag = "AimbotToggle", Value = false,
+        Callback = function(s)
+            if s and not getCameraController() then WindUI:Notify({ Title = "Aimbot", Content = "Game camera not found", Duration = 3 }); AimbotToggle:Set(false); return end
+            aim.enabled = s; if s then startAimbot() else stopAimbot() end; syncAimbotTracking()
+        end })
+    Tabs.Combat:Dropdown({ Title = "Aim Part", Flag = "AimPartDropdown", Values = { "Head", "Body", "Legs" }, Value = "Head",
+        Callback = function(v) aim.part = v end })
+    Tabs.Combat:Slider({ Title = "Smoothness", Flag = "AimSmoothnessSlider", Desc = "Higher = smoother aim", Step = 0.01, Value = { Min = 0.01, Max = 20, Default = 10 },
+        Callback = function(v) aim.smoothness = tonumber(v) or 10 end })
+    Tabs.Combat:Input({ Title = "Aimbot Max Distance", Flag = "AimMaxDistanceInput", Placeholder = "1000", Value = tostring(aim.maxDistance),
+        Callback = function(v) local n = tonumber(v); if n and n > 0 then aim.maxDistance = n end end })
+    Tabs.Combat:Toggle({ Title = "Wall Check", Flag = "AimWallCheckToggle", Value = false, Callback = function(s) aim.wallCheck = s end })
+    Tabs.Combat:Space()
+    Tabs.Combat:Section({ Title = "Aimbot FOV", TextSize = 20 })
+    Tabs.Combat:Divider()
+    Tabs.Combat:Toggle({ Title = "Show FOV Circle", Flag = "AimShowFovToggle", Value = false, Callback = function(s) aim.showFov = s; updateFovCircle() end })
+    Tabs.Combat:Slider({ Title = "FOV Radius", Flag = "AimFovRadiusSlider", Step = 1, Value = { Min = 10, Max = 800, Default = 100 },
+        Callback = function(v) aim.fovRadius = tonumber(v) or 100; updateFovCircle() end })
+    Tabs.Combat:Colorpicker({ Title = "FOV Circle Color", Flag = "AimFovColorPicker", Default = aim.fovColor,
+        Callback = function(c) aim.fovColor = c; updateFovCircle() end })
+
+    cameraCleanup = function()
+        stopAimbot(); aim.enabled = false; syncAimbotTracking()
+        if fovGui then fovGui:Destroy(); fovGui = nil end
+        stopThirdPerson(); stopFov(); stopSensitivity()
+    end
+end
+
+Tabs.Misc:Section({ Title = "Utility", TextSize = 20 })
+Tabs.Misc:Divider()
+local antiAfkConnection
+local function stopAntiAfk() if antiAfkConnection then antiAfkConnection:Disconnect(); antiAfkConnection = nil end end
+AntiAfkToggle = Tabs.Misc:Toggle({ Title = "Anti AFK", Flag = "AntiAfkToggle", Value = false,
+    Callback = function(s)
+        stopAntiAfk()
+        if s then
+            antiAfkConnection = LocalPlayer.Idled:Connect(function()
+                local cam = workspace.CurrentCamera
+                VirtualUser:Button2Down(Vector2.new(0, 0), cam.CFrame); task.wait(1); VirtualUser:Button2Up(Vector2.new(0, 0), cam.CFrame)
+            end)
+        end
+    end })
+
+Tabs.Misc:Space()
+Tabs.Misc:Section({ Title = "Auto Pilot", TextSize = 20 })
+Tabs.Misc:Divider()
+
+local autopilot = {
+    enabled = false,
+    keybind = Enum.KeyCode.RightShift
+}
+
+local autopilotControls
+local autopilotPatched = setmetatable({}, { __mode = "k" })
+
+local function isSitting()
+    local c = LocalPlayer.Character
+    local h = c and c:FindFirstChildOfClass("Humanoid")
+    return h ~= nil and h.Health > 0 and h.Sit and h.SeatPart ~= nil
+end
+
+local function patchAutopilotController(controller)
+    if not controller or autopilotPatched[controller] then return end
+    autopilotPatched[controller] = true
+
+    local originalGetMoveVector = controller.GetMoveVector
+    controller.GetMoveVector = function(self, ...)
+        local moveVector = originalGetMoveVector(self, ...)
+        if not autopilot.enabled or not isSitting() then return moveVector end
+        if not self:IsMoveVectorCameraRelative() then return moveVector end
+        if moveVector.Magnitude > 0 then return moveVector end
+        return Vector3.new(0, 0, -1)
+    end
+end
+
+local function stopAutopilot()
+    autopilot.enabled = false
+    pcall(function() RunService:UnbindFromRenderStep("DaraHubAutoPilot") end)
+end
+
+local function startAutopilot()
+    if not autopilotControls then
+        local ok, controls = pcall(function()
+            local pm = LocalPlayer:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule", 5)
+            return require(pm):GetControls()
+        end)
+        if not ok or not controls then return false end
+        autopilotControls = controls
+    end
+    pcall(function() RunService:UnbindFromRenderStep("DaraHubAutoPilot") end)
+    RunService:BindToRenderStep("DaraHubAutoPilot", Enum.RenderPriority.Input.Value - 1, function()
+        patchAutopilotController(autopilotControls:GetActiveController())
+    end)
+    autopilot.enabled = true
+    return true
+end
+
+local function setAutopilot(state)
+    stopAutopilot()
+    if state and not startAutopilot() then
+        WindUI:Notify({ Title = "Auto Pilot", Content = "Could not load the control module", Duration = 3 })
+        if AutoPilotToggle then AutoPilotToggle:Set(false) end
+    end
+end
+
+AutoPilotToggle = Tabs.Misc:Toggle({
+    Title = "Auto Pilot",
+    Flag = "AutoPilotToggle",
+    Value = false,
+    Callback = function(s) setAutopilot(s) end
+})
+
+if Tabs.Misc.Keybind then
+    Tabs.Misc:Keybind({
+        Title = "Auto Pilot Keybind",
+        Flag = "AutoPilotKeybind",
+        Desc = "Press this key to toggle Auto Pilot",
+        Value = "RightShift",
+        Callback = function(key)
+            local ok, code = pcall(function() return Enum.KeyCode[key] end)
+            if ok and code then autopilot.keybind = code end
+        end
+    })
+end
+
+ShowAutoPilotButtonToggle = Tabs.Misc:Toggle({
+    Title = "Show Auto Pilot Button",
+    Flag = "ShowAutoPilotButton",
+    Value = false,
+    Callback = function(state)
+        if ButtonLib and ButtonLib.AutoPilotToggle then ButtonLib.AutoPilotToggle:SetVisible(state) end
+    end
+})
+
+function ScanObjectEntries(folder, requires)
+    local entries, all = {}, {}
+    if not folder then return entries end
+    if not ECS then ECS = loadECS() end
+    local compNames, hasNames = {}, false
+    if ECS and type(ECS.comps) == "table" then
+        for k, v in pairs(ECS.comps) do
+            local t = type(v)
+            if t == "table" or t == "function" or t == "userdata" or t == "number" then compNames[v] = tostring(k); hasNames = true end
+        end
+    end
+    local function describe(module)
+        local okR, data = pcall(require, module)
+        if not okR or type(data) ~= "table" or type(data.components) ~= "table" then return nil, nil, nil end
+        local displayName
+        local parts, caps = {}, {}
+        for comp, val in pairs(data.components) do
+            local cname = compNames[comp]
+            if cname then
+                caps[cname] = true
+                local tv = type(val)
+                if not string.find(cname, "Path$") and (tv == "string" or tv == "number" or tv == "boolean") then
+                    if cname == "Name" then displayName = tostring(val)
+                    else table.insert(parts, cname .. ": " .. tostring(val)) end
+                end
+            end
+        end
+        if type(data.tags) == "table" then
+            for _, tag in pairs(data.tags) do
+                local tname = compNames[tag]
+                if tname then caps[tname] = true end
+            end
+        end
+        table.sort(parts)
+        return displayName, (#parts > 0 and table.concat(parts, " | ") or nil), caps
+    end
+    local seen, usedTitles, count = {}, {}, 0
+    for _, d in ipairs(folder:GetDescendants()) do
+        if d:IsA("ModuleScript") then
+            if not seen[d.Name] then
+                seen[d.Name] = true
+                local displayName, details, caps = describe(d)
+                local title = displayName or d.Name
+                if usedTitles[title] then title = d.Name end
+                usedTitles[title] = true
+                local e = { Title = title, Id = d.Name, Desc = details }
+                table.insert(all, e)
+                local matches = true
+                if requires and caps and hasNames then
+                    matches = false
+                    for _, r in ipairs(requires) do
+                        if caps[r] then matches = true; break end
+                    end
+                end
+                if matches then table.insert(entries, e) end
+            end
+            count += 1
+            if count % 40 == 0 then task.wait() end
+        end
+    end
+    if #entries == 0 then entries = all end
+    table.sort(entries, function(x, y) return x.Title < y.Title end)
+    return entries
+end
+
+function CreateListFilter(opts)
+    local titleToId, idToTitle, selected = {}, {}, {}
+    local dropdown
+    local function toSet(values)
+        local set = {}
+        if type(values) == "table" then
+            for _, n in ipairs(values) do
+                local title = type(n) == "table" and n.Title or n
+                if title ~= nil then set[titleToId[tostring(title)] or tostring(title)] = true end
+            end
+        end
+        return set
+    end
+    dropdown = opts.Tab:Dropdown({ Title = opts.Title, Flag = opts.Flag, Desc = opts.Desc or "Empty = everything", Values = {}, Value = {}, Multi = true, AllowNone = true, SearchBarEnabled = true,
+        Callback = function(v) selected = toSet(v); opts.OnChange(selected) end })
+    opts.Tab:Button({ Title = "Refresh " .. opts.Title,
+        Callback = function()
+            local entries = opts.Scan()
+            if #entries == 0 then WindUI:Notify({ Title = opts.Title, Content = "No items found", Duration = 3 }); return end
+            table.clear(titleToId); table.clear(idToTitle)
+            local view = {}
+            for _, e in ipairs(entries) do
+                titleToId[e.Title] = e.Id; idToTitle[e.Id] = e.Title
+                table.insert(view, { Title = e.Title, Desc = e.Desc })
+            end
+            local sel = {}
+            for id in pairs(selected) do if idToTitle[id] then table.insert(sel, idToTitle[id]) end end
+            if dropdown and dropdown.Refresh then dropdown:Refresh(view, sel) end
+            WindUI:Notify({ Title = opts.Title, Content = #entries .. " found", Duration = 3 })
+        end })
+    return dropdown
+end
+
+local farmCleanup
+do
+    local farm = {
+        collectAll = false, bond = false, minDistance = 15,
+        filters = { bring = {}, nearby = {}, pickup = {} },
+        filterNorm = { bring = {}, nearby = {}, pickup = {} },
+        nearby = false, pickup = false, moneyBag = false, moneyBagDistance = 15,
+        auraRange = 15, nearbyDistance = 15, delay = 0.25,
+        bringDelay = 0.1, nearbyDelay = 0.1, pickupDelay = 0.1, bondDelay = 0.1,
+        collectRun = 0, autoRetry = false, emptyPasses = 0, lastRetry = 0
+    }
+
+    local function getMyPos() return ecsMyPosition() end
+
+    local function retryRun()
+        pcall(function() ReplicatedStorage.Shared.Universe.Network.RemoteEvent.ResetCharacter:FireServer() end)
+        pcall(function() ReplicatedStorage.Remotes.EndDecision:FireServer(false) end)
+        WindUI:Notify({ Title = "Auto Retry", Content = "No bonds left, retrying", Duration = 3 })
+    end
+
+    local function collectPass(modules)
+        if not ECS then return end
+        local world, comps = modules.world, modules.comps
+        local state = world:get_resource(comps.ClientStateResource)
+        local character = state and state.localCharacter
+        if not character then return end
+        if not world:has(character, comps.Sack) then
+            world:add(character, comps.Sack)
+            world:set(character, comps.Sack, { contents = {}, maxContents = 10 })
+        end
+        local myPos = getMyPos(); if not myPos then return end
+
+        local bondNear, bondFar = {}, {}
+        local bondTotal = 0
+        local checked = 0
+        for id in world:query(comps.Storable, comps.ObjectId) do
+            if not (farm.collectAll or farm.bond or farm.moneyBag or farm.nearby or farm.pickup) then return end
+            local objectId = world:get(id, comps.ObjectId)
+            if objectId == "bond" then bondTotal += 1 end
+            local isBond = (farm.bond and objectId == "bond") or (farm.moneyBag and objectId == "money_bag")
+            local function allowed(key) return next(farm.filters[key]) == nil or farm.filterNorm[key][normalizeName(tostring(objectId))] == true end
+            local isBring = not isBond and farm.collectAll and allowed("bring")
+            local isNearby = not isBond and farm.nearby and allowed("nearby")
+            local isPickup = not isBond and farm.pickup and allowed("pickup")
+            if isBond or isBring or isNearby or isPickup then
+                local serverEntity = modules.replicator:get_server_entity(id)
+                if serverEntity and serverEntity ~= id then
+                    local t = world:get(id, comps.Transform)
+                    local pos = t and (t.Position or t.p)
+                    local dist = pos and (pos - myPos).Magnitude or math.huge
+                    if isBond then
+                        local range = objectId == "money_bag" and farm.moneyBagDistance or farm.nearbyDistance
+                        if dist <= range then table.insert(bondNear, serverEntity)
+                        else table.insert(bondFar, serverEntity) end
+                    else
+                        if isBring and dist > farm.minDistance then
+                            modules.remotes.Store:FireServer(serverEntity); modules.remotes.Store:FireServer()
+                            if farm.bringDelay > 0 then task.wait(farm.bringDelay) end
+                        end
+                        if isNearby and dist <= farm.nearbyDistance then
+                            if world:has(id, comps.Actionable) then
+                                modules.actionable:FireServer(serverEntity)
+                                if farm.nearbyDelay > 0 then task.wait(farm.nearbyDelay) end
+                            end
+                        end
+                        if isPickup and dist <= farm.auraRange then
+                            if world:has(id, comps.Pickupable) then
+                                modules.pickup:FireServer(serverEntity)
+                                if farm.pickupDelay > 0 then task.wait(farm.pickupDelay) end
+                            end
+                        end
+                    end
+                end
+            end
+            checked += 1
+            if checked % 20 == 0 then task.wait() end
+        end
+
+        if farm.bond and farm.autoRetry then
+            if bondTotal == 0 then
+                farm.emptyPasses += 1
+                if farm.emptyPasses >= 3 and os.clock() - farm.lastRetry > 15 then
+                    farm.emptyPasses = 0
+                    farm.lastRetry = os.clock()
+                    retryRun()
+                    return
+                end
+            else
+                farm.emptyPasses = 0
+            end
+        end
+
+        if #bondNear > 0 then
+            for _, sr in ipairs(bondNear) do
+                modules.actionable:FireServer(sr)
+                if farm.bondDelay > 0 then task.wait(farm.bondDelay) end
+            end
+            return
+        end
+        for _, sr in ipairs(bondFar) do
+            if not (farm.bond or farm.moneyBag) then return end
+            modules.remotes.Store:FireServer(sr); modules.remotes.Store:FireServer(); modules.actionable:FireServer(sr)
+            if farm.bondDelay > 0 then task.wait(farm.bondDelay) end
+        end
+    end
+
+    local function refreshCollect()
+        local needed = farm.collectAll or farm.bond or farm.moneyBag or farm.nearby or farm.pickup
+        farm.collectRun += 1
+        farm.emptyPasses = 0
+        if not needed then return end
+        local run = farm.collectRun
+        task.spawn(function()
+            while farm.collectRun == run do
+                if not ECS then ECS = loadECS() end
+                if not ECS then
+                    WindUI:Notify({ Title = "Auto Collect", Content = "Game item modules not found", Duration = 3 })
+                    farm.collectAll = false; farm.bond = false; farm.moneyBag = false; farm.nearby = false; farm.pickup = false
+                    return
+                end
+                pcall(collectPass, ECS)
+                task.wait(farm.delay)
+            end
+        end)
+    end
+
+    local function addFilter(title, flag, key, requires)
+        CreateListFilter({
+            Tab = Tabs.Misc, Title = title, Flag = flag,
+            Scan = function()
+                local ok, folder = pcall(function() return ReplicatedStorage.Shared.Universe.Object.Objects end)
+                if not ok or not folder then return {} end
+                return ScanObjectEntries(folder, requires)
+            end,
+            OnChange = function(set)
+                farm.filters[key] = set
+                local norm = {}
+                for n in pairs(set) do norm[normalizeName(n)] = true end
+                farm.filterNorm[key] = norm
+            end
+        })
+    end
+    local function addToggle(title, flag, desc, field)
+        Tabs.Misc:Toggle({ Title = title, Flag = flag, Value = false, Desc = desc,
+            Callback = function(s) farm[field] = s; refreshCollect() end })
+    end
+
+    Tabs.Misc:Space()
+    Tabs.Misc:Section({ Title = "Bring Items", TextSize = 20 })
+    Tabs.Misc:Divider()
+    addToggle("Bring Items", "AutoCollectToggle", "Brings items to you (skips nearby)", "collectAll")
+    addFilter("Bring Item Filter", "BringFilterDropdown", "bring", { "Pickupable", "Actionable" })
+    Tabs.Misc:Input({ Title = "Ignore Bring Distance", Flag = "BringDistanceInput", Desc = "Items within this range are ignored", Placeholder = "15", Value = tostring(farm.minDistance),
+        Callback = function(v) local n = tonumber(v); if n and n >= 0 then farm.minDistance = n end end })
+    Tabs.Misc:Input({ Title = "Bring Delay", Flag = "BringDelayInput", Placeholder = "0.1", Value = tostring(farm.bringDelay),
+        Callback = function(v) local n = tonumber(v); if n and n >= 0 then farm.bringDelay = n end end })
+
+    Tabs.Misc:Space()
+    Tabs.Misc:Section({ Title = "Collect Nearby", TextSize = 20 })
+    Tabs.Misc:Divider()
+    addToggle("Collect Nearby Items", "CollectNearbyToggle", "Collects items within range of you", "nearby")
+    addFilter("Collect Nearby Filter", "NearbyFilterDropdown", "nearby", { "Actionable" })
+    Tabs.Misc:Input({ Title = "Nearby Distance", Flag = "NearbyDistanceInput", Placeholder = "15", Value = tostring(farm.nearbyDistance),
+        Callback = function(v) local n = tonumber(v); if n and n >= 0 then farm.nearbyDistance = n end end })
+    Tabs.Misc:Input({ Title = "Collect Nearby Delay", Flag = "NearbyDelayInput", Placeholder = "0.1", Value = tostring(farm.nearbyDelay),
+        Callback = function(v) local n = tonumber(v); if n and n >= 0 then farm.nearbyDelay = n end end })
+
+    Tabs.Misc:Space()
+    Tabs.Misc:Section({ Title = "Item Aura", TextSize = 20 })
+    Tabs.Misc:Divider()
+    addToggle("Item Aura", "ItemAuraToggle", "Picks up every item within range below", "pickup")
+    addFilter("Item Aura Filter", "PickupFilterDropdown", "pickup", { "Pickupable" })
+    Tabs.Misc:Input({ Title = "Aura Range", Flag = "AuraRangeInput", Placeholder = "15", Value = tostring(farm.auraRange),
+        Callback = function(v) local n = tonumber(v); if n and n >= 0 then farm.auraRange = n end end })
+    Tabs.Misc:Input({ Title = "Item Aura Delay", Flag = "PickupDelayInput", Placeholder = "0.1", Value = tostring(farm.pickupDelay),
+        Callback = function(v) local n = tonumber(v); if n and n >= 0 then farm.pickupDelay = n end end })
+
+    Tabs.Misc:Space()
+    Tabs.Misc:Section({ Title = "Auto Farm", TextSize = 20 })
+    Tabs.Misc:Divider()
+    addToggle("Auto Farm Bond", "AutoFarmBondToggle", "Collects bonds near first, then brings far bonds", "bond")
+    Tabs.Misc:Toggle({ Title = "Auto Retry When No Bond Left", Type = "Checkbox", Flag = "AutoRetryNoBondToggle", Desc = "Needs Auto Farm Bond. Resets and declines the next run when no bonds are left", Value = false,
+        Callback = function(s) farm.autoRetry = s; farm.emptyPasses = 0 end })
+    Tabs.Misc:Space()
+    addToggle("Auto Collect Money Bag", "AutoCollectMoneyBagToggle", "Collects money bags near first, then brings far ones", "moneyBag")
+    Tabs.Misc:Input({ Title = "Money Bag Distance", Flag = "MoneyBagDistanceInput", Placeholder = "15", Value = tostring(farm.moneyBagDistance),
+        Callback = function(v) local n = tonumber(v); if n and n >= 0 then farm.moneyBagDistance = n end end })
+    Tabs.Misc:Input({ Title = "Bond / Money Bag Delay", Flag = "BondDelayInput", Placeholder = "0.1", Value = tostring(farm.bondDelay),
+        Callback = function(v) local n = tonumber(v); if n and n >= 0 then farm.bondDelay = n end end })
+
+    local weldHook = { active = false, original = nil, raw = false, world = nil, cache = nil, cachedAt = 0, cachedFor = nil }
+    local function findWeldTarget(modules, dragged)
+        local now = os.clock()
+        if weldHook.cachedFor == dragged and now - weldHook.cachedAt < 0.25 then return weldHook.cache end
+        local world, comps = modules.world, modules.comps
+        local draggedModel = world:get(dragged, comps.ModelInstance); if not draggedModel then return nil end
+        local origin = draggedModel:GetPivot().Position
+        local bestEntity, bestDist
+        for id in world:query(comps.WeldSurface, comps.ModelInstance) do
+            if id ~= dragged and not modules.isShopItem(id) then
+                local model = world:get(id, comps.ModelInstance)
+                if model and model.Parent and not model:IsDescendantOf(draggedModel) then
+                    local d = (model:GetPivot().Position - origin).Magnitude
+                    if not bestDist or d < bestDist then bestEntity, bestDist = id, d end
+                end
+            end
+        end
+        weldHook.cache = bestEntity; weldHook.cachedAt = now; weldHook.cachedFor = dragged
+        return bestEntity
+    end
+    local function stopWeldAnywhere()
+        if not weldHook.active then return end
+        weldHook.active = false
+        local w = weldHook.world
+        if w then if weldHook.raw then w.insert_resource = weldHook.original else w.insert_resource = nil end end
+        weldHook.world = nil; weldHook.original = nil; weldHook.cache = nil
+    end
+    local function startWeldAnywhere()
+        stopWeldAnywhere()
+        if not ECS then ECS = loadECS() end
+        if not ECS then return false end
+        local world, comps = ECS.world, ECS.comps
+        local original = world.insert_resource
+        if type(original) ~= "function" then return false end
+        weldHook.world = world; weldHook.original = rawget(world, "insert_resource"); weldHook.raw = weldHook.original ~= nil; weldHook.active = true
+        world.insert_resource = function(self, component, value, ...)
+            if weldHook.active and component == comps.DraggingStateResource and type(value) == "table" then
+                local dragged = value.draggingEntity
+                if dragged and not value.weldTarget and world:has(dragged, comps.Weldable) and not ECS.isShopItem(dragged) then
+                    local target = findWeldTarget(ECS, dragged)
+                    if target then value = table.clone(value); value.weldTarget = target end
+                end
+            end
+            return original(self, component, value, ...)
+        end
+        return true
+    end
+    Tabs.Misc:Space()
+    Tabs.Misc:Section({ Title = "Weld", TextSize = 20 })
+    Tabs.Misc:Divider()
+    WeldAnywhereToggle = Tabs.Misc:Toggle({ Title = "Weld Anywhere", Flag = "WeldAnywhereToggle", Value = false,
+        Callback = function(s) if s then if not startWeldAnywhere() then WindUI:Notify({ Title = "Weld Anywhere", Content = "Could not hook the weld system", Duration = 3 }); WeldAnywhereToggle:Set(false) end else stopWeldAnywhere() end end })
+
+    farmCleanup = function()
+        stopWeldAnywhere()
+        farm.collectAll = false; farm.bond = false; farm.moneyBag = false; farm.nearby = false; farm.pickup = false
+        farm.collectRun += 1
+    end
+end
+
+local extraCleanups = {}
+
+do
+    local BANDAGE_FAST_TIME = 0.05
+    local bandage = { connections = {}, watched = {}, enabled = false }
+    local function patchBandageScript(cs)
+        if not (getconnections and getfenv and debug and debug.getconstants and debug.setconstant) then return end
+        for _, conn in ipairs(getconnections(RunService.RenderStepped)) do
+            local fn = conn.Function
+            if type(fn) == "function" then
+                local ok, env = pcall(getfenv, fn)
+                if ok and type(env) == "table" and rawget(env, "script") == cs then
+                    local okC, consts = pcall(debug.getconstants, fn)
+                    if okC then for i, v in pairs(consts) do if v == 3.7 then pcall(debug.setconstant, fn, i, BANDAGE_FAST_TIME) end end end
+                end
+            end
+        end
+    end
+    local function watchTool(tool)
+        if not bandage.enabled or bandage.watched[tool] or not tool:IsA("Tool") then return end
+        task.spawn(function()
+            local cs = tool:WaitForChild("BandageClient", 5)
+            if not cs or not bandage.enabled or bandage.watched[tool] then return end
+            bandage.watched[tool] = true
+            table.insert(bandage.connections, tool.Equipped:Connect(function() task.delay(0.1, patchBandageScript, cs) end))
+            if tool.Parent == LocalPlayer.Character then task.delay(0.1, patchBandageScript, cs) end
+        end)
+    end
+    local function watchContainer(c)
+        for _, ch in ipairs(c:GetChildren()) do watchTool(ch) end
+        table.insert(bandage.connections, c.ChildAdded:Connect(watchTool))
+    end
+    local function stopBandage()
+        bandage.enabled = false
+        for _, c in ipairs(bandage.connections) do c:Disconnect() end
+        table.clear(bandage.connections); table.clear(bandage.watched)
+    end
+    local function startBandage()
+        stopBandage(); bandage.enabled = true
+        local bp = LocalPlayer:FindFirstChildOfClass("Backpack"); if bp then watchContainer(bp) end
+        if LocalPlayer.Character then watchContainer(LocalPlayer.Character) end
+        table.insert(bandage.connections, LocalPlayer.CharacterAdded:Connect(function(c)
+            table.clear(bandage.watched); watchContainer(c)
+            local nb = LocalPlayer:WaitForChild("Backpack", 5); if nb then watchContainer(nb) end
+        end))
+    end
+    Tabs.Main:Toggle({ Title = "Remove Bandage Cooldown", Flag = "RemoveBandageCooldownToggle", Value = false,
+        Callback = function(s)
+            if s then if not (getconnections and debug and debug.setconstant) then WindUI:Notify({ Title = "Bandage", Content = "Your executor does not support this", Duration = 3 }) end; startBandage() else stopBandage() end
+        end })
+    table.insert(extraCleanups, stopBandage)
+end
+
+do
+    local GUN_PELLETS = 15
+    local gun = { enabled = false, range = 50, scanDelay = 0.05, filter = {}, allowed = {}, run = 0, tracking = false, lastShotAt = 0, lastReloadAt = 0 }
+    local function gunKey(n) return (string.lower(n):gsub("[^%w]", "")) end
+    local function getGunFolder() local ok, f = pcall(function() return ReplicatedStorage.Assets.Tools.Weapon.Gun end); return ok and f or nil end
+    local function getGunObjectFolder()
+        local ok, f = pcall(function() return ReplicatedStorage.Shared.Universe.Object.Objects.Weapon.Gun end)
+        return ok and f or nil
+    end
+    local function getGunNames()
+        local names, seen = {}, {}
+        local f = getGunObjectFolder()
+        if f then
+            for _, d in ipairs(f:GetDescendants()) do
+                if d:IsA("ModuleScript") and not seen[d.Name] then seen[d.Name] = true; table.insert(names, d.Name) end
+            end
+        end
+        if #names == 0 then
+            local tf = getGunFolder()
+            if tf then for _, ch in ipairs(tf:GetChildren()) do table.insert(names, ch.Name) end end
+        end
+        table.sort(names); return names
+    end
+    local function rebuildAllowed()
+        local a = {}
+        if next(gun.filter) ~= nil then for n in pairs(gun.filter) do a[gunKey(n)] = true end
+        else for _, n in ipairs(getGunNames()) do a[gunKey(n)] = true end end
+        gun.allowed = a
+    end
+    local function getWeaponConfig(tool)
+        local cfg = tool:FindFirstChild("WeaponConfiguration"); local state = tool:FindFirstChild("ClientWeaponState")
+        if not cfg or not state then return nil end
+        return { fireDelay = cfg:FindFirstChild("FireDelay"), autoFireDelay = cfg:FindFirstChild("AutoFireDelay"), currentAmmo = state:FindFirstChild("CurrentAmmo"), isReloading = state:FindFirstChild("IsReloading"), lastFireTime = state:FindFirstChild("LastFireTime"), bulletType = cfg:FindFirstChild("BulletType") }
+    end
+    local function hasAmmo(wc)
+        if not wc then return true end
+        local bt = wc.bulletType and wc.bulletType.Value
+        if not bt or bt == "" then return true end
+        local c = LocalPlayer:GetAttribute(bt .. "Ammo"); if c ~= nil then return c > 0 end
+        return true
+    end
+    local function triggerReload(tool)
+        local r = ReplicatedStorage:FindFirstChild("Remotes")
+        r = r and r:FindFirstChild("Weapon"); r = r and r:FindFirstChild("Reload")
+        if r then r:FireServer(0, tool) end
+    end
+    local function isGunReady(tool, wc)
+        if not wc then return false end
+        if wc.isReloading and wc.isReloading.Value then return false end
+        local ammo = wc.currentAmmo and wc.currentAmmo.Value
+        if ammo ~= nil and ammo <= 0 then
+            if hasAmmo(wc) and tick() - gun.lastReloadAt >= 2 then gun.lastReloadAt = tick(); triggerReload(tool) end
+            return false
+        end
+        if not hasAmmo(wc) then return false end
+        return true
+    end
+    local function getFireDelay(wc)
+        if not wc then return 0.15 end
+        local fd = wc.fireDelay and wc.fireDelay.Value or 0.15
+        local afd = wc.autoFireDelay and wc.autoFireDelay.Value
+        return math.max(0.05, afd and math.max(afd, fd) or fd)
+    end
+    local function getNextFireTime(wc)
+        if not wc then return 0 end
+        local lft = wc.lastFireTime and wc.lastFireTime.Value or 0
+        return lft + getFireDelay(wc)
+    end
+    local function findReadyGun(c)
+        local function try(tool)
+            if not (tool:IsA("Tool") and gun.allowed[gunKey(tool.Name)]) then return nil, nil end
+            local wc = getWeaponConfig(tool); if not wc then return nil, nil end
+            if wc.isReloading and wc.isReloading.Value then return nil, nil end
+            return tool, wc
+        end
+        for _, ch in ipairs(c:GetChildren()) do local t, wc = try(ch); if t then return t, wc end end
+        local bp = LocalPlayer:FindFirstChildOfClass("Backpack")
+        if bp then for _, ch in ipairs(bp:GetChildren()) do local t, wc = try(ch); if t then return t, wc end end end
+        return nil, nil
+    end
+    local function gunStep()
+        local c = LocalPlayer.Character; local root = getRootPart(c); if not root then return end
+        local r = ReplicatedStorage:FindFirstChild("Remotes"); r = r and r:FindFirstChild("Weapon"); r = r and r:FindFirstChild("Shoot")
+        if not r then return end
+        local tool, wc = findReadyGun(c); if not tool then return end
+        local fd = getFireDelay(wc); local now = tick()
+        if now - gun.lastShotAt < fd then return end
+        local sNow = workspace:GetServerTimeNow()
+        if sNow < getNextFireTime(wc) then return end
+        if not isGunReady(tool, wc) then return end
+        local bp, bh, bd = nil, nil, gun.range
+        for m, h in pairs(trackedNPCs) do
+            if m.Parent and h.Health > 0 then
+                local p = m:FindFirstChild("Head") or m:FindFirstChild("HumanoidRootPart")
+                if p then local d = (p.Position - root.Position).Magnitude; if d <= bd then bp, bh, bd = p, h, d end end
+            end
+        end
+        if bp then
+            local hits = {}; for i = 1, GUN_PELLETS do hits[tostring(i)] = bh end
+            local o = root.Position + Vector3.new(0, 1.5, 0)
+            r:FireServer(workspace:GetServerTimeNow(), tool, CFrame.lookAt(o, bp.Position), hits)
+            gun.lastShotAt = tick()
+        end
+    end
+    local function stopGunAura()
+        gun.run += 1; gun.enabled = false
+        if gun.tracking then gun.tracking = false; stopNPCTracking() end
+    end
+    local function sta…
