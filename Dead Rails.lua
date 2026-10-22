@@ -1,3239 +1,1844 @@
-if getgenv().DaraHubExecuted then
-    NotifyToast({
-        title = "WARNING!",
-        content = "Script Is Already Loaded, rejoin if you want to re-execute.",
-        duration = 8,
-        icon = "triangle-exclamation",
-        iconColor = "#FFFF00",
-    })
-    return
-end
-getgenv().DaraHubExecuted = true
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local RayfieldLibrary = {
+	Flags = {},
+	Theme = {
+		Default = {
+			TextColor = Color3.fromRGB(240, 240, 240),
 
-local BaseURL = "https://darahub.pages.dev"
-WindUI = loadstring(game:HttpGet(BaseURL .. "/Module/Library/GUI/WindUI-Moded/main.lua"))()
-loadstring(game:HttpGet(BaseURL .. "/Module/Library/GUI/LoadAll.lua"))()
+			Background = Color3.fromRGB(25, 25, 25),
+			Topbar = Color3.fromRGB(34, 34, 34),
+			Shadow = Color3.fromRGB(20, 20, 20),
 
-Window = WindUI:CreateWindow({
-    Title = "Darahub | Dead Rail (Game)",
-    Icon = BaseURL .. "/icon.png",
-    Author = "Made By Pnsdg",
-    Folder = "Darahub/DeadRail-Game",
-    Size = UDim2.fromOffset(580, 490),
-    Theme = "Dark",
-    HidePanelBackground = false,
-    NewElements = true,
-    Acrylic = false,
-    HideSearchBar = false,
-    SideBarWidth = 200,
-    OpenButton = { ShowIconOnly = true },
-})
-WindUI.TransparencyValue = 0.7
-Window:ToggleTransparency(true)
-Window:DisableTopbarButtons({ "Fullscreen" })
-executor = identifyexecutor()
-if type(executor) == "string" then
-    Window:Tag({ Title = executor })
-end
-Window:Tag({ Title = "v1" })
+			NotificationBackground = Color3.fromRGB(20, 20, 20),
+			NotificationActionsBackground = Color3.fromRGB(230, 230, 230),
 
-Tabs = {
-    Main = Window:Tab({ Title = "Main", Icon = "layout-grid" }),
-    Player = Window:Tab({ Title = "Player", Icon = "user" }),
-    Visuals = Window:Tab({ Title = "Visuals", Icon = "camera" }),
-    ESP = Window:Tab({ Title = "ESP", Icon = "eye" }),
-    Combat = Window:Tab({ Title = "Combat", Icon = "swords" }),
-    Misc = Window:Tab({ Title = "Misc", Icon = "wrench" }),
-    Teleport = Window:Tab({ Title = "Teleport", Icon = "navigation" }),
-    Settings = Window:Tab({ Title = "Settings", Icon = "settings" }),
-    info = Window:Tab({ Title = "info", Icon = "info" }),
+			TabBackground = Color3.fromRGB(80, 80, 80),
+			TabStroke = Color3.fromRGB(85, 85, 85),
+			TabBackgroundSelected = Color3.fromRGB(210, 210, 210),
+			TabTextColor = Color3.fromRGB(240, 240, 240),
+			SelectedTabTextColor = Color3.fromRGB(50, 50, 50),
+
+			ElementBackground = Color3.fromRGB(35, 35, 35),
+			ElementBackgroundHover = Color3.fromRGB(40, 40, 40),
+			SecondaryElementBackground = Color3.fromRGB(25, 25, 25),
+			ElementStroke = Color3.fromRGB(50, 50, 50),
+			SecondaryElementStroke = Color3.fromRGB(40, 40, 40),
+
+			SliderBackground = Color3.fromRGB(50, 138, 220),
+			SliderProgress = Color3.fromRGB(50, 138, 220),
+			SliderStroke = Color3.fromRGB(58, 163, 255),
+
+			ToggleBackground = Color3.fromRGB(30, 30, 30),
+			ToggleEnabled = Color3.fromRGB(0, 146, 214),
+			ToggleDisabled = Color3.fromRGB(100, 100, 100),
+			ToggleEnabledStroke = Color3.fromRGB(0, 170, 255),
+			ToggleDisabledStroke = Color3.fromRGB(125, 125, 125),
+			ToggleEnabledOuterStroke = Color3.fromRGB(100, 100, 100),
+			ToggleDisabledOuterStroke = Color3.fromRGB(65, 65, 65),
+
+			DropdownSelected = Color3.fromRGB(40, 40, 40),
+			DropdownUnselected = Color3.fromRGB(30, 30, 30),
+
+			InputBackground = Color3.fromRGB(30, 30, 30),
+			InputStroke = Color3.fromRGB(65, 65, 65),
+			PlaceholderColor = Color3.fromRGB(178, 178, 178)
+		},
+
+		Ocean = {
+			TextColor = Color3.fromRGB(230, 240, 240),
+
+			Background = Color3.fromRGB(20, 30, 30),
+			Topbar = Color3.fromRGB(25, 40, 40),
+			Shadow = Color3.fromRGB(15, 20, 20),
+
+			NotificationBackground = Color3.fromRGB(25, 35, 35),
+			NotificationActionsBackground = Color3.fromRGB(230, 240, 240),
+
+			TabBackground = Color3.fromRGB(40, 60, 60),
+			TabStroke = Color3.fromRGB(50, 70, 70),
+			TabBackgroundSelected = Color3.fromRGB(100, 180, 180),
+			TabTextColor = Color3.fromRGB(210, 230, 230),
+			SelectedTabTextColor = Color3.fromRGB(20, 50, 50),
+
+			ElementBackground = Color3.fromRGB(30, 50, 50),
+			ElementBackgroundHover = Color3.fromRGB(40, 60, 60),
+			SecondaryElementBackground = Color3.fromRGB(30, 45, 45),
+			ElementStroke = Color3.fromRGB(45, 70, 70),
+			SecondaryElementStroke = Color3.fromRGB(40, 65, 65),
+
+			SliderBackground = Color3.fromRGB(0, 110, 110),
+			SliderProgress = Color3.fromRGB(0, 140, 140),
+			SliderStroke = Color3.fromRGB(0, 160, 160),
+
+			ToggleBackground = Color3.fromRGB(30, 50, 50),
+			ToggleEnabled = Color3.fromRGB(0, 130, 130),
+			ToggleDisabled = Color3.fromRGB(70, 90, 90),
+			ToggleEnabledStroke = Color3.fromRGB(0, 160, 160),
+			ToggleDisabledStroke = Color3.fromRGB(85, 105, 105),
+			ToggleEnabledOuterStroke = Color3.fromRGB(50, 100, 100),
+			ToggleDisabledOuterStroke = Color3.fromRGB(45, 65, 65),
+
+			DropdownSelected = Color3.fromRGB(30, 60, 60),
+			DropdownUnselected = Color3.fromRGB(25, 40, 40),
+
+			InputBackground = Color3.fromRGB(30, 50, 50),
+			InputStroke = Color3.fromRGB(50, 70, 70),
+			PlaceholderColor = Color3.fromRGB(140, 160, 160)
+		},
+
+		AmberGlow = {
+			TextColor = Color3.fromRGB(255, 245, 230),
+
+			Background = Color3.fromRGB(45, 30, 20),
+			Topbar = Color3.fromRGB(55, 40, 25),
+			Shadow = Color3.fromRGB(35, 25, 15),
+
+			NotificationBackground = Color3.fromRGB(50, 35, 25),
+			NotificationActionsBackground = Color3.fromRGB(245, 230, 215),
+
+			TabBackground = Color3.fromRGB(75, 50, 35),
+			TabStroke = Color3.fromRGB(90, 60, 45),
+			TabBackgroundSelected = Color3.fromRGB(230, 180, 100),
+			TabTextColor = Color3.fromRGB(250, 220, 200),
+			SelectedTabTextColor = Color3.fromRGB(50, 30, 10),
+
+			ElementBackground = Color3.fromRGB(60, 45, 35),
+			ElementBackgroundHover = Color3.fromRGB(70, 50, 40),
+			SecondaryElementBackground = Color3.fromRGB(55, 40, 30),
+			ElementStroke = Color3.fromRGB(85, 60, 45),
+			SecondaryElementStroke = Color3.fromRGB(75, 50, 35),
+
+			SliderBackground = Color3.fromRGB(220, 130, 60),
+			SliderProgress = Color3.fromRGB(250, 150, 75),
+			SliderStroke = Color3.fromRGB(255, 170, 85),
+
+			ToggleBackground = Color3.fromRGB(55, 40, 30),
+			ToggleEnabled = Color3.fromRGB(240, 130, 30),
+			ToggleDisabled = Color3.fromRGB(90, 70, 60),
+			ToggleEnabledStroke = Color3.fromRGB(255, 160, 50),
+			ToggleDisabledStroke = Color3.fromRGB(110, 85, 75),
+			ToggleEnabledOuterStroke = Color3.fromRGB(200, 100, 50),
+			ToggleDisabledOuterStroke = Color3.fromRGB(75, 60, 55),
+
+			DropdownSelected = Color3.fromRGB(70, 50, 40),
+			DropdownUnselected = Color3.fromRGB(55, 40, 30),
+
+			InputBackground = Color3.fromRGB(60, 45, 35),
+			InputStroke = Color3.fromRGB(90, 65, 50),
+			PlaceholderColor = Color3.fromRGB(190, 150, 130)
+		},
+
+		Light = {
+			TextColor = Color3.fromRGB(40, 40, 40),
+
+			Background = Color3.fromRGB(245, 245, 245),
+			Topbar = Color3.fromRGB(230, 230, 230),
+			Shadow = Color3.fromRGB(200, 200, 200),
+
+			NotificationBackground = Color3.fromRGB(250, 250, 250),
+			NotificationActionsBackground = Color3.fromRGB(240, 240, 240),
+
+			TabBackground = Color3.fromRGB(235, 235, 235),
+			TabStroke = Color3.fromRGB(215, 215, 215),
+			TabBackgroundSelected = Color3.fromRGB(255, 255, 255),
+			TabTextColor = Color3.fromRGB(80, 80, 80),
+			SelectedTabTextColor = Color3.fromRGB(0, 0, 0),
+
+			ElementBackground = Color3.fromRGB(240, 240, 240),
+			ElementBackgroundHover = Color3.fromRGB(225, 225, 225),
+			SecondaryElementBackground = Color3.fromRGB(235, 235, 235),
+			ElementStroke = Color3.fromRGB(210, 210, 210),
+			SecondaryElementStroke = Color3.fromRGB(210, 210, 210),
+
+			SliderBackground = Color3.fromRGB(150, 180, 220),
+			SliderProgress = Color3.fromRGB(100, 150, 200), 
+			SliderStroke = Color3.fromRGB(120, 170, 220),
+
+			ToggleBackground = Color3.fromRGB(220, 220, 220),
+			ToggleEnabled = Color3.fromRGB(0, 146, 214),
+			ToggleDisabled = Color3.fromRGB(150, 150, 150),
+			ToggleEnabledStroke = Color3.fromRGB(0, 170, 255),
+			ToggleDisabledStroke = Color3.fromRGB(170, 170, 170),
+			ToggleEnabledOuterStroke = Color3.fromRGB(100, 100, 100),
+			ToggleDisabledOuterStroke = Color3.fromRGB(180, 180, 180),
+
+			DropdownSelected = Color3.fromRGB(230, 230, 230),
+			DropdownUnselected = Color3.fromRGB(220, 220, 220),
+
+			InputBackground = Color3.fromRGB(240, 240, 240),
+			InputStroke = Color3.fromRGB(180, 180, 180),
+			PlaceholderColor = Color3.fromRGB(140, 140, 140)
+		},
+
+		Amethyst = {
+			TextColor = Color3.fromRGB(240, 240, 240),
+
+			Background = Color3.fromRGB(30, 20, 40),
+			Topbar = Color3.fromRGB(40, 25, 50),
+			Shadow = Color3.fromRGB(20, 15, 30),
+
+			NotificationBackground = Color3.fromRGB(35, 20, 40),
+			NotificationActionsBackground = Color3.fromRGB(240, 240, 250),
+
+			TabBackground = Color3.fromRGB(60, 40, 80),
+			TabStroke = Color3.fromRGB(70, 45, 90),
+			TabBackgroundSelected = Color3.fromRGB(180, 140, 200),
+			TabTextColor = Color3.fromRGB(230, 230, 240),
+			SelectedTabTextColor = Color3.fromRGB(50, 20, 50),
+
+			ElementBackground = Color3.fromRGB(45, 30, 60),
+			ElementBackgroundHover = Color3.fromRGB(50, 35, 70),
+			SecondaryElementBackground = Color3.fromRGB(40, 30, 55),
+			ElementStroke = Color3.fromRGB(70, 50, 85),
+			SecondaryElementStroke = Color3.fromRGB(65, 45, 80),
+
+			SliderBackground = Color3.fromRGB(100, 60, 150),
+			SliderProgress = Color3.fromRGB(130, 80, 180),
+			SliderStroke = Color3.fromRGB(150, 100, 200),
+
+			ToggleBackground = Color3.fromRGB(45, 30, 55),
+			ToggleEnabled = Color3.fromRGB(120, 60, 150),
+			ToggleDisabled = Color3.fromRGB(94, 47, 117),
+			ToggleEnabledStroke = Color3.fromRGB(140, 80, 170),
+			ToggleDisabledStroke = Color3.fromRGB(124, 71, 150),
+			ToggleEnabledOuterStroke = Color3.fromRGB(90, 40, 120),
+			ToggleDisabledOuterStroke = Color3.fromRGB(80, 50, 110),
+
+			DropdownSelected = Color3.fromRGB(50, 35, 70),
+			DropdownUnselected = Color3.fromRGB(35, 25, 50),
+
+			InputBackground = Color3.fromRGB(45, 30, 60),
+			InputStroke = Color3.fromRGB(80, 50, 110),
+			PlaceholderColor = Color3.fromRGB(178, 150, 200)
+		},
+
+		Green = {
+			TextColor = Color3.fromRGB(30, 60, 30),
+
+			Background = Color3.fromRGB(235, 245, 235),
+			Topbar = Color3.fromRGB(210, 230, 210),
+			Shadow = Color3.fromRGB(200, 220, 200),
+
+			NotificationBackground = Color3.fromRGB(240, 250, 240),
+			NotificationActionsBackground = Color3.fromRGB(220, 235, 220),
+
+			TabBackground = Color3.fromRGB(215, 235, 215),
+			TabStroke = Color3.fromRGB(190, 210, 190),
+			TabBackgroundSelected = Color3.fromRGB(245, 255, 245),
+			TabTextColor = Color3.fromRGB(50, 80, 50),
+			SelectedTabTextColor = Color3.fromRGB(20, 60, 20),
+
+			ElementBackground = Color3.fromRGB(225, 240, 225),
+			ElementBackgroundHover = Color3.fromRGB(210, 225, 210),
+			SecondaryElementBackground = Color3.fromRGB(235, 245, 235), 
+			ElementStroke = Color3.fromRGB(180, 200, 180),
+			SecondaryElementStroke = Color3.fromRGB(180, 200, 180),
+
+			SliderBackground = Color3.fromRGB(90, 160, 90),
+			SliderProgress = Color3.fromRGB(70, 130, 70),
+			SliderStroke = Color3.fromRGB(100, 180, 100),
+
+			ToggleBackground = Color3.fromRGB(215, 235, 215),
+			ToggleEnabled = Color3.fromRGB(60, 130, 60),
+			ToggleDisabled = Color3.fromRGB(150, 175, 150),
+			ToggleEnabledStroke = Color3.fromRGB(80, 150, 80),
+			ToggleDisabledStroke = Color3.fromRGB(130, 150, 130),
+			ToggleEnabledOuterStroke = Color3.fromRGB(100, 160, 100),
+			ToggleDisabledOuterStroke = Color3.fromRGB(160, 180, 160),
+
+			DropdownSelected = Color3.fromRGB(225, 240, 225),
+			DropdownUnselected = Color3.fromRGB(210, 225, 210),
+
+			InputBackground = Color3.fromRGB(235, 245, 235),
+			InputStroke = Color3.fromRGB(180, 200, 180),
+			PlaceholderColor = Color3.fromRGB(120, 140, 120)
+		},
+
+		Bloom = {
+			TextColor = Color3.fromRGB(60, 40, 50),
+
+			Background = Color3.fromRGB(255, 240, 245),
+			Topbar = Color3.fromRGB(250, 220, 225),
+			Shadow = Color3.fromRGB(230, 190, 195),
+
+			NotificationBackground = Color3.fromRGB(255, 235, 240),
+			NotificationActionsBackground = Color3.fromRGB(245, 215, 225),
+
+			TabBackground = Color3.fromRGB(240, 210, 220),
+			TabStroke = Color3.fromRGB(230, 200, 210),
+			TabBackgroundSelected = Color3.fromRGB(255, 225, 235),
+			TabTextColor = Color3.fromRGB(80, 40, 60),
+			SelectedTabTextColor = Color3.fromRGB(50, 30, 50),
+
+			ElementBackground = Color3.fromRGB(255, 235, 240),
+			ElementBackgroundHover = Color3.fromRGB(245, 220, 230),
+			SecondaryElementBackground = Color3.fromRGB(255, 235, 240), 
+			ElementStroke = Color3.fromRGB(230, 200, 210),
+			SecondaryElementStroke = Color3.fromRGB(230, 200, 210),
+
+			SliderBackground = Color3.fromRGB(240, 130, 160),
+			SliderProgress = Color3.fromRGB(250, 160, 180),
+			SliderStroke = Color3.fromRGB(255, 180, 200),
+
+			ToggleBackground = Color3.fromRGB(240, 210, 220),
+			ToggleEnabled = Color3.fromRGB(255, 140, 170),
+			ToggleDisabled = Color3.fromRGB(200, 180, 185),
+			ToggleEnabledStroke = Color3.fromRGB(250, 160, 190),
+			ToggleDisabledStroke = Color3.fromRGB(210, 180, 190),
+			ToggleEnabledOuterStroke = Color3.fromRGB(220, 160, 180),
+			ToggleDisabledOuterStroke = Color3.fromRGB(190, 170, 180),
+
+			DropdownSelected = Color3.fromRGB(250, 220, 225),
+			DropdownUnselected = Color3.fromRGB(240, 210, 220),
+
+			InputBackground = Color3.fromRGB(255, 235, 240),
+			InputStroke = Color3.fromRGB(220, 190, 200),
+			PlaceholderColor = Color3.fromRGB(170, 130, 140)
+		},
+
+		DarkBlue = {
+			TextColor = Color3.fromRGB(230, 230, 230),
+
+			Background = Color3.fromRGB(20, 25, 30),
+			Topbar = Color3.fromRGB(30, 35, 40),
+			Shadow = Color3.fromRGB(15, 20, 25),
+
+			NotificationBackground = Color3.fromRGB(25, 30, 35),
+			NotificationActionsBackground = Color3.fromRGB(45, 50, 55),
+
+			TabBackground = Color3.fromRGB(35, 40, 45),
+			TabStroke = Color3.fromRGB(45, 50, 60),
+			TabBackgroundSelected = Color3.fromRGB(40, 70, 100),
+			TabTextColor = Color3.fromRGB(200, 200, 200),
+			SelectedTabTextColor = Color3.fromRGB(255, 255, 255),
+
+			ElementBackground = Color3.fromRGB(30, 35, 40),
+			ElementBackgroundHover = Color3.fromRGB(40, 45, 50),
+			SecondaryElementBackground = Color3.fromRGB(35, 40, 45), 
+			ElementStroke = Color3.fromRGB(45, 50, 60),
+			SecondaryElementStroke = Color3.fromRGB(40, 45, 55),
+
+			SliderBackground = Color3.fromRGB(0, 90, 180),
+			SliderProgress = Color3.fromRGB(0, 120, 210),
+			SliderStroke = Color3.fromRGB(0, 150, 240),
+
+			ToggleBackground = Color3.fromRGB(35, 40, 45),
+			ToggleEnabled = Color3.fromRGB(0, 120, 210),
+			ToggleDisabled = Color3.fromRGB(70, 70, 80),
+			ToggleEnabledStroke = Color3.fromRGB(0, 150, 240),
+			ToggleDisabledStroke = Color3.fromRGB(75, 75, 85),
+			ToggleEnabledOuterStroke = Color3.fromRGB(20, 100, 180), 
+			ToggleDisabledOuterStroke = Color3.fromRGB(55, 55, 65),
+
+			DropdownSelected = Color3.fromRGB(30, 70, 90),
+			DropdownUnselected = Color3.fromRGB(25, 30, 35),
+
+			InputBackground = Color3.fromRGB(25, 30, 35),
+			InputStroke = Color3.fromRGB(45, 50, 60), 
+			PlaceholderColor = Color3.fromRGB(150, 150, 160)
+		},
+
+		Serenity = {
+			TextColor = Color3.fromRGB(50, 55, 60),
+			Background = Color3.fromRGB(240, 245, 250),
+			Topbar = Color3.fromRGB(215, 225, 235),
+			Shadow = Color3.fromRGB(200, 210, 220),
+
+			NotificationBackground = Color3.fromRGB(210, 220, 230),
+			NotificationActionsBackground = Color3.fromRGB(225, 230, 240),
+
+			TabBackground = Color3.fromRGB(200, 210, 220),
+			TabStroke = Color3.fromRGB(180, 190, 200),
+			TabBackgroundSelected = Color3.fromRGB(175, 185, 200),
+			TabTextColor = Color3.fromRGB(50, 55, 60),
+			SelectedTabTextColor = Color3.fromRGB(30, 35, 40),
+
+			ElementBackground = Color3.fromRGB(210, 220, 230),
+			ElementBackgroundHover = Color3.fromRGB(220, 230, 240),
+			SecondaryElementBackground = Color3.fromRGB(200, 210, 220),
+			ElementStroke = Color3.fromRGB(190, 200, 210),
+			SecondaryElementStroke = Color3.fromRGB(180, 190, 200),
+
+			SliderBackground = Color3.fromRGB(200, 220, 235),
+			SliderProgress = Color3.fromRGB(70, 130, 180),
+			SliderStroke = Color3.fromRGB(150, 180, 220),
+
+			ToggleBackground = Color3.fromRGB(210, 220, 230),
+			ToggleEnabled = Color3.fromRGB(70, 160, 210),
+			ToggleDisabled = Color3.fromRGB(180, 180, 180),
+			ToggleEnabledStroke = Color3.fromRGB(60, 150, 200),
+			ToggleDisabledStroke = Color3.fromRGB(140, 140, 140),
+			ToggleEnabledOuterStroke = Color3.fromRGB(100, 120, 140),
+			ToggleDisabledOuterStroke = Color3.fromRGB(120, 120, 130),
+
+			DropdownSelected = Color3.fromRGB(220, 230, 240),
+			DropdownUnselected = Color3.fromRGB(200, 210, 220),
+
+			InputBackground = Color3.fromRGB(220, 230, 240),
+			InputStroke = Color3.fromRGB(180, 190, 200),
+			PlaceholderColor = Color3.fromRGB(150, 150, 150)
+		},
+	}
 }
 
+local Window = Rayfield:CreateWindow({
+    Name = "Dead Rails | Cerberus",
+    Icon = 0,
+    LoadingTitle = "Loading Dead Rails...",
+    LoadingSubtitle = "Cerberus - Premium Scripts",
+    Theme = "Amethyst", 
+ 
+    DisableRayfieldPrompts = false,
+    DisableBuildWarnings = false,
+ 
+    ConfigurationSaving = {
+       Enabled = true,
+       FolderName = "Cerberus", 
+       FileName = "DeadRails"
+    },
+
+ })
+
+-- Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local VirtualUser = game:GetService("VirtualUser")
-local UserInputService = game:GetService("UserInputService")
-local Lighting = game:GetService("Lighting")
-local HttpService = game:GetService("HttpService")
-local MarketplaceService = game:GetService("MarketplaceService")
-local Stats = game:GetService("Stats")
-local TweenService = game:GetService("TweenService")
+local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
-local Character
-local Humanoid
-local HumanoidRootPart
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local TweenService = game:GetService("TweenService")
+local Lighting = game:GetService("Lighting")
+local Mouse = LocalPlayer:GetMouse()
 
-local function setupCharacter(character)
-    Character = character
-    Humanoid = character:FindFirstChildOfClass("Humanoid")
-    HumanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+--------------------
+-- // MAIN TAB // --
+--------------------
+
+local itemFolder = Workspace:FindFirstChild("RuntimeItems")
+local itemDropdownList = {}
+local itemLookup = {} -- [displayName] = {instances}
+local selectedItemName = nil
+local maxCollectAmount = 5
+
+local MainTab = Window:CreateTab("Main", "home")
+local CombatTab = Window:CreateTab("Combat", "angry")
+local ESPTab = Window:CreateTab("Visuals", "glasses")
+local MiscTab = Window:CreateTab("Misc", "menu")
+
+--[[
+MainTab:CreateSection("Item Management")
+
+--// TELEPORT FUNCTION (WITH TWEEN)
+local function safelyTeleportItem(item, targetCFrame)
+	local part = item:IsA("Model") and item.PrimaryPart or item
+	if not part or not part:IsA("BasePart") then return end
+
+	-- Ensure PrimaryPart
+	if item:IsA("Model") and not item.PrimaryPart then
+		for _, p in ipairs(item:GetDescendants()) do
+			if p:IsA("BasePart") then
+				item.PrimaryPart = p
+				part = p
+				break
+			end
+		end
+	end
+
+	-- Anchor before tween
+	part.Anchored = true
+	local goal = { CFrame = targetCFrame }
+	local tween = TweenService:Create(part, TweenInfo.new(0.75, Enum.EasingStyle.Linear), goal)
+	tween:Play()
+
+	-- Restore physics after tween
+	tween.Completed:Once(function()
+		part.Anchored = false
+		part.CanCollide = true
+		part.CanTouch = true
+		part.CanQuery = true
+	end)
 end
 
+--// REFRESH DROPDOWN LIST
+local function refreshItemList()
+	itemDropdownList = {}
+	itemLookup = {}
+
+	if itemFolder then
+		for _, item in pairs(itemFolder:GetChildren()) do
+			local name = item.Name
+			itemLookup[name] = itemLookup[name] or {}
+			table.insert(itemLookup[name], item)
+		end
+
+		for name, group in pairs(itemLookup) do
+			local displayName = (#group > 1) and (tostring(#group) .. "x " .. name) or name
+			itemDropdownList[#itemDropdownList + 1] = displayName
+			itemLookup[displayName] = group
+		end
+	end
+
+	return itemDropdownList
+end
+
+--// UI ELEMENTS
+MainTab:CreateDropdown({
+	Name = "Select Item",
+	Options = refreshItemList(),
+	CurrentOption = nil,
+	MultiSelection = false,
+	Callback = function(option)
+		selectedItemName = typeof(option) == "table" and option[1] or option
+		print("[Item Manager] Selected:", selectedItemName)
+	end,
+})
+
+MainTab:CreateSlider({
+	Name = "Max Items (Selected Only)",
+	Range = {1, 10},
+	Increment = 1,
+	CurrentValue = maxCollectAmount,
+	Callback = function(value)
+		maxCollectAmount = value
+	end,
+})
+
+MainTab:CreateButton({
+	Name = "Refresh List",
+	Callback = function()
+		local updated = refreshItemList()
+		print("[Item Manager] Refreshed list with", #updated, "unique entries.")
+	end,
+})
+
+MainTab:CreateButton({
+	Name = "Collect Selected Item",
+	Callback = function()
+		if not selectedItemName or not itemLookup[selectedItemName] then
+			warn("[Item Manager] No valid item selected.")
+			return
+		end
+
+		local character = Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
+		local hrp = character and character:FindFirstChild("HumanoidRootPart")
+		if not hrp then
+			warn("[Item Manager] Missing HumanoidRootPart.")
+			return
+		end
+
+		local collected = 0
+		for _, item in ipairs(itemLookup[selectedItemName]) do
+			if collected >= maxCollectAmount then break end
+			safelyTeleportItem(item, hrp.CFrame * CFrame.new(0, 0, -2))
+			print("[Item Manager] Collected:", item.Name)
+			collected += 1
+		end
+
+		print(string.format("[Item Manager] Total collected: %d/%d", collected, maxCollectAmount))
+	end,
+})
+
+MainTab:CreateButton({
+	Name = "Collect All Items",
+	Callback = function()
+		local character = Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
+		local hrp = character and character:FindFirstChild("HumanoidRootPart")
+		if not hrp then
+			warn("[Item Manager] No HumanoidRootPart found.")
+			return
+		end
+
+		local found = 0
+		if itemFolder then
+			for _, item in ipairs(itemFolder:GetChildren()) do
+				if not item.Name:lower():find("model") then
+					safelyTeleportItem(item, hrp.CFrame * CFrame.new(0, 0, -2))
+					print("[Item Manager] Collected:", item.Name)
+					found += 1
+				else
+					print("[Item Manager] Skipped (model excluded):", item.Name)
+				end
+			end
+		else
+			warn("[Item Manager] RuntimeItems folder not found.")
+		end
+
+		print(string.format("[Item Manager] Total collected: %d item(s).", found))
+	end
+})
+
+MainTab:CreateButton({
+	Name = "Collect Bandages",
+	Callback = function()
+		local character = Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
+		local hrp = character and character:FindFirstChild("HumanoidRootPart")
+		if not hrp then
+			warn("[Item Manager] Cannot collect bandages: No HumanoidRootPart.")
+			return
+		end
+
+		local found = 0
+		if itemFolder then
+			for _, item in pairs(itemFolder:GetChildren()) do
+				if item.Name == "Bandage" then
+					safelyTeleportItem(item, hrp.CFrame * CFrame.new(0, 0, -2))
+					print("[Item Manager] Collected Bandage:", item.Name)
+					found += 1
+				end
+			end
+		end
+
+		print(string.format("[Item Manager] Collected %d bandage(s).", found))
+	end
+})
+]]
+
+MainTab:CreateSection("Movement")
+
+local moveBoostEnabled = false
+local moveBoostSliderValue = 100
+
+local defaultWalkSpeed = 16
+local defaultJumpPower = 50
+
+-- Combined Movement Boost Toggle
+MainTab:CreateToggle({
+	Name = "Small Movement Boost (speed/jump)",
+    Flag = "movementBoost",
+	CurrentValue = false,
+	Callback = function(state)
+		moveBoostEnabled = state
+
+		local char = Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
+		local humanoid = char:FindFirstChildWhichIsA("Humanoid")
+
+		if humanoid then
+			humanoid.UseJumpPower = true
+
+			if moveBoostEnabled then
+				local speedBoostPercent = moveBoostSliderValue * 0.1 / 100
+				local jumpBoostPercent = moveBoostSliderValue * 0.4 / 100
+
+				humanoid.WalkSpeed = defaultWalkSpeed * (1 + speedBoostPercent)
+				humanoid.JumpPower = defaultJumpPower * (1 + jumpBoostPercent)
+			else
+				humanoid.WalkSpeed = defaultWalkSpeed
+				humanoid.JumpPower = defaultJumpPower
+			end
+		end
+	end
+})
+
+-- Movement Boost Slider
+MainTab:CreateSlider({
+	Name = "Boost Strength (%)",
+    Flag = "boostStrength",
+	Range = {0, 100},
+	Increment = 1,
+	CurrentValue = moveBoostSliderValue, -- ✅ Reflect default 10% in UI
+	Suffix = "%",
+	Callback = function(value)
+		moveBoostSliderValue = value
+
+		-- If boost is on, apply updated values immediately
+		if moveBoostEnabled then
+			local char = Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
+			local humanoid = char:FindFirstChildWhichIsA("Humanoid")
+			if humanoid then
+				local speedBoostPercent = moveBoostSliderValue * 0.1 / 100
+				local jumpBoostPercent = moveBoostSliderValue * 0.4 / 100
+
+				humanoid.WalkSpeed = defaultWalkSpeed * (1 + speedBoostPercent)
+				humanoid.JumpPower = defaultJumpPower * (1 + jumpBoostPercent)
+			end
+		end
+	end
+})
+
+MainTab:CreateSection("Toggles")
+
+local transparencyEnabled = false
+
+local function setBuildingTransparency(enabled)
+	local folder = workspace:FindFirstChild("RandomBuildings")
+	if not folder then
+		return
+	end
+
+	for _, model in ipairs(folder:GetDescendants()) do
+		if model:IsA("BasePart") then
+			model.Transparency = enabled and 0.7 or 0
+			model.CanCollide = not enabled
+		elseif model:IsA("Decal") or model:IsA("Texture") then
+			model.Transparency = enabled and 1 or 0
+		end
+	end
+end
+
+MainTab:CreateToggle({
+	Name = "Transparent Buildings",
+    Flag = "transBuild",
+	CurrentValue = false,
+	Callback = function(state)
+		transparencyEnabled = state
+		setBuildingTransparency(transparencyEnabled)
+	end
+})
+
+--// STATE
+local cameraUnlockEnabled = false
+local cameraUnlockConn
+
+--// UNLOCK FUNCTION
+local function forceCameraUnlock()
+	local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	local humanoid = character:WaitForChild("Humanoid")
+
+	cameraUnlockConn = RunService.RenderStepped:Connect(function()
+		if not cameraUnlockEnabled then return end
+
+		if Camera.CameraType ~= Enum.CameraType.Custom then
+			Camera.CameraType = Enum.CameraType.Custom
+		end
+
+		if Camera.CameraSubject ~= humanoid then
+			Camera.CameraSubject = humanoid
+		end
+
+		LocalPlayer.CameraMode = Enum.CameraMode.Classic
+		LocalPlayer.CameraMaxZoomDistance = 128
+		LocalPlayer.CameraMinZoomDistance = 0.5
+	end)
+end
+
+--// UNLOCK CAMERA // 00
 if LocalPlayer.Character then
-    setupCharacter(LocalPlayer.Character)
+	forceCameraUnlock()
+else
+	LocalPlayer.CharacterAdded:Wait()
+	forceCameraUnlock()
 end
 
-LocalPlayer.CharacterAdded:Connect(setupCharacter)
-
-function RunEvery(interval, fn)
-    local acc, busy = 0, false
-    return RunService.Heartbeat:Connect(function(dt)
-        if busy then
-            return
-        end
-        acc += dt
-        local wait = type(interval) == "function" and interval() or interval
-        if acc < wait then
-            return
-        end
-        acc = 0
-        busy = true
-        pcall(fn)
-        busy = false
-    end)
-end
-
-socialsModule = loadstring(game:HttpGet(BaseURL .. "/Module/info.lua"))()
-socialsModule(Tabs)
-
-local jobId, placeId, StartTime = game.JobId, game.PlaceId, tick()
-local EngineTargetMegaBytes = 3000
-local FrameCount, LastTime, CurrentFPS = 0, tick(), 0
-RunService.RenderStepped:Connect(function()
-    FrameCount += 1
-    local now = tick()
-    if now - LastTime >= 1 then
-        CurrentFPS = FrameCount
-        FrameCount = 0
-        LastTime = now
-    end
-end)
-
-local function loadECS()
-    local ok, result = pcall(function()
-        local universe = ReplicatedStorage.Shared.Universe
-        return {
-            world = require(universe.ECS.world),
-            comps = require(universe.ECS.components),
-            replicator = require(ReplicatedStorage.Client.Universe.Replication.clientReplicator),
-            remotes = require(universe.Remotes),
-            actionable = universe.Network.RemoteEvent.Actionable,
-            pickup = universe.Network.RemoteEvent.Pickup,
-        }
-    end)
-    if not ok then
-        return nil
-    end
-    local shopOk, shopFn = pcall(function()
-        return require(ReplicatedStorage.Shared.Game.Shop.isShopItem)
-    end)
-    result.isShopItem = shopOk and shopFn or function()
-        return false
-    end
-    return result
-end
-
-local ECS = loadECS()
-local function ecsGet(id, comp)
-    if not ECS then
-        return nil
-    end
-    local ok, v = pcall(ECS.world.get, ECS.world, id, comp)
-    return ok and v or nil
-end
-local function ecsHas(id, comp)
-    if not ECS then
-        return false
-    end
-    local ok, v = pcall(ECS.world.has, ECS.world, id, comp)
-    return ok and v or false
-end
-local function ecsMyPosition()
-    if not ECS then
-        return nil
-    end
-    local state = ECS.world:get_resource(ECS.comps.ClientStateResource)
-    local char = state and state.localCharacter
-    if not char then
-        return nil
-    end
-    local t = ecsGet(char, ECS.comps.Transform)
-    if not t then
-        return nil
-    end
-    return t.Position or t.p
-end
-
-function convertToDetailedTime(S, ms)
-    local y = math.floor(S / 31536000)
-    S %= 31536000
-    local mo = math.floor(S / 2592000)
-    S %= 2592000
-    local w = math.floor(S / 604800)
-    S %= 604800
-    local d = math.floor(S / 86400)
-    S %= 86400
-    local h = math.floor(S / 3600)
-    S %= 3600
-    local m = math.floor(S / 60)
-    local s = S % 60
-    return { Years = y, Months = mo, Weeks = w, Days = d, Hours = h, Minutes = m, Seconds = s, Milliseconds = ms or 0 }
-end
-function GetServerUptimeString()
-    local t = time()
-    local ms = math.floor((t - math.floor(t)) * 1000)
-    local u = convertToDetailedTime(math.floor(t), ms)
-    return string.format(
-        "<font color='#FFD700'>%dY</font> <font color='#FFA500'>%dMth</font> <font color='#FF8C00'>%dW</font> <font color='#32CD32'>%dD</font> <font color='#00CED1'>%dH</font> <font color='#1E90FF'>%dMin</font> <font color='#9370DB'>%dSec</font> <font color='#FF69B4'>%dMS</font>",
-        u.Years,
-        u.Months,
-        u.Weeks,
-        u.Days,
-        u.Hours,
-        u.Minutes,
-        u.Seconds,
-        u.Milliseconds
-    )
-end
-function GetLastJoinedString()
-    local c = os.time()
-    local j = c - math.floor(time())
-    local jt = os.date("*t", j)
-    local ap = jt.hour >= 12 and "PM" or "AM"
-    local h12 = jt.hour % 12
-    if h12 == 0 then
-        h12 = 12
-    end
-    local ms = math.floor((time() - math.floor(time())) * 1000)
-    local mn = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
-    return string.format(
-        "<font color='#87CEEB'>%02d:%02d:%02d.%03d %s</font> - <font color='#98FB98'>%s %d, %d</font>",
-        h12,
-        jt.min,
-        jt.sec,
-        ms,
-        ap,
-        mn[jt.month],
-        jt.day,
-        jt.year
-    )
-end
-function GetScriptRuntime()
-    local e = tick() - StartTime
-    local ms = math.floor((e - math.floor(e)) * 1000)
-    local r = convertToDetailedTime(math.floor(e), ms)
-    return string.format(
-        "<font color='#FFD700'>%dY</font> <font color='#FFA500'>%dMth</font> <font color='#FF8C00'>%dW</font> <font color='#32CD32'>%dD</font> <font color='#00CED1'>%dH</font> <font color='#1E90FF'>%dMin</font> <font color='#9370DB'>%dSec</font> <font color='#FF69B4'>%dMS</font>",
-        r.Years,
-        r.Months,
-        r.Weeks,
-        r.Days,
-        r.Hours,
-        r.Minutes,
-        r.Seconds,
-        r.Milliseconds
-    )
-end
-function GetExecutedSince()
-    return string.format("<font color='#87CEEB'>%s</font>", os.date("%I:%M:%S %p", StartTime))
-end
-function GetOSClock()
-    local n = os.date("*t")
-    local ap = n.hour >= 12 and "PM" or "AM"
-    local h12 = n.hour % 12
-    if h12 == 0 then
-        h12 = 12
-    end
-    return string.format("<font color='#FFD700'>%02d:%02d:%02d %s</font>", h12, n.min, n.sec, ap)
-end
-function GetCalendarDate()
-    local n = os.date("*t")
-    local mn = {
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-    }
-    local sf = "th"
-    if n.day == 1 or n.day == 21 or n.day == 31 then
-        sf = "st"
-    elseif n.day == 2 or n.day == 22 then
-        sf = "nd"
-    elseif n.day == 3 or n.day == 23 then
-        sf = "rd"
-    end
-    return string.format("<font color='#98FB98'>%s %d%s, %d</font>", mn[n.month], n.day, sf, n.year)
-end
-function GetGPUInfo()
-    local v = string.format("%.2f", Stats.RenderGPUFrameTime * 1000)
-    local c = tonumber(v) < 10 and "#32CD32" or (tonumber(v) < 30 and "#FFD700" or "#FF6666")
-    return string.format("<font color='%s'>%s ms</font>", c, v)
-end
-function GetCPUInfo()
-    local v = string.format("%.2f", Stats.RenderCPUFrameTime * 1000)
-    local c = tonumber(v) < 10 and "#32CD32" or (tonumber(v) < 30 and "#FFD700" or "#FF6666")
-    return string.format("<font color='%s'>%s ms</font>", c, v)
-end
-function GetRAMInfo()
-    local r = Stats:GetTotalMemoryUsageMb()
-    local p = math.floor((r / EngineTargetMegaBytes) * 100)
-    local c = p < 50 and "#32CD32" or (p < 80 and "#FFD700" or "#FF6666")
-    return string.format("<font color='%s'>%.2f MB / %d MB (%d%%)</font>", c, r, EngineTargetMegaBytes, p)
-end
-function GetNetworkSent()
-    local s = Stats.DataSendKbps
-    local c = s < 100 and "#32CD32" or (s < 500 and "#FFD700" or "#FF6666")
-    return string.format("<font color='%s'>%.2f KB/s</font>", c, s)
-end
-function GetNetworkReceived()
-    local s = Stats.DataReceiveKbps
-    local c = s < 100 and "#32CD32" or (s < 500 and "#FFD700" or "#FF6666")
-    return string.format("<font color='%s'>%.2f KB/s</font>", c, s)
-end
-function GetPing()
-    local p = math.clamp(Stats.Network.ServerStatsItem["Data Ping"]:GetValue(), 10, 700)
-    local c = p < 100 and "#32CD32" or (p < 200 and "#FFD700" or "#FF6666")
-    return string.format("<font color='%s'>%d ms</font>", c, math.floor(p))
-end
-function GetFPS()
-    local c = CurrentFPS >= 60 and "#32CD32" or (CurrentFPS >= 30 and "#FFD700" or "#FF6666")
-    return string.format("<font color='%s'>%d fps</font>", c, CurrentFPS)
-end
-
-local TotalFriends, OnlineFriends, OfflineFriends = 0, 0, 0
-function UpdateFriendData()
-    pcall(function()
-        local total, online = 0, 0
-        local list = Players:GetFriendsAsync(LocalPlayer.UserId)
-        for _ = 1, 200 do
-            for _ in list:GetCurrentPage() do
-                total += 1
-            end
-            if list.IsFinished then
-                break
-            end
-            list:AdvanceToNextPageAsync()
-        end
-        for _ in pairs(LocalPlayer:GetFriendsOnline()) do
-            online += 1
-        end
-        TotalFriends, OnlineFriends, OfflineFriends = total, online, total - online
-    end)
-end
-Tabs.Main:Section({ Title = "FE Bypass", TextSize = 20 })
-Tabs.Main:Button({
-    Title = "Load ServerSide ExecutionorNadol",
-    Callback = function()
-        loadstring(game:HttpGet("https://darahub.pages.dev/MrRobot/loader.lua"))()
-    end,
-})
-Tabs.Main:Section({ Title = "Server Information", TextSize = 20 })
-Tabs.Main:Divider()
-ServerInfoParagraph = Tabs.Main:Paragraph({ Title = "In Server For", Desc = GetServerUptimeString() })
-RunEvery(0, function()
-    ServerInfoParagraph:SetDesc(GetServerUptimeString())
-end)
-Tabs.Main:Paragraph({ Title = "Joinned Started", Desc = GetLastJoinedString() })
-local placeName = "Unknown"
-pcall(function()
-    local p = MarketplaceService:GetProductInfo(placeId)
-    if p and p.Name then
-        placeName = p.Name
-    end
-end)
-Tabs.Main:Paragraph({ Title = "Game", Desc = placeName })
-local maxPlayers = Players.MaxPlayers
-CurrentPlayersParagraph =
-    Tabs.Main:Paragraph({ Title = "Current Players", Desc = #Players:GetPlayers() .. " / " .. maxPlayers })
-RunEvery(1, function()
-    CurrentPlayersParagraph:SetDesc(#Players:GetPlayers() .. " / " .. maxPlayers)
-end)
-Tabs.Main:Paragraph({ Title = "Server ID", Desc = string.sub(jobId, 1, 30) .. "..." })
-Tabs.Main:Space()
-Tabs.Main:Section({ Title = "Client Information", TextSize = 20 })
-Tabs.Main:Divider()
-ScriptRuntimeParagraph = Tabs.Main:Paragraph({ Title = "Script Running For", Desc = GetScriptRuntime() })
-RunEvery(0, function()
-    ScriptRuntimeParagraph:SetDesc(GetScriptRuntime())
-end)
-Tabs.Main:Paragraph({ Title = "Executed Since", Desc = GetExecutedSince() })
-Tabs.Main:Space()
-Tabs.Main:Section({ Title = "System Information", TextSize = 20 })
-Tabs.Main:Divider()
-OSClockParagraph = Tabs.Main:Paragraph({ Title = "OS Clock", Desc = GetOSClock() })
-RunEvery(0, function()
-    OSClockParagraph:SetDesc(GetOSClock())
-end)
-CalendarParagraph = Tabs.Main:Paragraph({ Title = "Calendar", Desc = GetCalendarDate() })
-RunEvery(60, function()
-    CalendarParagraph:SetDesc(GetCalendarDate())
-end)
-GPUParagraph = Tabs.Main:Paragraph({ Title = "GPU", Desc = GetGPUInfo() })
-CPUParagraph = Tabs.Main:Paragraph({ Title = "CPU", Desc = GetCPUInfo() })
-RAMParagraph = Tabs.Main:Paragraph({ Title = "RAM", Desc = GetRAMInfo() })
-SentParagraph = Tabs.Main:Paragraph({ Title = "Sent", Desc = GetNetworkSent() })
-ReceivedParagraph = Tabs.Main:Paragraph({ Title = "Received", Desc = GetNetworkReceived() })
-PingParagraph = Tabs.Main:Paragraph({ Title = "Ping", Desc = GetPing() })
-FPSParagraph = Tabs.Main:Paragraph({ Title = "FPS", Desc = GetFPS() })
-RunEvery(0.2, function()
-    GPUParagraph:SetDesc(GetGPUInfo())
-    CPUParagraph:SetDesc(GetCPUInfo())
-    RAMParagraph:SetDesc(GetRAMInfo())
-    SentParagraph:SetDesc(GetNetworkSent())
-    ReceivedParagraph:SetDesc(GetNetworkReceived())
-    PingParagraph:SetDesc(GetPing())
-    FPSParagraph:SetDesc(GetFPS())
-end)
-Tabs.Main:Space()
-Tabs.Main:Section({ Title = "Player Information", TextSize = 20 })
-Tabs.Main:Divider()
-Tabs.Main:Paragraph({ Title = "Username", Desc = LocalPlayer.Name })
-Tabs.Main:Paragraph({ Title = "Display Name", Desc = LocalPlayer.DisplayName })
-Tabs.Main:Paragraph({ Title = "User ID", Desc = tostring(LocalPlayer.UserId) })
-local accStr = "Unknown"
-pcall(function()
-    local a = LocalPlayer.AccountAge
-    if a then
-        accStr = os.date("%B %d, %Y", os.time() - a * 86400)
-    end
-end)
-Tabs.Main:Paragraph({ Title = "Account Created", Desc = accStr })
-Tabs.Main:Space()
-Tabs.Main:Section({ Title = "Friends Data", TextSize = 20 })
-Tabs.Main:Divider()
-FriendsOnlineParagraph = Tabs.Main:Paragraph({ Title = "Online Friends", Desc = "0" })
-FriendsOfflineParagraph = Tabs.Main:Paragraph({ Title = "Offline Friends", Desc = "0" })
-FriendsTotalParagraph = Tabs.Main:Paragraph({ Title = "Total Friends", Desc = "0" })
-local function refreshFriendParagraphs()
-    UpdateFriendData()
-    FriendsOnlineParagraph:SetDesc(tostring(OnlineFriends))
-    FriendsOfflineParagraph:SetDesc(tostring(OfflineFriends))
-    FriendsTotalParagraph:SetDesc(tostring(TotalFriends))
-end
-task.spawn(function()
-    pcall(refreshFriendParagraphs)
-end)
-RunEvery(30, refreshFriendParagraphs)
-Tabs.Main:Space()
-Tabs.Main:Section({ Title = "Server Tools", TextSize = 20 })
-Tabs.Main:Divider()
-Tabs.Main:Button({
-    Title = "Advanced Server Hop",
-    Icon = "server",
-    Callback = function()
-        pcall(function()
-            loadstring(game:HttpGet("https://darahub.pages.dev/raw-script/Tools/Advanced%20Server%20Hop.lua"))()
-        end)
-        WindUI:Notify({ Title = "Success", Content = "Advanced Server Hop Loaded", Duration = 3 })
-    end,
-})
-Tabs.Main:Space()
-Tabs.Main:Section({ Title = "Party", TextSize = 20 })
-Tabs.Main:Divider()
-do
-    local PARTY_CACHE_FOLDERS = { "Darahub", "Darahub/Cache", "Darahub/Cache/DeadRail" }
-    local PARTY_CACHE_FILE = "Darahub/Cache/DeadRail/LastPartyID.txt"
-    local LOBBY_PLACE_ID = 116495829188952
-
-    local function readPartyId()
-        local ok, label = pcall(function()
-            return LocalPlayer.PlayerGui.TopbarStandard.Holders.Left.Widget.IconButton.Menu.IconSpot.Contents.IconLabelContainer.IconLabel
-        end)
-        if not ok or not label then
-            return nil
-        end
-        local id = label.Text:match("Party Id:%s*(.+)")
-        return id and id:gsub("%s+$", "") or nil
-    end
-
-    Tabs.Main:Button({
-        Title = "Rejoin Party",
-        Desc = "Saves your party ID and goes back to the lobby, then rejoins the same party (needs 2+ players)",
-        Icon = "door-open",
-        Callback = function()
-            if #Players:GetPlayers() <= 1 then
-                task.spawn(error, "required 2 player", 0)
-                WindUI:Notify({ Title = "Rejoin Party", Content = "Required 2 players", Duration = 3 })
-                return
-            end
-            if not (writefile and makefolder) then
-                WindUI:Notify({ Title = "Rejoin Party", Content = "Your executor does not support files", Duration = 3 })
-                return
-            end
-            local partyId = readPartyId()
-            if not partyId or partyId == "" then
-                WindUI:Notify({ Title = "Rejoin Party", Content = "Party ID not found", Duration = 3 })
-                return
-            end
-            for _, f in ipairs(PARTY_CACHE_FOLDERS) do
-                pcall(makefolder, f)
-            end
-            if not pcall(writefile, PARTY_CACHE_FILE, partyId) then
-                WindUI:Notify({ Title = "Rejoin Party", Content = "Could not save the party ID", Duration = 3 })
-                return
-            end
-            WindUI:Notify({ Title = "Rejoin Party", Content = "Saved party " .. partyId .. ", going to lobby", Duration = 3 })
-            game:GetService("TeleportService"):Teleport(LOBBY_PLACE_ID, LocalPlayer)
-        end,
-    })
-    Tabs.Main:Space()
-end
-
-Tabs.Player:Section({ Title = "Movement", TextSize = 20 })
-Tabs.Player:Divider()
-local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
-local doubleJumpAvailable, doubleJumpGroundedAt = true, 0
-local doubleJumpRequestConnection, doubleJumpGroundConnection
-local function stopDoubleJump()
-    if doubleJumpRequestConnection then
-        doubleJumpRequestConnection:Disconnect()
-        doubleJumpRequestConnection = nil
-    end
-    if doubleJumpGroundConnection then
-        doubleJumpGroundConnection:Disconnect()
-        doubleJumpGroundConnection = nil
-    end
-end
-local function startDoubleJump()
-    stopDoubleJump()
-    doubleJumpAvailable = true
-    doubleJumpGroundedAt = tick()
-    doubleJumpGroundConnection = RunService.Heartbeat:Connect(function()
-        if Humanoid and Humanoid.FloorMaterial ~= Enum.Material.Air then
-            doubleJumpAvailable = true
-            doubleJumpGroundedAt = tick()
-        end
-    end)
-    doubleJumpRequestConnection = UserInputService.JumpRequest:Connect(function()
-        if
-            Humanoid
-            and doubleJumpAvailable
-            and Humanoid.FloorMaterial == Enum.Material.Air
-            and tick() - doubleJumpGroundedAt > 0.2
-        then
-            doubleJumpAvailable = false
-            Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-        end
-    end)
-end
-DoubleJumpToggle = Tabs.Player:Toggle({
-    Title = "Double Jump",
-    Flag = "DoubleJumpToggle",
-    Value = false,
-    Callback = function(s)
-        if s then
-            startDoubleJump()
-        else
-            stopDoubleJump()
-        end
-    end,
-})
-Tabs.Player:Space()
-
-local noclipConnection
-local function setNoclip(state)
-    if noclipConnection then
-        noclipConnection:Disconnect()
-        noclipConnection = nil
-    end
-    if state then
-        noclipConnection = RunService.Stepped:Connect(function()
-            if Character then
-                for _, p in ipairs(Character:GetChildren()) do
-                    if p:IsA("BasePart") then
-                        p.CanCollide = false
-                    end
-                end
-            end
-        end)
-    else
-        if Character then
-            for _, p in ipairs(Character:GetChildren()) do
-                if p:IsA("BasePart") then
-                    p.CanCollide = true
-                end
-            end
-        end
-    end
-end
-NoclipToggle = Tabs.Player:Toggle({
-    Title = "Noclip",
-    Flag = "NoclipToggle",
-    Value = false,
-    Callback = function(s)
-        setNoclip(s)
-    end,
+MainTab:CreateToggle({
+	Name = "Unlock Camera",
+    Flag = "unlockCam",
+	CurrentValue = true,
+	Callback = function(state)
+		cameraUnlockEnabled = state
+		if not state and cameraUnlockConn then
+			cameraUnlockConn:Disconnect()
+			cameraUnlockConn = nil
+		elseif state and not cameraUnlockConn then
+			forceCameraUnlock()
+		end
+	end
 })
 
-Tabs.Player:Space()
+-- Fullbright Persistent Toggl
+local originalLighting = {}
+local fullbrightEnabled = false
+local fullbrightConnection
 
-local isOnMobile = false
-pcall(function()
-    isOnMobile = table.find({ Enum.Platform.Android, Enum.Platform.IOS }, UserInputService:GetPlatform()) ~= nil
-end)
-local vflySpeed, vflyQE = 5, false
-local vflyConnection, vflyKeyDown, vflyKeyUp, vflyControlModule
-local vflyKeys, vflyUp, vflyDown = {}, false, false
-local vflyVelocityName = "VFlyVelocity_" .. math.random(1000, 9999)
-local vflyGyroName = "VFlyGyro_" .. math.random(1000, 9999)
-local mobileConnections, mobileJumpButton, mobileJumpRect, downButton = {}, nil, nil, nil
+MainTab:CreateToggle({
+	Name = "Fullbright",
+    Flag = "Fullbright",
+	CurrentValue = false,
+	Callback = function(state)
+		fullbrightEnabled = state
 
-local function destroyMobileButtons()
-    for _, c in ipairs(mobileConnections) do
-        c:Disconnect()
-    end
-    table.clear(mobileConnections)
-    if mobileJumpButton and mobileJumpButton.Parent and mobileJumpRect then
-        mobileJumpButton.ImageRectOffset = mobileJumpRect
-    end
-    mobileJumpButton, mobileJumpRect = nil, nil
-    if downButton then
-        downButton:Destroy()
-        downButton = nil
-    end
-    vflyUp, vflyDown = false, false
-end
+		if state then
+			-- Backup original values (once)
+			originalLighting.Ambient = Lighting.Ambient
+			originalLighting.OutdoorAmbient = Lighting.OutdoorAmbient
+			originalLighting.Brightness = Lighting.Brightness
+			originalLighting.ClockTime = Lighting.ClockTime
+			originalLighting.GlobalShadows = Lighting.GlobalShadows
 
-local function createMobileButtons()
-    destroyMobileButtons()
-    local tg = PlayerGui:FindFirstChild("TouchGui") or PlayerGui:WaitForChild("TouchGui", 5)
-    local cf = tg and tg:FindFirstChild("TouchControlFrame")
-    local jb = cf and cf:FindFirstChild("JumpButton")
-    if not jb then
-        return
-    end
-    mobileJumpButton = jb
-    mobileJumpRect = jb.ImageRectOffset
-    local pressed = Vector2.new(146, 146)
-    local b = Instance.new("ImageButton")
-    b.Name = "DownWardJumpBtn"
-    b.Size = jb.Size
-    b.Image = jb.Image
-    b.ImageRectOffset = mobileJumpRect
-    b.ImageRectSize = jb.ImageRectSize
-    b.BackgroundTransparency = 1
-    b.AnchorPoint = Vector2.new(1, 0)
-    b.AutoButtonColor = false
-    b.Position = UDim2.new(1, 0, jb.Position.Y.Scale, jb.Position.Y.Offset)
-    b.Rotation = 180
-    b.Parent = cf
-    downButton = b
-    local function align()
-        if not b.Parent or not jb.Parent then
-            return
-        end
-        local d = b.AbsolutePosition.X - (jb.AbsolutePosition.X + jb.AbsoluteSize.X)
-        b.Position = UDim2.new(1, b.Position.X.Offset + (d - 1), b.Position.Y.Scale, b.Position.Y.Offset)
-    end
-    local function bind(t, dn, up)
-        table.insert(mobileConnections, t.MouseButton1Down:Connect(dn))
-        table.insert(mobileConnections, t.MouseButton1Up:Connect(up))
-        table.insert(mobileConnections, t.MouseLeave:Connect(up))
-    end
-    bind(jb, function()
-        vflyUp = true
-        jb.ImageRectOffset = pressed
-    end, function()
-        vflyUp = false
-        jb.ImageRectOffset = mobileJumpRect or jb.ImageRectOffset
-    end)
-    bind(b, function()
-        vflyDown = true
-        b.ImageRectOffset = pressed
-    end, function()
-        vflyDown = false
-        b.ImageRectOffset = mobileJumpRect or b.ImageRectOffset
-    end)
-    table.insert(mobileConnections, b:GetPropertyChangedSignal("AbsoluteSize"):Connect(align))
-    if workspace.CurrentCamera then
-        table.insert(mobileConnections, workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(align))
-    end
-    align()
-end
+			-- Start enforcing fullbright settings
+			if not fullbrightConnection then
+				fullbrightConnection = RunService.RenderStepped:Connect(function()
+					Lighting.Ambient = Color3.new(1, 1, 1)
+					Lighting.OutdoorAmbient = Color3.new(1, 1, 1)
+					Lighting.Brightness = 1.5
+					Lighting.ClockTime = 14
+					Lighting.GlobalShadows = false
+				end)
+			end
+		else
+			-- Stop reapplying and restore original
+			if fullbrightConnection then
+				fullbrightConnection:Disconnect()
+				fullbrightConnection = nil
+			end
 
-local function getVFlyBodies(root)
-    local v = root:FindFirstChild(vflyVelocityName)
-    if not v then
-        v = Instance.new("BodyVelocity")
-        v.Name = vflyVelocityName
-        v.MaxForce = Vector3.new(9e9, 9e9, 9e9)
-        v.Velocity = Vector3.zero
-        v.Parent = root
-    end
-    local g = root:FindFirstChild(vflyGyroName)
-    if not g then
-        g = Instance.new("BodyGyro")
-        g.Name = vflyGyroName
-        g.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
-        g.P = 9e4
-        g.CFrame = root.CFrame
-        g.Parent = root
-    end
-    return v, g
-end
-
-local function stopVFly()
-    if vflyConnection then
-        vflyConnection:Disconnect()
-        vflyConnection = nil
-    end
-    if vflyKeyDown then
-        vflyKeyDown:Disconnect()
-        vflyKeyDown = nil
-    end
-    if vflyKeyUp then
-        vflyKeyUp:Disconnect()
-        vflyKeyUp = nil
-    end
-    table.clear(vflyKeys)
-    vflyControlModule = nil
-    if HumanoidRootPart then
-        local v = HumanoidRootPart:FindFirstChild(vflyVelocityName)
-        if v then
-            v:Destroy()
-        end
-        local g = HumanoidRootPart:FindFirstChild(vflyGyroName)
-        if g then
-            g:Destroy()
-        end
-    end
-    destroyMobileButtons()
-end
-
-local function startVFly()
-    stopVFly()
-    if not HumanoidRootPart then
-        return false
-    end
-    if isOnMobile then
-        pcall(function()
-            local pm = LocalPlayer.PlayerScripts:WaitForChild("PlayerModule", 5)
-            vflyControlModule = require(pm:WaitForChild("ControlModule", 5))
-        end)
-        createMobileButtons()
-    else
-        vflyKeyDown = UserInputService.InputBegan:Connect(function(i, p)
-            if not p then
-                vflyKeys[i.KeyCode] = true
-            end
-        end)
-        vflyKeyUp = UserInputService.InputEnded:Connect(function(i)
-            vflyKeys[i.KeyCode] = nil
-        end)
-    end
-    vflyConnection = RunService.RenderStepped:Connect(function()
-        local cam = workspace.CurrentCamera
-        if not HumanoidRootPart or not cam then
-            return
-        end
-        local velocity = getVFlyBodies(HumanoidRootPart)
-        local ccf = cam.CFrame
-        local move = Vector3.zero
-        local up, down = vflyUp, vflyDown
-        if isOnMobile then
-            if vflyControlModule then
-                local d = vflyControlModule:GetMoveVector()
-                move = ccf.RightVector * d.X - ccf.LookVector * d.Z
-            end
-        else
-            local x = (vflyKeys[Enum.KeyCode.D] and 1 or 0) - (vflyKeys[Enum.KeyCode.A] and 1 or 0)
-            local z = (vflyKeys[Enum.KeyCode.W] and 1 or 0) - (vflyKeys[Enum.KeyCode.S] and 1 or 0)
-            move = ccf.RightVector * x + ccf.LookVector * z
-            if vflyQE then
-                up = up or vflyKeys[Enum.KeyCode.E] == true
-                down = down or vflyKeys[Enum.KeyCode.Q] == true
-            end
-        end
-        local speed = vflySpeed * 50
-        local vert = (up and 1 or 0) - (down and 1 or 0)
-        velocity.Velocity = move * speed + Vector3.new(0, vert * speed, 0)
-    end)
-    return true
-end
-
-VehicleFlyToggle = Tabs.Player:Toggle({
-    Title = "Vehicle Fly",
-    Flag = "VehicleFlyToggle",
-    Desc = "Fly while seated in a vehicle or on foot",
-    Value = false,
-    Callback = function(s)
-        if s then
-            if not startVFly() then
-                VehicleFlyToggle:Set(false)
-            end
-        else
-            stopVFly()
-        end
-    end,
-})
-VehicleFlySpeedInput = Tabs.Player:Input({
-    Title = "Vehicle Fly Speed",
-    Flag = "VehicleFlySpeedInput",
-    Placeholder = "Enter speed value",
-    Value = tostring(vflySpeed),
-    NumbersOnly = true,
-    Callback = function(v)
-        local n = tonumber(v)
-        if n and n > 0 then
-            vflySpeed = n
-        end
-    end,
-})
-VehicleQEflyToggle = Tabs.Player:Toggle({
-    Title = "Q/E Vertical Fly",
-    Flag = "VehicleQEflyToggle",
-    Desc = "E to go up, Q to go down (PC)",
-    Value = false,
-    Callback = function(s)
-        vflyQE = s
-    end,
+			for prop, value in pairs(originalLighting) do
+				Lighting[prop] = value
+			end
+		end
+	end
 })
 
-LocalPlayer.CharacterAdded:Connect(function()
-    if vflyConnection then
-        stopVFly()
-        if VehicleFlyToggle then
-            VehicleFlyToggle:Set(false)
-        end
-    end
-end)
-
-Tabs.Combat:Section({ Title = "Auto Swing", TextSize = 20 })
-Tabs.Combat:Divider()
-local SWING_RANGE = 15
-local swingPerTime = 1
-local trackedNPCs = {}
-local swingConnection, descendantConnection
-function getSwingRemote()
-    local ok, r = pcall(function()
-        return ReplicatedStorage.Shared.Universe.Network.RemoteEvent.SwingMelee
-    end)
-    return ok and r or nil
-end
-local descendantUsers = 0
-local function normalizeName(n)
-    return (string.lower(n):gsub("[%s_]", ""))
-end
-local function getMeleeNames()
-    local ok, f = pcall(function()
-        return ReplicatedStorage.Assets.Tools.Weapon.Melee
-    end)
-    if not ok or not f then
-        return nil, 0
-    end
-    local names, c = {}, 0
-    for _, t in ipairs(f:GetChildren()) do
-        names[normalizeName(t.Name)] = true
-        c += 1
-    end
-    return names, c
-end
-local function findMeleeTool(names)
-    if not Character then
-        return nil
-    end
-    for _, ch in ipairs(Character:GetChildren()) do
-        if ch:IsA("Tool") and names[normalizeName(ch.Name)] then
-            return ch
-        end
-    end
-    local bp = LocalPlayer:FindFirstChildOfClass("Backpack")
-    if bp then
-        for _, ch in ipairs(bp:GetChildren()) do
-            if ch:IsA("Tool") and names[normalizeName(ch.Name)] then
-                return ch
-            end
-        end
-    end
-    return nil
-end
-local function trackNPC(h)
-    local m = h.Parent
-    if m and m:IsA("Model") and not trackedNPCs[m] and not Players:GetPlayerFromCharacter(m) then
-        trackedNPCs[m] = h
-    end
-end
-local function startNPCTracking()
-    descendantUsers += 1
-    if descendantUsers > 1 then
-        return
-    end
-    for _, o in ipairs(workspace:GetDescendants()) do
-        if o:IsA("Humanoid") then
-            trackNPC(o)
-        end
-    end
-    descendantConnection = workspace.DescendantAdded:Connect(function(o)
-        if o:IsA("Humanoid") then
-            trackNPC(o)
-        end
-    end)
-end
-local function stopNPCTracking()
-    if descendantUsers == 0 then
-        return
-    end
-    descendantUsers -= 1
-    if descendantUsers > 0 then
-        return
-    end
-    if descendantConnection then
-        descendantConnection:Disconnect()
-        descendantConnection = nil
-    end
-    table.clear(trackedNPCs)
-end
-local function getClosestNPCId()
-    if not HumanoidRootPart then
-        return nil
-    end
-    local pos = HumanoidRootPart.Position
-    local bestId, bestDist
-    for m, h in pairs(trackedNPCs) do
-        if not m.Parent then
-            trackedNPCs[m] = nil
-        elseif h.Health > 0 then
-            local id = m:GetAttribute("ServerEntityId")
-            local nr = m:FindFirstChild("HumanoidRootPart") or m.PrimaryPart
-            if id and nr then
-                local d = (nr.Position - pos).Magnitude
-                if d <= SWING_RANGE and (not bestDist or d < bestDist) then
-                    bestId, bestDist = id, d
-                end
-            end
-        end
-    end
-    return bestId
-end
-local autoSwingTracking = false
-local stopAutoSwing, startAutoSwing
-do
-    local swingTool, swingRun = nil, 0
-    local toolConnections = {}
-    local function clearToolConnections()
-        for _, c in ipairs(toolConnections) do
-            c:Disconnect()
-        end
-        table.clear(toolConnections)
-    end
-    local function watchTools(names, run)
-        clearToolConnections()
-        local function refresh()
-            if swingRun == run then
-                swingTool = findMeleeTool(names)
-            end
-        end
-        local function watch(container)
-            if not container then
-                return
-            end
-            table.insert(
-                toolConnections,
-                container.ChildAdded:Connect(function(ch)
-                    if ch:IsA("Tool") then
-                        refresh()
-                    end
-                end)
-            )
-            table.insert(
-                toolConnections,
-                container.ChildRemoved:Connect(function(ch)
-                    if ch:IsA("Tool") then
-                        task.defer(refresh)
-                    end
-                end)
-            )
-        end
-        watch(Character)
-        watch(LocalPlayer:FindFirstChildOfClass("Backpack"))
-        table.insert(
-            toolConnections,
-            LocalPlayer.CharacterAdded:Connect(function()
-                task.spawn(function()
-                    LocalPlayer:WaitForChild("Backpack", 5)
-                    if swingRun == run then
-                        watchTools(names, run)
-                    end
-                end)
-            end)
-        )
-        refresh()
-    end
-    stopAutoSwing = function()
-        swingRun += 1
-        clearToolConnections()
-        swingTool = nil
-        if swingConnection then
-            swingConnection:Disconnect()
-            swingConnection = nil
-        end
-        if autoSwingTracking then
-            autoSwingTracking = false
-            stopNPCTracking()
-        end
-    end
-    startAutoSwing = function()
-        stopAutoSwing()
-        local R = getSwingRemote()
-        if not R then
-            WindUI:Notify({ Title = "Auto Swing", Content = "SwingMelee remote not found", Duration = 3 })
-            return false
-        end
-        local names, count = getMeleeNames()
-        if not names or count == 0 then
-            WindUI:Notify({ Title = "Auto Swing", Content = "No melee weapons found", Duration = 3 })
-            return false
-        end
-        autoSwingTracking = true
-        startNPCTracking()
-        watchTools(names, swingRun)
-        swingConnection = RunService.Heartbeat:Connect(function()
-            local w = swingTool
-            if not w or not w.Parent then
-                return
-            end
-            local id = getClosestNPCId()
-            if id then
-                for _ = 1, swingPerTime do
-                    R:FireServer(w, 0, id)
-                end
-            end
-        end)
-        return true
-    end
-end
-AutoSwingToggle = Tabs.Combat:Toggle({
-    Title = "Auto Swing",
-    Flag = "AutoSwingToggle",
-    Value = false,
-    Callback = function(s)
-        if s then
-            if not startAutoSwing() then
-                AutoSwingToggle:Set(false)
-            end
-        else
-            stopAutoSwing()
-        end
-    end,
-})
-SwingPerTimeInput = Tabs.Combat:Input({
-    Title = "Swing Per Time",
-    Flag = "SwingPerTimeInput",
-    Desc = "How many swings are fired per frame",
-    Icon = "swords",
-    Placeholder = "1",
-    Value = tostring(swingPerTime),
-    Callback = function(v)
-        local n = tonumber(v)
-        if n then
-            swingPerTime = math.max(math.floor(n), 1)
-        end
-    end,
-})
-Tabs.Combat:Space()
-
-Tabs.Combat:Section({ Title = "OP Swing", TextSize = 20 })
-Tabs.Combat:Divider()
-local opSwingDelay, opSwingsPerDelay = 0.05, 2
-local opHolding, opLoopId, ClientMeleeHandler, originalMeleeHandler = false, 0, nil, nil
-local opCharacterConnection, opTracking, opSwingEnabled, opHookFn, opInputBegan, opInputEnded
-local function stopOpHolding()
-    opHolding = false
-    opLoopId += 1
-    if OpHoldConnection then
-        OpHoldConnection:Disconnect()
-        OpHoldConnection = nil
-    end
-end
-local function startOpHolding()
-    if not Character then
-        return
-    end
-    local tool = Character:FindFirstChildWhichIsA("Tool")
-    if not tool then
-        return
-    end
-    local R = getSwingRemote()
-    if not R then
-        return
-    end
-    local at = workspace:GetServerTimeNow()
-    local mouse = LocalPlayer:GetMouse()
-    local lv = mouse.Hit and mouse.Hit.LookVector or Character:GetPivot().LookVector
-    stopOpHolding()
-    opHolding = true
-    OpHoldConnection = RunEvery(function()
-        return opSwingDelay
-    end, function()
-        if not opHolding or tool.Parent ~= Character then
-            stopOpHolding()
-            return
-        end
-        local tid = getClosestNPCId()
-        if tid then
-            for _ = 1, opSwingsPerDelay do
-                R:FireServer(tool, at, lv)
-                R:FireServer(tool, 0, tid)
-            end
-        end
-    end)
-end
-local function stopOpSwing()
-    opSwingEnabled = false
-    stopOpHolding()
-    if ClientMeleeHandler and opHookFn and ClientMeleeHandler._meleeActionHandler == opHookFn then
-        ClientMeleeHandler._meleeActionHandler = originalMeleeHandler
-    end
-    if opTracking then
-        opTracking = false
-        stopNPCTracking()
-    end
-    if opCharacterConnection then
-        opCharacterConnection:Disconnect()
-        opCharacterConnection = nil
-    end
-    if opInputBegan then
-        opInputBegan:Disconnect()
-        opInputBegan = nil
-    end
-    if opInputEnded then
-        opInputEnded:Disconnect()
-        opInputEnded = nil
-    end
-end
-local function rebindMeleeInput()
-    local t = Character and Character:FindFirstChildWhichIsA("Tool")
-    if Humanoid and t then
-        Humanoid:UnequipTools()
-        task.wait(0.15)
-        if opSwingEnabled then
-            Humanoid:EquipTool(t)
-        end
-    end
-end
-local function startOpSwing()
-    stopOpSwing()
-    local ok, mod = pcall(function()
-        return require(ReplicatedStorage.Client.Game.Melee.ClientMeleeHandler)
-    end)
-    if not ok or type(mod) ~= "table" then
-        WindUI:Notify({ Title = "OP Swing", Content = "ClientMeleeHandler not found", Duration = 3 })
-        return false
-    end
-    ClientMeleeHandler = mod
-    if not originalMeleeHandler and mod._meleeActionHandler ~= opHookFn then
-        originalMeleeHandler = mod._meleeActionHandler
-    end
-    if not opHookFn then
-        opHookFn = function(name, state, obj)
-            if opSwingEnabled then
-                if state == Enum.UserInputState.Begin then
-                    startOpHolding()
-                elseif state == Enum.UserInputState.End then
-                    stopOpHolding()
-                end
-            end
-            if originalMeleeHandler then
-                return originalMeleeHandler(name, state, obj)
-            end
-        end
-    end
-    mod._meleeActionHandler = opHookFn
-    opSwingEnabled = true
-    opTracking = true
-    startNPCTracking()
-    opCharacterConnection = LocalPlayer.CharacterAdded:Connect(stopOpHolding)
-    opInputBegan = UserInputService.InputBegan:Connect(function(i, p)
-        if not p and i.UserInputType == Enum.UserInputType.MouseButton1 then
-            startOpHolding()
-        end
-    end)
-    opInputEnded = UserInputService.InputEnded:Connect(function(i)
-        if i.UserInputType == Enum.UserInputType.MouseButton1 then
-            stopOpHolding()
-        end
-    end)
-    task.spawn(rebindMeleeInput)
-    return true
-end
-OpSwingToggle = Tabs.Combat:Toggle({
-    Title = "OP Swing",
-    Flag = "OpSwingToggle",
-    Value = false,
-    Callback = function(s)
-        if s then
-            if not startOpSwing() then
-                OpSwingToggle:Set(false)
-            end
-        else
-            stopOpSwing()
-        end
-    end,
-})
-OpSwingDelayInput = Tabs.Combat:Input({
-    Title = "OP Swing Delay",
-    Flag = "OpSwingDelayInput",
-    Desc = "Seconds to wait between bursts (0 = every frame)",
-    Icon = "timer",
-    Placeholder = "0.05",
-    Value = tostring(opSwingDelay),
-    Callback = function(v)
-        local n = tonumber(v)
-        if n then
-            opSwingDelay = math.max(n, 0)
-        end
-    end,
-})
-OpSwingsPerDelayInput = Tabs.Combat:Input({
-    Title = "OP Swings Per Delay",
-    Flag = "OpSwingsPerDelayInput",
-    Desc = "How many swings are fired in each burst",
-    Icon = "swords",
-    Placeholder = "2",
-    Value = tostring(opSwingsPerDelay),
-    Callback = function(v)
-        local n = tonumber(v)
-        if n then
-            opSwingsPerDelay = math.max(math.floor(n), 1)
-        end
-    end,
-})
-
-Tabs.Visuals:Section({ Title = "Lighting", TextSize = 20 })
-Tabs.Visuals:Divider()
-local fogOriginal, fogConnection
-local function stopLoopNoFog()
-    if fogConnection then
-        fogConnection:Disconnect()
-        fogConnection = nil
-    end
-    if fogOriginal then
-        Lighting.FogStart = fogOriginal.FogStart
-        Lighting.FogEnd = fogOriginal.FogEnd
-        local a = Lighting:FindFirstChildOfClass("Atmosphere")
-        if a and fogOriginal.Density then
-            a.Density = fogOriginal.Density
-            a.Haze = fogOriginal.Haze
-        end
-        fogOriginal = nil
-    end
-end
-local function startLoopNoFog()
-    stopLoopNoFog()
-    local a = Lighting:FindFirstChildOfClass("Atmosphere")
-    fogOriginal =
-        { FogStart = Lighting.FogStart, FogEnd = Lighting.FogEnd, Density = a and a.Density, Haze = a and a.Haze }
-    fogConnection = RunService.Heartbeat:Connect(function()
-        Lighting.FogStart = 100000
-        Lighting.FogEnd = 100000
-        local c = Lighting:FindFirstChildOfClass("Atmosphere")
-        if c then
-            c.Density = 0
-            c.Haze = 0
-        end
-    end)
-end
-LoopNoFogToggle = Tabs.Visuals:Toggle({
-    Title = "Loop Remove Fog",
-    Flag = "LoopNoFogToggle",
-    Value = false,
-    Callback = function(s)
-        if s then
-            startLoopNoFog()
-        else
-            stopLoopNoFog()
-        end
-    end,
-})
-Tabs.Visuals:Space()
-
-local fbOriginal, fbConnection
-local function stopLoopFullBright()
-    if fbConnection then
-        fbConnection:Disconnect()
-        fbConnection = nil
-    end
-    if fbOriginal then
-        Lighting.Brightness = fbOriginal.Brightness
-        Lighting.Ambient = fbOriginal.Ambient
-        Lighting.OutdoorAmbient = fbOriginal.OutdoorAmbient
-        Lighting.ColorShift_Top = fbOriginal.ColorShift_Top
-        Lighting.ColorShift_Bottom = fbOriginal.ColorShift_Bottom
-        fbOriginal = nil
-    end
-end
-local function startLoopFullBright()
-    stopLoopFullBright()
-    fbOriginal = {
-        Brightness = Lighting.Brightness,
-        Ambient = Lighting.Ambient,
-        OutdoorAmbient = Lighting.OutdoorAmbient,
-        ColorShift_Top = Lighting.ColorShift_Top,
-        ColorShift_Bottom = Lighting.ColorShift_Bottom,
-    }
-    local w = Color3.fromRGB(255, 255, 255)
-    fbConnection = RunService.Heartbeat:Connect(function()
-        Lighting.Brightness = 1
-        Lighting.Ambient = w
-        Lighting.OutdoorAmbient = w
-        Lighting.ColorShift_Top = w
-        Lighting.ColorShift_Bottom = w
-    end)
-end
-LoopFullBrightToggle = Tabs.Visuals:Toggle({
-    Title = "Loop Full Bright",
-    Flag = "LoopFullBrightToggle",
-    Value = false,
-    Callback = function(s)
-        if s then
-            startLoopFullBright()
-        else
-            stopLoopFullBright()
-        end
-    end,
-})
-Tabs.Visuals:Space()
-Tabs.Visuals:Divider()
-Tabs.Visuals:Section({ Title = "Camera", TextSize = 20 })
-Tabs.Visuals:Divider()
-
-local stretchHorizontal, stretchVertical = 0.8, 0.8
-local cameraStretchConnection
-local function stopCameraStretch()
-    if cameraStretchConnection then
-        cameraStretchConnection:Disconnect()
-        cameraStretchConnection = nil
-    end
-end
-local function startCameraStretch()
-    stopCameraStretch()
-    cameraStretchConnection = RunService.RenderStepped:Connect(function()
-        local cam = workspace.CurrentCamera
-        if cam then
-            cam.CFrame = cam.CFrame * CFrame.new(0, 0, 0, stretchHorizontal, 0, 0, 0, stretchVertical, 0, 0, 0, 1)
-        end
-    end)
-end
-CameraStretchToggle = Tabs.Visuals:Toggle({
-    Title = "Camera Stretch",
-    Flag = "CameraStretchToggle",
-    Value = false,
-    Callback = function(s)
-        if s then
-            startCameraStretch()
-        else
-            stopCameraStretch()
-        end
-    end,
-})
-CameraStretchHorizontalInput = Tabs.Visuals:Input({
-    Title = "Camera Stretch Horizontal",
-    Flag = "CameraStretchHorizontalInput",
-    Placeholder = "0.80",
-    Value = tostring(stretchHorizontal),
-    Callback = function(v)
-        local n = tonumber(v)
-        if n then
-            stretchHorizontal = n
-        end
-    end,
-})
-CameraStretchVerticalInput = Tabs.Visuals:Input({
-    Title = "Camera Stretch Vertical",
-    Flag = "CameraStretchVerticalInput",
-    Placeholder = "0.80",
-    Value = tostring(stretchVertical),
-    Callback = function(v)
-        local n = tonumber(v)
-        if n then
-            stretchVertical = n
-        end
-    end,
-})
-
-do
-local shakePatches = {}
-local shakeProxied = {}
-local shakeCharacterConnection
-
-local function shakeFind(root, ...)
-    local node = root
-    for _, name in ipairs({ ... }) do
-        node = node and node:FindFirstChild(name)
-    end
-    return node
-end
-
-local function shakeRequireModule(inst)
-    if not inst then
-        return nil
-    end
-    local ok, m = pcall(require, inst)
-    return ok and type(m) == "table" and m or nil
-end
-
-local function shakePatch(tbl, key, fn)
-    if type(tbl) ~= "table" or type(tbl[key]) ~= "function" then
-        return false
-    end
-    pcall(setreadonly, tbl, false)
-    local original = tbl[key]
-    if pcall(function()
-        tbl[key] = fn
-    end) then
-        table.insert(shakePatches, { tbl = tbl, key = key, original = original })
-        return true
-    end
-    return false
-end
-
-local function shakeProxyLayer(layer)
-    if type(layer) ~= "table" or shakeProxied[layer] ~= nil then
-        return false
-    end
-    pcall(setreadonly, layer, false)
-    local okMeta, original = pcall(getmetatable, layer)
-    original = okMeta and type(original) == "table" and original or nil
-    local originalIndex = original and original.__index
-    local originalNewIndex = original and original.__newindex
-    local mt = {}
-    if original then
-        for k, v in pairs(original) do
-            mt[k] = v
-        end
-    end
-    mt.__index = function(t, k)
-        if k == "CameraShake" then
-            return Vector3.zero
-        end
-        if type(originalIndex) == "function" then
-            return originalIndex(t, k)
-        end
-        if type(originalIndex) == "table" then
-            return originalIndex[k]
-        end
-        return nil
-    end
-    mt.__newindex = function(t, k, v)
-        if k == "CameraShake" then
-            return
-        end
-        if type(originalNewIndex) == "function" then
-            return originalNewIndex(t, k, v)
-        end
-        if type(originalNewIndex) == "table" then
-            originalNewIndex[k] = v
-            return
-        end
-        rawset(t, k, v)
-    end
-    rawset(layer, "CameraShake", nil)
-    if pcall(setmetatable, layer, mt) then
-        shakeProxied[layer] = original or false
-        return true
-    end
-    return false
-end
-
-local function blockGameCameraLayers()
-    local cameraModule = shakeRequireModule(shakeFind(ReplicatedStorage, "Shared", "Universe", "Camera"))
-    if not cameraModule then
-        return 0
-    end
-    local ok, singleton = pcall(function()
-        return cameraModule:GetSingleton()
-    end)
-    if not ok or type(singleton) ~= "table" then
-        return 0
-    end
-    local count = 0
-    if shakeProxyLayer(singleton.Rotations) then
-        count += 1
-    end
-    if shakeProxyLayer(singleton.Positions) then
-        count += 1
-    end
-    return count
-end
-
-local function startBlockCameraShake()
-    local count = blockGameCameraLayers()
-
-    local forgeEffect = shakeRequireModule(
-        shakeFind(
-            ReplicatedStorage,
-            "Packages",
-            "_Index",
-            "zilibobi_forge-vfx@2.4.0",
-            "forge-vfx",
-            "effects",
-            "camera_shake"
-        )
-    )
-    if forgeEffect and shakePatch(forgeEffect, "emit", function() end) then
-        count += 1
-    end
-
-    local shaker = shakeRequireModule(shakeFind(ReplicatedStorage, "Packages", "CameraShaker"))
-    if shaker then
-        local originalUpdate = shaker.Update
-        if
-            type(originalUpdate) == "function"
-            and shakePatch(shaker, "Update", function(self, dt)
-                originalUpdate(self, dt)
-                return CFrame.identity
-            end)
-        then
-            count += 1
-        end
-    end
-
-    if shakeCharacterConnection then
-        shakeCharacterConnection:Disconnect()
-    end
-    shakeCharacterConnection = LocalPlayer.CharacterAdded:Connect(function()
-        blockGameCameraLayers()
-    end)
-
-    if count == 0 then
-        WindUI:Notify({
-            Title = "Block Camera Shake",
-            Content = "No camera shake source found yet. Toggle again after the camera loads",
-            Duration = 4,
-        })
-    end
-end
-
-local function stopBlockCameraShake()
-    if shakeCharacterConnection then
-        shakeCharacterConnection:Disconnect()
-        shakeCharacterConnection = nil
-    end
-    for i = #shakePatches, 1, -1 do
-        local p = shakePatches[i]
-        pcall(function()
-            p.tbl[p.key] = p.original
-        end)
-        shakePatches[i] = nil
-    end
-    for layer, original in pairs(shakeProxied) do
-        pcall(setmetatable, layer, original or nil)
-        shakeProxied[layer] = nil
-    end
-end
-
-Tabs.Visuals:Space()
-BlockCameraShakeToggle = Tabs.Visuals:Toggle({
-    Title = "Block Camera Shake",
-    Flag = "BlockCameraShakeToggle",
-    Desc = "Stops explosion, lightning, tesla and effect camera shake",
-    Value = false,
-    Callback = function(s)
-        if s then
-            startBlockCameraShake()
-        else
-            stopBlockCameraShake()
-        end
-    end,
-})
-end
-
-Tabs.Visuals:Space()
-Tabs.Visuals:Divider()
-Tabs.Visuals:Section({ Title = "Clock Display", TextSize = 20 })
-Tabs.Visuals:Divider()
-
-do
-    local clockGui, clockFrame, clockLabel, clockValueConnection, clockAddedConnection
-    local clockScale = 1
-
-    local function findClockValue()
-        local v = ReplicatedStorage:FindFirstChild("TimeHour")
-        if v and v:IsA("ValueBase") then
-            return v
-        end
-        return nil
-    end
-
-    local function destroyClockDisplay()
-        if clockAddedConnection then
-            clockAddedConnection:Disconnect()
-            clockAddedConnection = nil
-        end
-        if clockValueConnection then
-            clockValueConnection:Disconnect()
-            clockValueConnection = nil
-        end
-        if clockGui then
-            clockGui:Destroy()
-        end
-        clockGui, clockFrame, clockLabel = nil, nil, nil
-    end
-
-    local function applyClockScale()
-        if clockFrame then
-            clockFrame.Size = UDim2.fromOffset(180 * clockScale, 50 * clockScale)
-        end
-    end
-
-    local function buildClockDisplay(source)
-        clockGui = Instance.new("ScreenGui")
-        clockGui.Name = "DaraClockDisplay"
-        clockGui.ResetOnSpawn = false
-        clockGui.IgnoreGuiInset = true
-        clockGui.DisplayOrder = 10
-        clockGui.Parent = PlayerGui
-
-        clockFrame = Instance.new("Frame")
-        clockFrame.Name = "ClockFrame"
-        clockFrame.AnchorPoint = Vector2.new(0.5, 0)
-        clockFrame.Position = UDim2.new(0.5, 0, 0, 12)
-        clockFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-        clockFrame.BackgroundTransparency = 0.35
-        clockFrame.BorderSizePixel = 0
-        clockFrame.Active = true
-        clockFrame.Draggable = true
-        clockFrame.Parent = clockGui
-
-        local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0, 8)
-        corner.Parent = clockFrame
-
-        local pad = Instance.new("UIPadding")
-        pad.PaddingLeft = UDim.new(0, 6)
-        pad.PaddingRight = UDim.new(0, 6)
-        pad.PaddingTop = UDim.new(0, 4)
-        pad.PaddingBottom = UDim.new(0, 4)
-        pad.Parent = clockFrame
-
-        clockLabel = Instance.new("TextLabel")
-        clockLabel.Name = "ClockText"
-        clockLabel.Size = UDim2.fromScale(1, 1)
-        clockLabel.BackgroundTransparency = 1
-        clockLabel.Font = Enum.Font.GothamBold
-        clockLabel.TextScaled = true
-        clockLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-        clockLabel.Text = tostring(source.Value)
-        clockLabel.Parent = clockFrame
-
-        applyClockScale()
-
-        clockValueConnection = source.Changed:Connect(function()
-            if clockLabel then
-                clockLabel.Text = tostring(source.Value)
-            end
-        end)
-    end
-
-    local function startClockDisplay()
-        destroyClockDisplay()
-        local found = findClockValue()
-        if found then
-            buildClockDisplay(found)
-            return
-        end
-        clockAddedConnection = ReplicatedStorage.ChildAdded:Connect(function(child)
-            if child.Name == "TimeHour" and child:IsA("ValueBase") then
-                clockAddedConnection:Disconnect()
-                clockAddedConnection = nil
-                buildClockDisplay(child)
-            end
-        end)
-    end
-
-    Tabs.Visuals:Toggle({
-        Title = "Clock Display",
-        Flag = "ClockDisplayToggle",
-        Desc = "Shows the in-game time on screen. Drag it to move",
-        Value = false,
-        Callback = function(s)
-            if s then
-                startClockDisplay()
-            else
-                destroyClockDisplay()
-            end
-        end,
-    })
-    Tabs.Visuals:Slider({
-        Title = "Clock Size",
-        Flag = "ClockDisplaySizeSlider",
-        Step = 0.05,
-        Value = { Min = 0.5, Max = 4, Default = 1 },
-        Callback = function(v)
-            clockScale = tonumber(v) or 1
-            applyClockScale()
-        end,
-    })
-end
-
-local mobColor = Color3.fromRGB(255, 255, 0)
-local espSettings = {
-    Player = {
-        Names = false,
-        Boxes = false,
-        BoxType = "2D",
-        Distance = false,
-        Health = false,
-        State = false,
-        Highlights = false,
-        Tracers = false,
-    },
-    Mob = {
-        Names = false,
-        Boxes = false,
-        BoxType = "2D",
-        Distance = false,
-        Health = false,
-        State = false,
-        Highlights = false,
-        Tracers = false,
-    },
-    Item = { Names = false, Boxes = false, BoxType = "2D", Distance = false, Highlights = false, Tracers = false },
-}
-local espElements = { Player = {}, Mob = {} }
-local tracerEntries, tracerGui, espConnection = {}, nil, nil
-local mobTrackingActive = false
-
-local function getDistanceFromCamera(pos)
-    local cam = workspace.CurrentCamera
-    if not cam then
-        return 0
-    end
-    return (pos - cam.CFrame.Position).Magnitude
-end
-local function calculateBoxScale(d)
-    if d <= 17 then
-        return 1
-    end
-    return math.max(17 / d, 0.013)
-end
-local function getCharacterState(c)
-    local h = c:FindFirstChildOfClass("Humanoid")
-    if not h then
-        return "Unknown"
-    end
-    if h.Health <= 0 then
-        return "Dead"
-    end
-    if h.MoveDirection.Magnitude > 0 then
-        return "Moving"
-    end
-    return "Idle"
-end
-local function getHealthColor(h, m)
-    local p = h / math.max(m, 1)
-    if p > 0.6 then
-        return "#00ff00"
-    elseif p > 0.3 then
-        return "#ffa500"
-    end
-    return "#ff0000"
-end
-local PLAYER_ALIVE_COLOR = Color3.fromRGB(0, 255, 0)
-local PLAYER_DEAD_COLOR = Color3.fromRGB(255, 0, 0)
-local function getPlayerESPColor(h)
-    if h and h.Health <= 0 then
-        return PLAYER_DEAD_COLOR
-    end
-    return PLAYER_ALIVE_COLOR
-end
-local function destroyESPChild(c, n)
-    local d = c:FindFirstChild(n)
-    if d then
-        d:Destroy()
-    end
-    local r = c:FindFirstChild("HumanoidRootPart")
-    local ir = r and r:FindFirstChild(n)
-    if ir then
-        ir:Destroy()
-    end
-end
-local function create2DBox(c, col, sc)
-    destroyESPChild(c, "ESP_2DBox")
-    local r = c:FindFirstChild("HumanoidRootPart")
-    local bb = Instance.new("BillboardGui")
-    bb.Name = "ESP_2DBox"
-    bb.Adornee = r or c
-    bb.AlwaysOnTop = true
-    bb.Size = UDim2.new(0, 80 * sc, 0, 100 * sc)
-    bb.StudsOffset = Vector3.zero
-    bb.ClipsDescendants = false
-    bb.Parent = r or c
-    local f = Instance.new("Frame")
-    f.Name = "BoxFrame"
-    f.Size = UDim2.new(1, 0, 1, 0)
-    f.BackgroundTransparency = 1
-    f.BorderSizePixel = 0
-    f.Parent = bb
-    local st = Instance.new("UIStroke")
-    st.Thickness = math.max(2.5 * sc, 2)
-    st.Transparency = 0
-    st.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    st.Color = col
-    st.Parent = f
-    return { billboard = bb, stroke = st }
-end
-local function update2DBox(b, col, sc)
-    b.stroke.Color = col
-    b.stroke.Thickness = math.max(2.5 * sc, 2)
-    b.billboard.Size = UDim2.new(0, 80 * sc, 0, 100 * sc)
-end
-local function remove2DBox(c)
-    destroyESPChild(c, "ESP_2DBox")
-end
-local function create3DBox(c, col, sz)
-    local r = c:FindFirstChild("HumanoidRootPart")
-    if not r then
-        return nil
-    end
-    local e = c:FindFirstChild("ESP_3DBox")
-    if e then
-        e:Destroy()
-    end
-    local f = Instance.new("Folder")
-    f.Name = "ESP_3DBox"
-    f.Parent = c
-    local x, y, z = sz.X / 2, sz.Y / 2, sz.Z / 2
-    local edges = {
-        { Vector3.new(0, y, z), Vector3.new(sz.X, 0.1, 0.1) },
-        { Vector3.new(0, y, -z), Vector3.new(sz.X, 0.1, 0.1) },
-        { Vector3.new(-x, y, 0), Vector3.new(0.1, 0.1, sz.Z) },
-        { Vector3.new(x, y, 0), Vector3.new(0.1, 0.1, sz.Z) },
-        { Vector3.new(0, -y, z), Vector3.new(sz.X, 0.1, 0.1) },
-        { Vector3.new(0, -y, -z), Vector3.new(sz.X, 0.1, 0.1) },
-        { Vector3.new(-x, -y, 0), Vector3.new(0.1, 0.1, sz.Z) },
-        { Vector3.new(x, -y, 0), Vector3.new(0.1, 0.1, sz.Z) },
-        { Vector3.new(-x, 0, z), Vector3.new(0.1, sz.Y, 0.1) },
-        { Vector3.new(x, 0, z), Vector3.new(0.1, sz.Y, 0.1) },
-        { Vector3.new(-x, 0, -z), Vector3.new(0.1, sz.Y, 0.1) },
-        { Vector3.new(x, 0, -z), Vector3.new(0.1, sz.Y, 0.1) },
-    }
-    for _, e2 in ipairs(edges) do
-        local a = Instance.new("BoxHandleAdornment")
-        a.Adornee = r
-        a.Size = e2[2]
-        a.CFrame = CFrame.new(e2[1])
-        a.Color3 = col
-        a.Transparency = 0.2
-        a.ZIndex = 10
-        a.AlwaysOnTop = true
-        a.Parent = f
-    end
-    return f
-end
-local function update3DBoxColor(c, col)
-    local f = c:FindFirstChild("ESP_3DBox")
-    if f then
-        for _, a in ipairs(f:GetChildren()) do
-            a.Color3 = col
-        end
-    end
-end
-local function remove3DBox(c)
-    local f = c:FindFirstChild("ESP_3DBox")
-    if f then
-        f:Destroy()
-    end
-end
-local function createHighlight(c, col)
-    local e = c:FindFirstChild("ESP_Highlight")
-    if e then
-        e:Destroy()
-    end
-    local hl = Instance.new("Highlight")
-    hl.Name = "ESP_Highlight"
-    hl.Adornee = c
-    hl.FillColor = col
-    hl.OutlineColor = col
-    hl.FillTransparency = 0.5
-    hl.OutlineTransparency = 0.3
-    hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-    hl.Parent = c
-    return hl
-end
-local function updateHighlight(hl, col)
-    hl.FillColor = col
-    hl.OutlineColor = col
-end
-local function removeHighlight(c)
-    local hl = c:FindFirstChild("ESP_Highlight")
-    if hl then
-        hl:Destroy()
-    end
-end
-local function createBillboard(c, col)
-    destroyESPChild(c, "ESP_Billboard")
-    local r = c:FindFirstChild("HumanoidRootPart")
-    local bb = Instance.new("BillboardGui")
-    bb.Name = "ESP_Billboard"
-    bb.Adornee = r or c
-    bb.AlwaysOnTop = true
-    bb.Size = UDim2.new(0, 350, 0, 100)
-    bb.StudsOffset = Vector3.new(0, 3, 0)
-    bb.ClipsDescendants = false
-    bb.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    bb.Parent = r or c
-    local tl = Instance.new("TextLabel")
-    tl.Name = "InfoLabel"
-    tl.Size = UDim2.new(1, 0, 1, 0)
-    tl.BackgroundTransparency = 1
-    tl.Text = ""
-    tl.TextColor3 = col
-    tl.TextSize = 10
-    tl.Font = Enum.Font.GothamBold
-    tl.RichText = true
-    tl.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-    tl.TextStrokeTransparency = 0
-    tl.TextXAlignment = Enum.TextXAlignment.Center
-    tl.TextYAlignment = Enum.TextYAlignment.Top
-    tl.TextWrapped = true
-    tl.LineHeight = 1.2
-    tl.Parent = bb
-    return { billboard = bb, textLabel = tl }
-end
-local function updateBillboard(d, name, dist, col, hp, mhp, state)
-    local lines = {}
-    if name then
-        table.insert(lines, name)
-    end
-    local details = {}
-    if hp and mhp then
-        table.insert(
-            details,
-            string.format('<font color="%s">Health: %.0f / %.0f</font>', getHealthColor(hp, mhp), hp, mhp)
-        )
-    end
-    if dist then
-        table.insert(details, "Distance: " .. string.format("%.0f", dist))
-    end
-    if state then
-        table.insert(details, "State: " .. state)
-    end
-    if #details > 0 then
-        table.insert(lines, table.concat(details, " | "))
-    end
-    d.textLabel.Text = table.concat(lines, "\n")
-    d.textLabel.TextColor3 = col
-end
-local function removeTargetESP(c, esp)
-    if esp.box2D then
-        remove2DBox(c)
-    end
-    if esp.box3D then
-        remove3DBox(c)
-    end
-    if esp.highlight then
-        removeHighlight(c)
-    end
-    if esp.billboard then
-        destroyESPChild(c, "ESP_Billboard")
-    end
-end
-
-local ItemESP = {
-    entries = {},
-    active = false,
-    color = Color3.fromRGB(0, 255, 255),
-    connection = nil,
-}
-
-local function iecCreateLabel(part)
-    local bb = Instance.new("BillboardGui")
-    bb.Name = "ESP_ItemLabel"
-    bb.Adornee = part
-    bb.AlwaysOnTop = true
-    bb.Size = UDim2.new(0, 200, 0, 50)
-    bb.StudsOffset = Vector3.new(0, 2, 0)
-    bb.ClipsDescendants = false
-    bb.Parent = part
-    local tl = Instance.new("TextLabel")
-    tl.Name = "InfoLabel"
-    tl.Size = UDim2.new(1, 0, 1, 0)
-    tl.BackgroundTransparency = 1
-    tl.TextColor3 = ItemESP.color
-    tl.TextSize = 10
-    tl.Font = Enum.Font.GothamBold
-    tl.TextStrokeTransparency = 0
-    tl.TextWrapped = true
-    tl.Parent = bb
-    return bb
-end
-local function iecCreateHighlight(inst)
-    local hl = Instance.new("Highlight")
-    hl.Name = "ESP_ItemHighlight"
-    hl.Adornee = inst
-    hl.FillColor = ItemESP.color
-    hl.OutlineColor = ItemESP.color
-    hl.FillTransparency = 0.5
-    hl.OutlineTransparency = 0.3
-    hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-    hl.Parent = inst
-    return hl
-end
-local function iecCreate2DBox(part)
-    local bb = Instance.new("BillboardGui")
-    bb.Name = "ESP_ItemBox2D"
-    bb.Adornee = part
-    bb.AlwaysOnTop = true
-    bb.Size = UDim2.fromScale(3, 3)
-    bb.ClipsDescendants = false
-    bb.Parent = part
-    local f = Instance.new("Frame")
-    f.Size = UDim2.new(1, 0, 1, 0)
-    f.BackgroundTransparency = 1
-    f.BorderSizePixel = 0
-    f.Parent = bb
-    local st = Instance.new("UIStroke")
-    st.Thickness = 2
-    st.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    st.Color = ItemESP.color
-    st.Parent = f
-    return bb
-end
-
-local function iecRender(entry, settings, dist, name)
-    local esp = entry.esp or {}
-    entry.esp = esp
-    local part = entry.part
-    if not part or not part.Parent then
-        return
-    end
-    local function drop(k)
-        if esp[k] then
-            esp[k]:Destroy()
-            esp[k] = nil
-        end
-    end
-    if settings.Boxes then
-        if not esp.box2D or not esp.box2D.Parent then
-            esp.box2D = iecCreate2DBox(part)
-        end
-    else
-        drop("box2D")
-    end
-    if settings.Highlights then
-        if not esp.highlight or not esp.highlight.Parent then
-            esp.highlight = iecCreateHighlight(entry.model)
-        end
-    else
-        drop("highlight")
-    end
-    if settings.Names or settings.Distance then
-        if not esp.label or not esp.label.Parent then
-            esp.label = iecCreateLabel(part)
-        end
-        local lines = {}
-        if settings.Names then
-            table.insert(lines, name)
-        end
-        if settings.Distance then
-            table.insert(lines, string.format("Distance: %.0f", dist))
-        end
-        esp.label.InfoLabel.Text = table.concat(lines, "\n")
-    else
-        drop("label")
-    end
-end
-
-local function iecClear(entry)
-    if entry.esp then
-        for _, inst in pairs(entry.esp) do
-            inst:Destroy()
-        end
-    end
-    entry.esp = nil
-end
-
-local function iecUpdate()
-    if not ECS then
-        return
-    end
-    local settings = espSettings.Item
-    local myPos = ecsMyPosition()
-    local alive = {}
-    for id in ECS.world:query(ECS.comps.Storable, ECS.comps.ObjectId, ECS.comps.ModelInstance) do
-        local model = ecsGet(id, ECS.comps.ModelInstance)
-        if model and model.Parent then
-            local name = ecsGet(id, ECS.comps.ObjectId)
-            local t = ecsGet(id, ECS.comps.Transform)
-            local pos = t and (t.Position or t.p) or model:GetPivot().Position
-            local part = model.PrimaryPart or model:FindFirstChildWhichIsA("BasePart", true) or model
-            local dist = myPos and (pos - myPos).Magnitude or getDistanceFromCamera(pos)
-            alive[model] = true
-            local entry = ItemESP.entries[model]
-            if not entry then
-                entry = { model = model, part = part }
-                ItemESP.entries[model] = entry
-            else
-                entry.part = part
-            end
-            iecRender(entry, settings, dist, name or model.Name)
-        end
-    end
-    for model, entry in pairs(ItemESP.entries) do
-        if not alive[model] then
-            iecClear(entry)
-            ItemESP.entries[model] = nil
-        end
-    end
-end
-
-local function iecClearAll()
-    for _, entry in pairs(ItemESP.entries) do
-        iecClear(entry)
-    end
-    ItemESP.entries = {}
-end
-
-local function iecStart()
-    if ItemESP.active then
-        return
-    end
-    ItemESP.active = true
-    ItemESP.connection = RunService.RenderStepped:Connect(function()
-        pcall(iecUpdate)
-    end)
-end
-local function iecStop()
-    if not ItemESP.active then
-        return
-    end
-    ItemESP.active = false
-    if ItemESP.connection then
-        ItemESP.connection:Disconnect()
-        ItemESP.connection = nil
-    end
-    iecClearAll()
-end
-
-local function cleanupKind(kind)
-    for c, esp in pairs(espElements[kind]) do
-        removeTargetESP(c, esp)
-    end
-    espElements[kind] = {}
-end
-local function cleanupTracerESP()
-    for _, d in pairs(tracerEntries) do
-        if d.pivot then
-            d.pivot:Destroy()
-        end
-    end
-    tracerEntries = {}
-    if tracerGui then
-        tracerGui:Destroy()
-        tracerGui = nil
-    end
-end
-local function cleanupAllESP()
-    cleanupKind("Player")
-    cleanupKind("Mob")
-    iecClearAll()
-    cleanupTracerESP()
-end
-local function getTracerGui()
-    if tracerGui and tracerGui.Parent then
-        return tracerGui
-    end
-    local g = Instance.new("ScreenGui")
-    g.Name = "Tracer GUI"
-    g.ResetOnSpawn = false
-    g.IgnoreGuiInset = true
-    g.DisplayOrder = -2147483648
-    g.Parent = PlayerGui
-    tracerGui = g
-    return g
-end
-local function ensureTracer(key, col)
-    local d = tracerEntries[key]
-    if d and d.pivot and d.pivot.Parent then
-        d.line.BackgroundColor3 = col
-        return d
-    end
-    local pivot = Instance.new("Frame")
-    pivot.Name = "Tracer"
-    pivot.AnchorPoint = Vector2.new(0.5, 0.5)
-    pivot.Position = UDim2.fromScale(0.5, 1)
-    pivot.Size = UDim2.fromOffset(1, 1)
-    pivot.BackgroundTransparency = 1
-    pivot.Visible = false
-    pivot.ZIndex = -2147483648
-    pivot.Parent = getTracerGui()
-    local line = Instance.new("Frame")
-    line.Name = "Line"
-    line.AnchorPoint = Vector2.new(0.5, 1)
-    line.Position = UDim2.fromScale(0.5, 0.5)
-    line.Size = UDim2.fromOffset(2, 0)
-    line.BackgroundColor3 = col
-    line.BorderSizePixel = 0
-    line.ZIndex = -2147483648
-    line.Parent = pivot
-    d = { pivot = pivot, line = line, lastPos = d and d.lastPos or nil }
-    tracerEntries[key] = d
-    return d
-end
-local function drawTracer(d, wp, col)
-    local cam = workspace.CurrentCamera
-    if not cam or not wp then
-        d.pivot.Visible = false
-        return
-    end
-    d.line.BackgroundColor3 = col
-    local sp = cam:WorldToViewportPoint(wp)
-    local vp = cam.ViewportSize
-    local dx = sp.X - vp.X * 0.5
-    local dy = sp.Y - vp.Y
-    if sp.Z < 0 then
-        dx = -dx
-        dy = -dy
-    end
-    if dx ~= dx or dy ~= dy then
-        d.pivot.Visible = false
-        return
-    end
-    d.pivot.Visible = true
-    d.pivot.Rotation = math.deg(math.atan2(dx, -dy))
-    d.line.Size = UDim2.fromOffset(2, math.sqrt(dx * dx + dy * dy))
-end
-local function updateTracerESP()
-    local pT, mT, iT = espSettings.Player.Tracers, espSettings.Mob.Tracers, espSettings.Item.Tracers
-    if not pT and not mT and not iT then
-        if next(tracerEntries) or tracerGui then
-            cleanupTracerESP()
-        end
-        return
-    end
-    local alive = {}
-    if pT then
-        for _, pl in ipairs(Players:GetPlayers()) do
-            if pl ~= LocalPlayer then
-                alive[pl] = true
-                local col = getPlayerESPColor(pl.Character and pl.Character:FindFirstChildOfClass("Humanoid"))
-                local d = ensureTracer(pl, col)
-                local r = pl.Character and pl.Character:FindFirstChild("HumanoidRootPart")
-                if r then
-                    d.lastPos = r.Position
-                end
-                if d.lastPos then
-                    drawTracer(d, d.lastPos, col)
-                else
-                    d.pivot.Visible = false
-                end
-            end
-        end
-    end
-    if mT then
-        for m, h in pairs(trackedNPCs) do
-            if m.Parent and h.Health > 0 then
-                alive[m] = true
-                local d = ensureTracer(m, mobColor)
-                local r = m:FindFirstChild("HumanoidRootPart")
-                if r then
-                    d.lastPos = r.Position
-                end
-                if d.lastPos then
-                    drawTracer(d, d.lastPos, mobColor)
-                else
-                    d.pivot.Visible = false
-                end
-            end
-        end
-    end
-    if iT then
-        for model, entry in pairs(ItemESP.entries) do
-            if model.Parent and entry.part and entry.part.Parent then
-                alive[model] = true
-                local d = ensureTracer(model, ItemESP.color)
-                d.lastPos = entry.part.Position
-                drawTracer(d, entry.part.Position, ItemESP.color)
-            end
-        end
-    end
-    for k, d in pairs(tracerEntries) do
-        if not alive[k] then
-            d.pivot:Destroy()
-            tracerEntries[k] = nil
-        end
-    end
-end
-
-local function updateTarget(kind, c, root, hum, col, dispName)
-    local settings = espSettings[kind]
-    local esp = espElements[kind][c]
-    if not esp then
-        esp = {}
-        espElements[kind][c] = esp
-    end
-    local d = getDistanceFromCamera(root.Position)
-    local sc = calculateBoxScale(d)
-    local hp, mhp = hum.Health, hum.MaxHealth
-
-    if settings.Boxes then
-        if settings.BoxType == "2D" then
-            if not esp.box2D or not esp.box2D.billboard.Parent then
-                esp.box2D = create2DBox(c, col, sc)
-            end
-            update2DBox(esp.box2D, col, sc)
-            if esp.box3D then
-                remove3DBox(c)
-                esp.box3D = nil
-            end
-        else
-            if not esp.box3D or not esp.box3D.Parent then
-                esp.box3D = create3DBox(c, col, Vector3.new(2, hum.HipHeight + 5, 2))
-            end
-            update3DBoxColor(c, col)
-            if esp.box2D then
-                remove2DBox(c)
-                esp.box2D = nil
-            end
-        end
-    else
-        if esp.box2D then
-            remove2DBox(c)
-            esp.box2D = nil
-        end
-        if esp.box3D then
-            remove3DBox(c)
-            esp.box3D = nil
-        end
-    end
-    if settings.Highlights then
-        if not esp.highlight or not esp.highlight.Parent then
-            esp.highlight = createHighlight(c, col)
-        end
-        updateHighlight(esp.highlight, col)
-    elseif esp.highlight then
-        removeHighlight(c)
-        esp.highlight = nil
-    end
-    if settings.Names or settings.Distance or settings.Health or settings.State then
-        if not esp.billboard or not esp.billboard.billboard.Parent then
-            esp.billboard = createBillboard(c, col)
-        end
-        updateBillboard(
-            esp.billboard,
-            settings.Names and dispName or nil,
-            settings.Distance and d or nil,
-            col,
-            settings.Health and hp or nil,
-            settings.Health and mhp or nil,
-            settings.State and getCharacterState(c) or nil
-        )
-    elseif esp.billboard then
-        destroyESPChild(c, "ESP_Billboard")
-        esp.billboard = nil
-    end
-end
-local function sweepKind(kind, curr)
-    for c, esp in pairs(espElements[kind]) do
-        if not curr[c] then
-            removeTargetESP(c, esp)
-            espElements[kind][c] = nil
-        end
-    end
-end
-local function updatePlayerESP()
-    local curr = {}
-    for _, pl in ipairs(Players:GetPlayers()) do
-        if pl ~= LocalPlayer then
-            local c = pl.Character
-            local r = c and c:FindFirstChild("HumanoidRootPart")
-            local h = c and c:FindFirstChildOfClass("Humanoid")
-            if r and h then
-                curr[c] = true
-                updateTarget("Player", c, r, h, getPlayerESPColor(h), pl.Name)
-            end
-        end
-    end
-    sweepKind("Player", curr)
-end
-local function updateMobESP()
-    local curr = {}
-    for m, h in pairs(trackedNPCs) do
-        if not m.Parent then
-            trackedNPCs[m] = nil
-        else
-            local r = m:FindFirstChild("HumanoidRootPart")
-            if r and h.Health > 0 then
-                curr[m] = true
-                updateTarget("Mob", m, r, h, mobColor, m:GetAttribute("EntityName") or m.Name)
-            end
-        end
-    end
-    sweepKind("Mob", curr)
-end
-local function hasEnabledOption(s)
-    for k, v in pairs(s) do
-        if k ~= "BoxType" and v then
-            return true
-        end
-    end
-    return false
-end
-local function onESPRenderStepped()
-    if not workspace.CurrentCamera then
-        return
-    end
-    if hasEnabledOption(espSettings.Player) then
-        updatePlayerESP()
-    else
-        cleanupKind("Player")
-    end
-    if hasEnabledOption(espSettings.Mob) then
-        updateMobESP()
-    else
-        cleanupKind("Mob")
-    end
-    updateTracerESP()
-end
-local function refreshESP()
-    local mobNeeded = hasEnabledOption(espSettings.Mob)
-    if mobNeeded and not mobTrackingActive then
-        mobTrackingActive = true
-        startNPCTracking()
-    elseif not mobNeeded and mobTrackingActive then
-        mobTrackingActive = false
-        stopNPCTracking()
-        cleanupKind("Mob")
-    end
-
-    local itemNeeded = hasEnabledOption(espSettings.Item)
-    if itemNeeded then
-        iecStart()
-    else
-        iecStop()
-    end
-
-    local anyEnabled = mobNeeded or itemNeeded or hasEnabledOption(espSettings.Player)
-    if anyEnabled and not espConnection then
-        espConnection = RunService.RenderStepped:Connect(onESPRenderStepped)
-    elseif not anyEnabled and espConnection then
-        espConnection:Disconnect()
-        espConnection = nil
-        cleanupAllESP()
-    end
-end
-local function stopESP()
-    for _, s in pairs(espSettings) do
-        for k in pairs(s) do
-            if k ~= "BoxType" then
-                s[k] = false
-            end
-        end
-    end
-    refreshESP()
-    cleanupAllESP()
-end
-local function addESPToggle(kind, key, title, flag, desc)
-    return Tabs.ESP:Toggle({
-        Title = title,
-        Flag = flag,
-        Desc = desc,
-        Value = false,
-        Callback = function(s)
-            espSettings[kind][key] = s
-            refreshESP()
-        end,
-    })
-end
-local function addESPBoxType(kind, title, flag)
-    return Tabs.ESP:Dropdown({
-        Title = title,
-        Flag = flag,
-        Values = { "2D", "3D" },
-        Value = "2D",
-        Callback = function(v)
-            espSettings[kind].BoxType = v
-        end,
-    })
-end
-
-local tracerWarning = "Warning: this may hurt performance and make the game laggy."
-
-Tabs.ESP:Section({ Title = "Player ESP", TextSize = 20 })
-Tabs.ESP:Divider()
-addESPToggle("Player", "Names", "Player Names", "PlayerNames")
-addESPToggle("Player", "Boxes", "Player Boxes", "PlayerBoxes")
-addESPBoxType("Player", "Player Box Type", "PlayerBoxType")
-addESPToggle("Player", "Distance", "Player Distance", "PlayerDistance")
-addESPToggle("Player", "Health", "Player Health", "PlayerHealth")
-addESPToggle("Player", "State", "Player State", "PlayerState")
-addESPToggle("Player", "Highlights", "Player Highlights", "PlayerHighlights")
-addESPToggle("Player", "Tracers", "Player Tracers", "PlayerTracerESP", tracerWarning)
-
-Tabs.ESP:Divider()
-Tabs.ESP:Section({ Title = "Mob ESP", TextSize = 20 })
-Tabs.ESP:Divider()
-addESPToggle("Mob", "Names", "Mob Names", "MobNames")
-addESPToggle("Mob", "Boxes", "Mob Boxes", "MobBoxes")
-addESPBoxType("Mob", "Mob Box Type", "MobBoxType")
-addESPToggle("Mob", "Distance", "Mob Distance", "MobDistance")
-addESPToggle("Mob", "Health", "Mob Health", "MobHealth")
-addESPToggle("Mob", "State", "Mob State", "MobState")
-addESPToggle("Mob", "Highlights", "Mob Highlights", "MobHighlights")
-addESPToggle("Mob", "Tracers", "Mob Tracers", "MobTracerESP", tracerWarning)
-
-Tabs.ESP:Divider()
-Tabs.ESP:Section({ Title = "Item ESP", TextSize = 20 })
-Tabs.ESP:Divider()
-addESPToggle("Item", "Names", "Item Names", "ItemNames")
-addESPToggle("Item", "Boxes", "Item Boxes", "ItemBoxes")
-addESPToggle("Item", "Distance", "Item Distance", "ItemDistance")
-addESPToggle("Item", "Highlights", "Item Highlights", "ItemHighlights")
-addESPToggle("Item", "Tracers", "Item Tracers", "ItemTracerESP", tracerWarning)
-
-local cameraCleanup
-do
-    local CAMERA_FOV_KEY = "DaraHubFov"
-    local cameraModule
-    local function getCameraController()
-        if cameraModule == nil then
-            local ok, m = pcall(function()
-                return require(ReplicatedStorage.Shared.Universe.Camera)
-            end)
-            cameraModule = ok and m or false
-        end
-        return cameraModule and cameraModule.Instance or nil
-    end
-    Tabs.Visuals:Space()
-    Tabs.Visuals:Divider()
-    Tabs.Visuals:Section({ Title = "Game Camera", TextSize = 20 })
-    Tabs.Visuals:Divider()
-
-    local thirdPersonConnection, thirdPersonActive, thirdPersonOriginal
-    local function stopThirdPerson()
-        if thirdPersonConnection then
-            thirdPersonConnection:Disconnect()
-            thirdPersonConnection = nil
-        end
-        if thirdPersonActive then
-            thirdPersonActive = false
-            workspace:SetAttribute("IsThirdpersonAllowed", thirdPersonOriginal)
-            local c = getCameraController()
-            if c then
-                c:DoZoom(0, true)
-            end
-        end
-    end
-    local function startThirdPerson()
-        stopThirdPerson()
-        local c = getCameraController()
-        if not c then
-            return false
-        end
-        thirdPersonActive = true
-        thirdPersonOriginal = workspace:GetAttribute("IsThirdpersonAllowed")
-        workspace:SetAttribute("IsThirdpersonAllowed", true)
-        if c.Zoom < c.MinZoom then
-            c:DoZoom(12, true)
-        end
-        thirdPersonConnection = RunService.Heartbeat:Connect(function()
-            if workspace:GetAttribute("IsThirdpersonAllowed") ~= true then
-                workspace:SetAttribute("IsThirdpersonAllowed", true)
-            end
-        end)
-        return true
-    end
-    ForceThirdPersonToggle = Tabs.Visuals:Toggle({
-        Title = "Force Third Person",
-        Flag = "ForceThirdPersonToggle",
-        Value = false,
-        Callback = function(s)
-            if s then
-                if not startThirdPerson() then
-                    WindUI:Notify({ Title = "Third Person", Content = "Game camera not found", Duration = 3 })
-                    ForceThirdPersonToggle:Set(false)
-                end
-            else
-                stopThirdPerson()
-            end
-        end,
-    })
-
-    local fovEnabled, fovTarget, fovConnection = false, 70, nil
-    local function stopFov()
-        if fovConnection then
-            fovConnection:Disconnect()
-            fovConnection = nil
-        end
-        local c = getCameraController()
-        if c and c.fov then
-            c.fov[CAMERA_FOV_KEY] = nil
-        end
-    end
-    local function startFov()
-        stopFov()
-        fovConnection = RunService.RenderStepped:Connect(function()
-            local c = getCameraController()
-            if not c or not c.fov then
-                return
-            end
-            local own = c.fov[CAMERA_FOV_KEY]
-            if type(own) ~= "number" then
-                own = 0
-            end
-            local others = c:GetFovAll() - own
-            c:SetFov(CAMERA_FOV_KEY, fovTarget - others)
-        end)
-    end
-    CustomFovToggle = Tabs.Visuals:Toggle({
-        Title = "Custom FOV",
-        Flag = "CustomFovToggle",
-        Value = false,
-        Callback = function(s)
-            fovEnabled = s
-            if s then
-                startFov()
-            else
-                stopFov()
-            end
-        end,
-    })
-    CustomFovSlider = Tabs.Visuals:Slider({
-        Title = "Field of View",
-        Flag = "CustomFovSlider",
-        Step = 1,
-        Value = { Min = 1, Max = 120, Default = 70 },
-        Callback = function(v)
-            fovTarget = tonumber(v) or 70
-        end,
-    })
-
-    local SENSITIVITY_KEY = "DaraHubSensitivity"
-    local sensitivityValue, sensitivityConnection = 1, nil
-    local function stopSensitivity()
-        if sensitivityConnection then
-            sensitivityConnection:Disconnect()
-            sensitivityConnection = nil
-        end
-        local c = getCameraController()
-        if c and c.sensitivities then
-            c.sensitivities[SENSITIVITY_KEY] = nil
-        end
-    end
-    local function startSensitivity()
-        stopSensitivity()
-        sensitivityConnection = RunService.Heartbeat:Connect(function()
-            local c = getCameraController()
-            if c and c.sensitivities and c.sensitivities[SENSITIVITY_KEY] ~= sensitivityValue then
-                c.sensitivities[SENSITIVITY_KEY] = sensitivityValue
-            end
-        end)
-    end
-    local aim = {
-        enabled = false,
-        part = "Head",
-        types = { Mob = true },
-        smoothness = 10,
-        maxDistance = 1000,
-        wallCheck = false,
-        showFov = false,
-        fovRadius = 100,
-        fovColor = Color3.fromRGB(0, 255, 0),
-        tracking = false,
-        bound = false,
-    }
-    local fovGui, fovCircle, fovStroke
-    local function updateFovCircle()
-        if not aim.showFov then
-            if fovGui then
-                fovGui.Enabled = false
-            end
-            return
-        end
-        if not fovGui or not fovGui.Parent then
-            fovGui = Instance.new("ScreenGui")
-            fovGui.Name = "DaraAimbotFOV"
-            fovGui.ResetOnSpawn = false
-            fovGui.IgnoreGuiInset = true
-            fovGui.Parent = PlayerGui
-            fovCircle = Instance.new("Frame")
-            fovCircle.AnchorPoint = Vector2.new(0.5, 0.5)
-            fovCircle.Position = UDim2.fromScale(0.5, 0.5)
-            fovCircle.BackgroundTransparency = 1
-            fovCircle.BorderSizePixel = 0
-            fovCircle.Parent = fovGui
-            local cr = Instance.new("UICorner")
-            cr.CornerRadius = UDim.new(1, 0)
-            cr.Parent = fovCircle
-            fovStroke = Instance.new("UIStroke")
-            fovStroke.Thickness = 2
-            fovStroke.Parent = fovCircle
-        end
-        fovGui.Enabled = true
-        fovCircle.Size = UDim2.fromOffset(aim.fovRadius * 2, aim.fovRadius * 2)
-        fovStroke.Color = aim.fovColor
-    end
-    local function syncAimbotTracking()
-        local needed = aim.enabled and aim.types.Mob == true
-        if needed and not aim.tracking then
-            aim.tracking = true
-            startNPCTracking()
-        elseif not needed and aim.tracking then
-            aim.tracking = false
-            stopNPCTracking()
-        end
-    end
-    local function selectAimPart(c)
-        if aim.part == "Head" then
-            return c:FindFirstChild("Head") or c:FindFirstChild("HumanoidRootPart")
-        elseif aim.part == "Legs" then
-            return c:FindFirstChild("LowerTorso")
-                or c:FindFirstChild("Left Leg")
-                or c:FindFirstChild("HumanoidRootPart")
-        end
-        return c:FindFirstChild("HumanoidRootPart") or c:FindFirstChild("UpperTorso") or c:FindFirstChild("Torso")
-    end
-    local function isVisible(cam, part, c)
-        if not aim.wallCheck then
-            return true
-        end
-        local ignore = { c }
-        if Character then
-            table.insert(ignore, Character)
-        end
-        local params = RaycastParams.new()
-        params.FilterType = Enum.RaycastFilterType.Exclude
-        params.FilterDescendantsInstances = ignore
-        local o = cam.CFrame.Position
-        return workspace:Raycast(o, part.Position - o, params) == nil
-    end
-    local function evaluate(cam, center, c, h)
-        if not h or h.Health <= 0 then
-            return nil
-        end
-        local p = selectAimPart(c)
-        if not p then
-            return nil
-        end
-        if (p.Position - cam.CFrame.Position).Magnitude > aim.maxDistance then
-            return nil
-        end
-        local s, on = cam:WorldToViewportPoint(p.Position)
-        if not on then
-            return nil
-        end
-        local d = (Vector2.new(s.X, s.Y) - center).Magnitude
-        if d > aim.fovRadius then
-            return nil
-        end
-        if not isVisible(cam, p, c) then
-            return nil
-        end
-        return p, d
-    end
-    local function aimStep(dt)
-        if not aim.enabled then
-            return
-        end
-        local ctrl = getCameraController()
-        local cam = workspace.CurrentCamera
-        if not ctrl or not cam or not ctrl.Rotations or not ctrl.Rotations.MouseLook then
-            return
-        end
-        if not Humanoid or Humanoid.Health <= 0 then
-            return
-        end
-        local center = cam.ViewportSize / 2
-        local bestPart, bestDist
-        if aim.types.Mob then
-            for m, h in pairs(trackedNPCs) do
-                if m.Parent then
-                    local p, d = evaluate(cam, center, m, h)
-                    if p and (not bestDist or d < bestDist) then
-                        bestPart, bestDist = p, d
-                    end
-                end
-            end
-        end
-        if not bestPart then
-            return
-        end
-        local dir = bestPart.Position - ctrl:GetPositionCharacter()
-        if dir.Magnitude < 0.001 then
-            return
-        end
-        dir = dir.Unit
-        local tPitch = math.deg(math.asin(math.clamp(dir.Y, -1, 1)))
-        local tYaw = math.deg(math.atan2(-dir.X, -dir.Z))
-        local cur = ctrl.Rotations.MouseLook
-        local dYaw = ((tYaw - cur.Y + 180) % 360) - 180
-        local dPitch = tPitch - cur.X
-        local f = math.clamp(1 - (aim.smoothness / 20), 0.001, 1)
-        local a = math.clamp(f * math.min(dt * 60, 1), 0, 1)
-        ctrl.Rotations.MouseLook = Vector3.new(math.clamp(cur.X + dPitch * a, -80, 80), cur.Y + dYaw * a, cur.Z)
-    end
-    local function startAimbot()
-        if aim.bound then
-            return
-        end
-        aim.bound = true
-        RunService:BindToRenderStep("DaraHubAimbot", Enum.RenderPriority.Camera.Value - 2, aimStep)
-    end
-    local function stopAimbot()
-        if aim.bound then
-            aim.bound = false
-            pcall(function()
-                RunService:UnbindFromRenderStep("DaraHubAimbot")
-            end)
-        end
-    end
-
-    Tabs.Combat:Space()
-    Tabs.Combat:Section({ Title = "Aimbot", TextSize = 20 })
-    Tabs.Combat:Divider()
-    AimbotToggle = Tabs.Combat:Toggle({
-        Title = "Aimbot",
-        Flag = "AimbotToggle",
-        Value = false,
-        Callback = function(s)
-            if s and not getCameraController() then
-                WindUI:Notify({ Title = "Aimbot", Content = "Game camera not found", Duration = 3 })
-                AimbotToggle:Set(false)
-                return
-            end
-            aim.enabled = s
-            if s then
-                startAimbot()
-            else
-                stopAimbot()
-            end
-            syncAimbotTracking()
-        end,
-    })
-    Tabs.Combat:Dropdown({
-        Title = "Aim Part",
-        Flag = "AimPartDropdown",
-        Values = { "Head", "Body", "Legs" },
-        Value = "Head",
-        Callback = function(v)
-            aim.part = v
-        end,
-    })
-    Tabs.Combat:Slider({
-        Title = "Smoothness",
-        Flag = "AimSmoothnessSlider",
-        Desc = "Higher = smoother aim",
-        Step = 0.01,
-        Value = { Min = 0.01, Max = 20, Default = 10 },
-        Callback = function(v)
-            aim.smoothness = tonumber(v) or 10
-        end,
-    })
-    Tabs.Combat:Input({
-        Title = "Aimbot Max Distance",
-        Flag = "AimMaxDistanceInput",
-        Placeholder = "1000",
-        Value = tostring(aim.maxDistance),
-        Callback = function(v)
-            local n = tonumber(v)
-            if n and n > 0 then
-                aim.maxDistance = n
-            end
-        end,
-    })
-    Tabs.Combat:Toggle({
-        Title = "Wall Check",
-        Flag = "AimWallCheckToggle",
-        Value = false,
-        Callback = function(s)
-            aim.wallCheck = s
-        end,
-    })
-    Tabs.Combat:Space()
-    Tabs.Combat:Section({ Title = "Aimbot FOV", TextSize = 20 })
-    Tabs.Combat:Divider()
-    Tabs.Combat:Toggle({
-        Title = "Show FOV Circle",
-        Flag = "AimShowFovToggle",
-        Value = false,
-        Callback = function(s)
-            aim.showFov = s
-            updateFovCircle()
-        end,
-    })
-    Tabs.Combat:Slider({
-        Title = "FOV Radius",
-        Flag = "AimFovRadiusSlider",
-        Step = 1,
-        Value = { Min = 10, Max = 800, Default = 100 },
-        Callback = function(v)
-            aim.fovRadius = tonumber(v) or 100
-            updateFovCircle()
-        end,
-    })
-    Tabs.Combat:Colorpicker({
-        Title = "FOV Circle Color",
-        Flag = "AimFovColorPicker",
-        Default = aim.fovColor,
-        Callback = function(c)
-            aim.fovColor = c
-            updateFovCircle()
-        end,
-    })
-
-    cameraCleanup = function()
-        stopAimbot()
-        aim.enabled = false
-        syncAimbotTracking()
-        if fovGui then
-            fovGui:Destroy()
-            fovGui = nil
-        end
-        stopThirdPerson()
-        stopFov()
-        stopSensitivity()
-    end
-end
-
-Tabs.Misc:Section({ Title = "Utility", TextSize = 20 })
-Tabs.Misc:Divider()
-local antiAfkConnection
-local function stopAntiAfk()
-    if antiAfkConnection then
-        antiAfkConnection:Disconnect()
-        antiAfkConnection = nil
-    end
-end
-AntiAfkToggle = Tabs.Misc:Toggle({
-    Title = "Anti AFK",
-    Flag = "AntiAfkToggle",
-    Value = false,
-    Callback = function(s)
-        stopAntiAfk()
-        if s then
-            antiAfkConnection = LocalPlayer.Idled:Connect(function()
-                local cam = workspace.CurrentCamera
-                VirtualUser:Button2Down(Vector2.new(0, 0), cam.CFrame)
-                task.wait(1)
-                VirtualUser:Button2Up(Vector2.new(0, 0), cam.CFrame)
-            end)
-        end
-    end,
-})
-
-Tabs.Misc:Space()
-Tabs.Misc:Section({ Title = "Auto Pilot", TextSize = 20 })
-Tabs.Misc:Divider()
-
-local autopilot = {
-    enabled = false,
-    keybind = Enum.KeyCode.RightShift,
-}
-
-local autopilotControls
-local autopilotPatched = setmetatable({}, { __mode = "k" })
-
-local function isSitting()
-    return Humanoid ~= nil and Humanoid.Health > 0 and Humanoid.Sit and Humanoid.SeatPart ~= nil
-end
-
-local function patchAutopilotController(controller)
-    if not controller or autopilotPatched[controller] then
-        return
-    end
-    autopilotPatched[controller] = true
-
-    local originalGetMoveVector = controller.GetMoveVector
-    controller.GetMoveVector = function(self, ...)
-        local moveVector = originalGetMoveVector(self, ...)
-        if not autopilot.enabled or not isSitting() then
-            return moveVector
-        end
-        if not self:IsMoveVectorCameraRelative() then
-            return moveVector
-        end
-        if moveVector.Magnitude > 0 then
-            return moveVector
-        end
-        return Vector3.new(0, 0, -1)
-    end
-end
-
-local function stopAutopilot()
-    autopilot.enabled = false
-    pcall(function()
-        RunService:UnbindFromRenderStep("DaraHubAutoPilot")
-    end)
-end
-
-local function startAutopilot()
-    if not autopilotControls then
-        local ok, controls = pcall(function()
-            local pm = LocalPlayer:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule", 5)
-            return require(pm):GetControls()
-        end)
-        if not ok or not controls then
-            return false
-        end
-        autopilotControls = controls
-    end
-    pcall(function()
-        RunService:UnbindFromRenderStep("DaraHubAutoPilot")
-    end)
-    RunService:BindToRenderStep("DaraHubAutoPilot", Enum.RenderPriority.Input.Value - 1, function()
-        patchAutopilotController(autopilotControls:GetActiveController())
-    end)
-    autopilot.enabled = true
-    return true
-end
-
-local function setAutopilot(state)
-    stopAutopilot()
-    if state and not startAutopilot() then
-        WindUI:Notify({ Title = "Auto Pilot", Content = "Could not load the control module", Duration = 3 })
-        if AutoPilotToggle then
-            AutoPilotToggle:Set(false)
-        end
-    end
-end
-
-AutoPilotToggle = Tabs.Misc:Toggle({
-    Title = "Auto Pilot",
-    Flag = "AutoPilotToggle",
-    Value = false,
-    Callback = function(s)
-        setAutopilot(s)
-    end,
-})
-
-if Tabs.Misc.Keybind then
-    Tabs.Misc:Keybind({
-        Title = "Auto Pilot Keybind",
-        Flag = "AutoPilotKeybind",
-        Desc = "Press this key to toggle Auto Pilot",
-        Value = "RightShift",
-        Callback = function(key)
-            local ok, code = pcall(function()
-                return Enum.KeyCode[key]
-            end)
-            if ok and code then
-                autopilot.keybind = code
-            end
-        end,
-    })
-end
-
-ShowAutoPilotButtonToggle = Tabs.Misc:Toggle({
-    Title = "Show Auto Pilot Button",
-    Flag = "ShowAutoPilotButton",
-    Value = false,
+-- No Fog Toggle (now handles Atmosphere too)
+MainTab:CreateToggle({
+    Name = "No Fog",
+    Flag = "noFog",
+    CurrentValue = false,
     Callback = function(state)
-        if ButtonLib and ButtonLib.AutoPilotToggle then
-            ButtonLib.AutoPilotToggle:SetVisible(state)
+        local lighting = game:GetService("Lighting")
+
+        if state then
+            lighting.FogEnd = 1e10
+            lighting.FogStart = 1e10 - 1
+
+            local atmosphere = lighting:FindFirstChildOfClass("Atmosphere")
+            if atmosphere then
+                atmosphere.Density = 0
+                atmosphere.Haze = 0
+            end
+        else
+            lighting.FogEnd = 1000
+            lighting.FogStart = 0
+
+            local atmosphere = lighting:FindFirstChildOfClass("Atmosphere")
+            if atmosphere then
+                atmosphere.Density = 0.3
+                atmosphere.Haze = 1
+            end
         end
-    end,
+    end
 })
 
-function ScanObjectEntries(folder, requires)
-    local entries, all = {}, {}
-    if not folder then
-        return entries
+-- FOV Slider
+MainTab:CreateSlider({
+    Name = "Camera FOV",
+    Flag = "camFOV",
+    Range = {40, 120},
+    Increment = 1,
+    Suffix = "°",
+    CurrentValue = workspace.CurrentCamera.FieldOfView,
+    Callback = function(value)
+        workspace.CurrentCamera.FieldOfView = value
     end
-    if not ECS then
-        ECS = loadECS()
-    end
-    local compNames, hasNames = {}, false
-    if ECS and type(ECS.comps) == "table" then
-        for k, v in pairs(ECS.comps) do
-            local t = type(v)
-            if t == "table" or t == "function" or t == "userdata" or t == "number" then
-                compNames[v] = tostring(k)
-                hasNames = true
-            end
-        end
-    end
+})
 
-    local function buildPath(module)
-        local parts = {}
-        local node = module.Parent
-        while node and node ~= folder do
-            table.insert(parts, 1, node.Name)
-            node = node.Parent
-        end
-        if #parts == 0 then
-            return nil
-        end
-        return table.concat(parts, " / ")
-    end
-
-    local function describe(module)
-        local okR, data = pcall(require, module)
-        if not okR or type(data) ~= "table" or type(data.components) ~= "table" then
-            return nil, buildPath(module), nil
-        end
-        local displayName
-        local caps = {}
-        for comp, val in pairs(data.components) do
-            local cname = compNames[comp]
-            if cname then
-                caps[cname] = true
-                if cname == "Name" then
-                    displayName = tostring(val)
-                end
-            end
-        end
-        if type(data.tags) == "table" then
-            for _, tag in pairs(data.tags) do
-                local tname = compNames[tag]
-                if tname then
-                    caps[tname] = true
-                end
-            end
-        end
-        return displayName, buildPath(module), caps
-    end
-
-    local seen, usedTitles, count = {}, {}, 0
-    for _, d in ipairs(folder:GetDescendants()) do
-        if d:IsA("ModuleScript") then
-            local key = d:GetFullName()
-            if not seen[key] then
-                seen[key] = true
-                local displayName, details, caps = describe(d)
-                local title = displayName or d.Name
-                if usedTitles[title] then
-                    title = title .. " (" .. details .. ")"
-                end
-                if usedTitles[title] then
-                    title = title .. " #" .. tostring(count)
-                end
-                usedTitles[title] = true
-                local e = { Title = title, Id = d.Name, Desc = details }
-                table.insert(all, e)
-                local matches = true
-                if requires and next(requires) ~= nil and caps and hasNames then
-                    matches = false
-                    for _, r in ipairs(requires) do
-                        if caps[r] then
-                            matches = true
-                            break
+-- No Clip
+local noclipConn
+MainTab:CreateToggle({
+    Name = "No Clip",
+    Flag = "noClip",
+    CurrentValue = false,
+    Callback = function(state)
+        local char = Players.LocalPlayer.Character
+        if state then
+            noclipConn = RunService.Stepped:Connect(function()
+                if char and char:FindFirstChild("HumanoidRootPart") then
+                    for _, part in pairs(char:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = false
                         end
                     end
                 end
-                if matches then
-                    table.insert(entries, e)
-                end
-            end
-            count += 1
-            if count % 40 == 0 then
-                task.wait()
+            end)
+        else
+            if noclipConn then
+                noclipConn:Disconnect()
+                noclipConn = nil
             end
         end
     end
-    if #entries == 0 then
-        entries = all
-    end
-    table.sort(entries, function(x, y)
-        return x.Title < y.Title
-    end)
-    return entries
+})
+
+----------------------
+-- // COMBAT TAB // --
+----------------------
+
+-- // INSTA KILL AND FREEZE ON CLICK // --
+local MobsFolder = workspace
+
+local freezeMobsEnabled = false
+local instaKillEnabled = false
+local killRange = 50
+local mobAddedConnection
+
+local function isValidMob(mob)
+	return mob:IsA("Model")
+		and mob:FindFirstChild("HumanoidRootPart")
+		and mob:FindFirstChildOfClass("Humanoid")
+		and not Players:GetPlayerFromCharacter(mob)
+		and not Players:FindFirstChild(mob.Name)
 end
 
-function CreateListFilter(opts)
-    local titleToId, idToTitle, selected = {}, {}, {}
-    local dropdown
+local function freezeMob(mob)
+	local hrp = mob:FindFirstChild("HumanoidRootPart")
+	local hum = mob:FindFirstChildOfClass("Humanoid")
+	if not hrp or not hum or hum.Health <= 0 then return end
 
-    local function toSet(values)
-        local set = {}
-        if type(values) == "table" then
-            for _, n in ipairs(values) do
-                local title = type(n) == "table" and n.Title or n
-                if title ~= nil then
-                    set[titleToId[tostring(title)] or tostring(title)] = true
-                end
-            end
-        end
-        return set
-    end
-
-    dropdown = opts.Tab:Dropdown({
-        Title = opts.Title,
-        Flag = opts.Flag,
-        Desc = opts.Desc or "Empty = everything",
-        Values = {},
-        Value = {},
-        Multi = true,
-        AllowNone = true,
-        SearchBarEnabled = true,
-        Callback = function(v)
-            selected = toSet(v)
-            opts.OnChange(selected)
-        end,
-    })
-
-    opts.Tab:Button({
-        Title = "Refresh " .. opts.Title,
-        Callback = function()
-            local entries = opts.Scan()
-            if #entries == 0 then
-                WindUI:Notify({ Title = opts.Title, Content = "No items found", Duration = 3 })
-                return
-            end
-            table.clear(titleToId)
-            table.clear(idToTitle)
-            local view = {}
-            for _, e in ipairs(entries) do
-                titleToId[e.Title] = e.Id
-                idToTitle[e.Id] = e.Title
-                table.insert(view, { Title = e.Title, Desc = e.Desc })
-            end
-            local sel = {}
-            for id in pairs(selected) do
-                if idToTitle[id] then
-                    table.insert(sel, idToTitle[id])
-                end
-            end
-            if dropdown and dropdown.Refresh then
-                dropdown:Refresh(view, sel)
-            end
-            WindUI:Notify({ Title = opts.Title, Content = #entries .. " found", Duration = 3 })
-        end,
-    })
-
-    return dropdown
+	hrp.Anchored = true
+	hum.WalkSpeed = 0
+	hum.JumpPower = 0
+	hum.PlatformStand = true
+	hum.AutoRotate = false
 end
 
-local farmCleanup
-do
-    local farm = {
-        collectAll = false,
-        bond = false,
-        minDistance = 15,
-        filters = { bring = {}, nearby = {}, pickup = {} },
-        filterNorm = { bring = {}, nearby = {}, pickup = {} },
-        nearby = false,
-        pickup = false,
-        moneyBag = false,
-        moneyBagDistance = 15,
-        auraRange = 15,
-        nearbyDistance = 15,
-        delay = 0.25,
-        bringDelay = 0.1,
-        nearbyDelay = 0.1,
-        pickupDelay = 0.1,
-        bondDelay = 0.1,
-        collectRun = 0,
-        autoRetry = false,
-        emptyPasses = 0,
-        lastRetry = 0,
+local function unfreezeMob(mob)
+	local hrp = mob:FindFirstChild("HumanoidRootPart")
+	local hum = mob:FindFirstChildOfClass("Humanoid")
+	if not hrp or not hum then return end
+
+	hrp.Anchored = false
+	hum.WalkSpeed = 16
+	hum.JumpPower = 50
+	hum.PlatformStand = false
+	hum.AutoRotate = true
+end
+
+UserInputService.InputBegan:Connect(function(input, gpe)
+	if gpe or input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
+	local char = LocalPlayer.Character
+	local hrp = char and char:FindFirstChild("HumanoidRootPart")
+	if not hrp then return end
+
+	local target = Mouse.Target
+	if not target then return end
+
+	local mob = target:FindFirstAncestorOfClass("Model")
+	if not mob or not isValidMob(mob) then return end
+
+	local mobHRP = mob:FindFirstChild("HumanoidRootPart")
+	local hum = mob:FindFirstChildOfClass("Humanoid")
+	if not mobHRP or not hum then return end
+
+	local dist = (hrp.Position - mobHRP.Position).Magnitude
+	if dist > killRange then return end
+
+	if freezeMobsEnabled then
+		if mobHRP.Anchored or hum.WalkSpeed == 0 then
+			unfreezeMob(mob)
+		else
+			freezeMob(mob)
+		end
+	end
+
+	if instaKillEnabled then
+		hum.Health = 0
+	end
+end)
+
+CombatTab:CreateSection("InstaKill & Freeze")
+
+CombatTab:CreateParagraph({
+    Title = "Kill and Freeze Limitations",
+    Content = "InstaKill and Freeze Mobs will only work on monument mobs (at structures), other mobs will show a false freeze and health. Don't have both on at the same time or InstaKill won't work properly."
+})
+
+local freezeToggle = CombatTab:CreateToggle({
+	Name = "Freeze Mobs (on click)",
+    Flag = "freezeMobs",
+	CurrentValue = false,
+	Callback = function(state)
+		freezeMobsEnabled = state
+
+		if not state then
+			for _, mob in ipairs(MobsFolder:GetDescendants()) do
+				if isValidMob(mob) then
+					unfreezeMob(mob)
+				end
+			end
+		end
+	end
+})
+
+CombatTab:CreateKeybind({
+	Name = "Toggle Freeze Mobs",
+    Flag = "toggleFreezeMobs",
+	CurrentKeybind = "V",
+	HoldToInteract = false,
+	Callback = function()
+		freezeToggle:Set(not freezeToggle.CurrentValue)
+	end
+})
+
+
+local killToggle = CombatTab:CreateToggle({
+	Name = "InstaKill Mobs (on click)",
+    Flag = "instaKill",
+	CurrentValue = false,
+	Callback = function(state)
+		instaKillEnabled = state
+	end
+})
+
+CombatTab:CreateKeybind({
+	Name = "Toggle InstaKill Mobs",
+    Flag = "toggleInstakill",
+	CurrentKeybind = "B",
+	HoldToInteract = false,
+	Callback = function()
+		killToggle:Set(not killToggle.CurrentValue)
+	end
+})
+
+CombatTab:CreateSlider({
+	Name = "Range",
+    Flag = "killRange",
+	Range = {0, 250},
+	Increment = 1,
+	Suffix = " studs",
+	CurrentValue = 50,
+	Callback = function(val)
+		killRange = val
+	end
+})
+
+
+-- // AIMBOT // --
+local function isValidMob(mob)
+	return mob:IsA("Model")
+		and mob:FindFirstChild("HumanoidRootPart")
+		and mob:FindFirstChildOfClass("Humanoid")
+		and not Players:GetPlayerFromCharacter(mob)
+		and not Players:FindFirstChild(mob.Name)
+end
+
+local function getClosestMobFOV(range, fovRadius)
+	local char = LocalPlayer.Character
+	local hrp = char and char:FindFirstChild("HumanoidRootPart")
+	if not hrp then return nil end
+
+	local closest, shortestDist = nil, range or math.huge
+	for _, mob in ipairs(workspace:GetDescendants()) do
+		if isValidMob(mob) then
+			local mobHRP = mob:FindFirstChild("HumanoidRootPart")
+			if mobHRP then
+				local screenPos, onScreen = Camera:WorldToViewportPoint(mobHRP.Position)
+				local mousePos = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+				local mob2D = Vector2.new(screenPos.X, screenPos.Y)
+				local dist2D = (mousePos - mob2D).Magnitude
+
+				local dist = (hrp.Position - mobHRP.Position).Magnitude
+				if onScreen and dist2D <= fovRadius and dist < shortestDist then
+					closest = mob
+					shortestDist = dist
+				end
+			end
+		end
+	end
+	return closest
+end
+
+local aimbotEnabled = false
+local aimbotFOV = 60
+local aimbotRange = 100
+local aimbotTrackSpeed = 0.15
+
+local function getClosestMobFOV(range, fovRadius)
+	local char = LocalPlayer.Character
+	local hrp = char and char:FindFirstChild("HumanoidRootPart")
+	if not hrp then return nil end
+
+	local closest, shortestDist = nil, range or math.huge
+	for _, mob in ipairs(workspace:GetDescendants()) do
+		if isValidMob(mob) then
+			local hum = mob:FindFirstChildOfClass("Humanoid")
+			local head = mob:FindFirstChild("Head") or mob:FindFirstChild("HumanoidRootPart")
+
+			if hum and head and hum.Health > 0 and hum:GetState() ~= Enum.HumanoidStateType.Dead then
+				local screenPos, onScreen = Camera:WorldToViewportPoint(head.Position)
+				local mousePos = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+				local mob2D = Vector2.new(screenPos.X, screenPos.Y)
+				local dist2D = (mousePos - mob2D).Magnitude
+
+				local dist = (hrp.Position - head.Position).Magnitude
+				if onScreen and dist2D <= fovRadius and dist < shortestDist then
+					closest = head
+					shortestDist = dist
+				end
+			end
+		end
+	end
+	return closest
+end
+
+local aimbotFOVCircle
+if Drawing then
+	aimbotFOVCircle = Drawing.new("Circle")
+	aimbotFOVCircle.Color = Color3.fromRGB(100,200,255)
+	aimbotFOVCircle.Thickness = 2
+	aimbotFOVCircle.Filled = false
+	aimbotFOVCircle.Visible = false
+end
+
+UserInputService.InputBegan:Connect(function(input, gpe)
+	if not gpe and input.KeyCode == aimbotBind then
+		aimbotEnabled = not aimbotEnabled
+	end
+end)
+
+RunService.RenderStepped:Connect(function(dt)
+	if aimbotFOVCircle then
+		aimbotFOVCircle.Position = Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)
+		aimbotFOVCircle.Radius = aimbotFOV
+		aimbotFOVCircle.Visible = aimbotEnabled
+	end
+
+	if aimbotEnabled then
+		local target = getClosestMobFOV(aimbotRange, aimbotFOV)
+		if target then
+			local current = Camera.CFrame.Position
+			local targetPos = target.Position
+			local newCFrame = CFrame.new(current, targetPos)
+			Camera.CFrame = Camera.CFrame:Lerp(newCFrame, aimbotTrackSpeed)
+		end
+	end
+end)
+
+CombatTab:CreateSection("Aimbot")
+
+local aimbotToggle = nil
+
+aimbotToggle = CombatTab:CreateToggle({
+	Name = "Aimbot",
+    Flag = "Aimbot",
+	CurrentValue = false,
+	Set = true,
+	Callback = function(val)
+		aimbotEnabled = val
+	end
+})
+CombatTab:CreateKeybind({
+	Name = "Toggle Aimbot",
+    Flag = "toggleAimbot",
+	CurrentKeybind = "N",
+	HoldToInteract = false,
+	Callback = function()
+		if aimbotToggle then
+			aimbotToggle:Set(not aimbotEnabled)
+		end
+	end
+})
+CombatTab:CreateSlider({
+	Name = "Aimbot FOV",
+    Flag = "aimbotFOV",
+	Range = {25, 200},
+	Increment = 1,
+	CurrentValue = aimbotFOV,
+	Callback = function(val) aimbotFOV = val end
+})
+CombatTab:CreateSlider({
+	Name = "Aimbot Range",
+    Flag = "aimbotRange",
+	Range = {10, 250},
+	Increment = 1,
+	CurrentValue = aimbotRange,
+	Callback = function(val) aimbotRange = val end
+})
+CombatTab:CreateSlider({
+	Name = "Tracking Speed",
+    Flag = "trackingSpeed",
+	Range = {1, 100},
+	Increment = 1,
+	Suffix = "%",
+	CurrentValue = math.floor(aimbotTrackSpeed * 100),
+	Callback = function(val)
+		aimbotTrackSpeed = math.clamp(val / 100, 0.01, 1)
+	end
+})
+
+--// MOB AURA CONFIG
+local meleeAuraEnabled = false
+local meleeAuraRange = 20
+local meleeAuraInterval = 0.3 -- seconds
+
+--// Get Closest Valid Mob
+local function getClosestMobInRange(range)
+	local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	local hrp = character and character:FindFirstChild("HumanoidRootPart")
+	if not hrp then return nil end
+
+	local closest, shortestDist = nil, range or math.huge
+	for _, mob in ipairs(workspace:GetDescendants()) do
+		if isValidMob(mob) then
+			local mobHRP = mob:FindFirstChild("HumanoidRootPart")
+			if mobHRP then
+				local dist = (hrp.Position - mobHRP.Position).Magnitude
+				if dist < shortestDist and dist <= range then
+					closest = mob
+					shortestDist = dist
+				end
+			end
+		end
+	end
+	return closest
+end
+
+--// Perform Melee Swing
+local function swingAtClosestMobInRange()
+	local mob = getClosestMobInRange(meleeAuraRange)
+	if not mob then return end
+
+	local charModel = workspace:FindFirstChild(LocalPlayer.Name)
+	if not charModel then
+		return
+	end
+
+	-- Find first tool with a SwingEvent
+	local tool
+	for _, obj in ipairs(charModel:GetChildren()) do
+		if obj:IsA("Tool") and obj:FindFirstChild("SwingEvent") then
+			tool = obj
+			break
+		end
+	end
+
+	if not tool then
+		return
+	end
+
+	local hrp = charModel:FindFirstChild("HumanoidRootPart")
+	local mobHRP = mob:FindFirstChild("HumanoidRootPart")
+	if not hrp or not mobHRP then return end
+
+	local direction = (mobHRP.Position - hrp.Position).Unit
+	tool.SwingEvent:FireServer(direction)
+end
+
+--// MOB AURA LOOP
+task.spawn(function()
+	while true do
+		if meleeAuraEnabled then
+			pcall(swingAtClosestMobInRange)
+		end
+		task.wait(meleeAuraInterval)
+	end
+end)
+
+--// UI: MOB AURA
+CombatTab:CreateSection("Mob Aura")
+
+CombatTab:CreateParagraph({
+    Title = "How to use Melee Aura",
+    Content = "To use Melee Aura equip a weapon and stand close to a mob, it will automatically attack them."
+})
+
+CombatTab:CreateToggle({
+	Name = "Melee Aura",
+    Flag = "meleeAura",
+	CurrentValue = false,
+	Callback = function(state)
+		meleeAuraEnabled = state
+	end
+})
+
+--------------------
+-- // ESP TAB // --
+--------------------
+-- Settings
+local Settings = {
+    PlayerESP = false,
+    TrainESP = false,
+    ItemESP = false,
+    MobESP = false,
+    OreESP = false,
+    EnableBox = false,
+    EnableHighlight = true,
+    EnableTracer = false,
+    ShowNames = false,
+    ShowDistance = false,
+    ShowHealth = false,
+    Colors = {
+        Player = Color3.fromRGB(0, 255, 255),
+        Train = Color3.fromRGB(255, 255, 0),
+        Item = Color3.fromRGB(255, 100, 100),
+        Mob = Color3.fromRGB(255, 0, 255),
+        Ore = Color3.fromRGB(255, 165, 0)
     }
+}
 
-    local function getMyPos()
-        return ecsMyPosition()
+local ESPObjects = {
+    Player = {},
+    Train = {},
+    Item = {},
+    Mob = {},
+    Ore = {}
+}
+
+local function getAllValidMobs()
+	local valid = {}
+	for _, mob in ipairs(workspace:GetDescendants()) do
+		if isValidMob(mob) then
+			table.insert(valid, mob)
+		end
+	end
+	return valid
+end
+
+local function destroyESP(esp)
+    for _, obj in pairs(esp) do
+        if typeof(obj) == "Instance" then
+            obj:Destroy()
+        elseif typeof(obj) == "table" or typeof(obj) == "userdata" then
+            obj:Remove()
+        end
+    end
+end
+
+local function removeESP(category)
+    for _, visuals in pairs(ESPObjects[category]) do
+        destroyESP(visuals)
+    end
+    ESPObjects[category] = {}
+end
+
+local function get2DBoundingBox(model)
+    if not model.PrimaryPart then
+        local parts = model:GetDescendants()
+        for _, p in pairs(parts) do
+            if p:IsA("BasePart") then
+                model.PrimaryPart = p
+                break
+            end
+        end
     end
 
-    local function retryRun()
-        pcall(function()
-            ReplicatedStorage.Shared.Universe.Network.RemoteEvent.ResetCharacter:FireServer()
+    if not model.PrimaryPart then return nil end
+
+    local cf, size = model:GetBoundingBox()
+    local corners = {}
+    for x = -1, 1, 2 do
+        for y = -1, 1, 2 do
+            for z = -1, 1, 2 do
+                table.insert(corners, cf.Position + (cf.RightVector * size.X/2 * x) + (cf.UpVector * size.Y/2 * y) + (cf.LookVector * size.Z/2 * z))
+            end
+        end
+    end
+
+    local min, max = Vector2.new(math.huge, math.huge), Vector2.new(-math.huge, -math.huge)
+    for _, corner in pairs(corners) do
+        local screenPos, onScreen = Camera:WorldToViewportPoint(corner)
+        if onScreen then
+            local pos2D = Vector2.new(screenPos.X, screenPos.Y)
+            min = Vector2.new(math.min(min.X, pos2D.X), math.min(min.Y, pos2D.Y))
+            max = Vector2.new(math.max(max.X, pos2D.X), math.max(max.Y, pos2D.Y))
+        end
+    end
+
+    return min, max
+end
+
+local function createESP(target, category)
+    if ESPObjects[category][target] then
+        for _, obj in pairs(ESPObjects[category][target]) do
+            if typeof(obj) == "Instance" then
+                obj:Destroy()
+            elseif typeof(obj) == "table" or typeof(obj) == "userdata" then
+                obj:Remove()
+            end
+        end
+        ESPObjects[category][target] = nil
+    end
+
+    local color = Settings.Colors[category]
+    local visuals = {}
+
+    if Settings.EnableBox then
+        local box = Drawing.new("Square")
+        box.Color = color
+        box.Thickness = 1
+        box.Filled = false
+        box.Visible = true
+        visuals.Box = box
+    end
+
+    if Settings.EnableTracer then
+        local line = Drawing.new("Line")
+        line.Color = color
+        line.Thickness = 1
+        line.Visible = true
+        visuals.Tracer = line
+    end
+
+    if Settings.EnableHighlight and target:IsA("Model") then
+        local highlight = Instance.new("Highlight")
+        highlight.FillColor = color
+        highlight.FillTransparency = 0.5
+        highlight.OutlineColor = Color3.new(0, 0, 0)
+        highlight.OutlineTransparency = 0
+        highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+        highlight.Adornee = target
+        highlight.Parent = game:GetService("CoreGui")
+        visuals.Highlight = highlight
+    end
+
+    if Settings.ShowNames or Settings.ShowDistance then
+        local text = Drawing.new("Text")
+        text.Size = 16
+        text.Center = true
+        text.Outline = true
+        text.Font = 2
+        text.Color = Color3.fromRGB(255, 255, 255)
+        text.Visible = true
+        visuals.Label = text
+    end
+
+    if Settings.ShowHealth then
+        local bar = Drawing.new("Square")
+        bar.Thickness = 1
+        bar.Filled = true
+        bar.Visible = true
+        visuals.HealthBar = bar
+    end
+
+    ESPObjects[category][target] = visuals
+end
+
+RunService.RenderStepped:Connect(function()
+	for category, targets in pairs(ESPObjects) do
+		for target, visuals in pairs(targets) do
+			local shouldSkip = false
+
+			if not target or not target.Parent then
+				destroyESP(visuals)
+				ESPObjects[category][target] = nil
+				shouldSkip = true
+			end
+
+			local model = not shouldSkip and target:IsA("Model") and target or nil
+			local part = not shouldSkip and (model and model.PrimaryPart or target) or nil
+			if not part then
+				if not shouldSkip then
+					destroyESP(visuals)
+					ESPObjects[category][target] = nil
+				end
+				shouldSkip = true
+			end
+
+			if not shouldSkip then
+				local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
+				local pos2D = Vector2.new(screenPos.X, screenPos.Y)
+
+				if onScreen then
+					if visuals.Box and model then
+						local min, max = get2DBoundingBox(model)
+						if min and max then
+							visuals.Box.Position = min
+							visuals.Box.Size = max - min
+							visuals.Box.Visible = true
+						else
+							visuals.Box.Visible = false
+						end
+					end
+
+					if visuals.Tracer then
+						visuals.Tracer.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
+						visuals.Tracer.To = pos2D
+						visuals.Tracer.Visible = true
+					end
+
+					if visuals.Label then
+						local label = ""
+						if Settings.ShowNames then label = target.Name end
+						if Settings.ShowDistance then
+							local dist = (Camera.CFrame.Position - part.Position).Magnitude
+							label = label .. string.format(" [%.0fm]", dist)
+						end
+						visuals.Label.Text = label
+						visuals.Label.Position = pos2D - Vector2.new(0, 45)
+						visuals.Label.Visible = true
+					end
+
+					if visuals.HealthBar and target:FindFirstChild("Humanoid") then
+						local hum = target:FindFirstChild("Humanoid")
+						local hp = hum.Health
+						local maxHp = hum.MaxHealth
+						if hp <= 0 then
+							destroyESP(visuals)
+							ESPObjects[category][target] = nil
+						else
+							local ratio = math.clamp(hp / maxHp, 0, 1)
+							local color = ratio > 0.6 and Color3.new(0, 1, 0) or (ratio > 0.3 and Color3.new(1, 1, 0) or Color3.new(1, 0, 0))
+							visuals.HealthBar.Color = color
+							visuals.HealthBar.Size = Vector2.new(4, 40 * ratio)
+							visuals.HealthBar.Position = pos2D - Vector2.new(30, 20 - (20 * (1 - ratio)))
+							visuals.HealthBar.Visible = true
+						end
+					elseif visuals.HealthBar then
+						visuals.HealthBar.Visible = false
+					end
+				else
+					if visuals.Box then visuals.Box.Visible = false end
+					if visuals.Tracer then visuals.Tracer.Visible = false end
+					if visuals.Label then visuals.Label.Visible = false end
+					if visuals.HealthBar then visuals.HealthBar.Visible = false end
+				end
+			end
+		end
+	end
+end)
+
+local function loadESP()
+    if Settings.PlayerESP then
+        for _, plr in Players:GetPlayers() do
+            if plr ~= LocalPlayer and plr.Character then
+                createESP(plr.Character, "Player")
+            end
+            plr.CharacterAdded:Connect(function(c)
+                repeat task.wait() until c:FindFirstChild("HumanoidRootPart")
+                if Settings.PlayerESP then createESP(c, "Player") end
+            end)
+        end
+    end
+
+    if Settings.TrainESP then
+        local train = workspace:FindFirstChild("Train")
+        if train then createESP(train, "Train") end
+    end
+
+    if Settings.ItemESP then
+        local folder = workspace:FindFirstChild("RuntimeItems")
+        if folder then
+            for _, obj in folder:GetChildren() do
+                local part = obj:IsA("Model") and obj.PrimaryPart or obj
+                if part then createESP(obj, "Item") end
+            end
+            folder.ChildAdded:Connect(function(obj)
+                task.wait()
+                local part = obj:IsA("Model") and obj.PrimaryPart or obj
+                if part and Settings.ItemESP then createESP(obj, "Item") end
+            end)
+        end
+    end
+
+    if Settings.OreESP then
+        local folder = workspace:FindFirstChild("Ore")
+        if folder then
+            for _, obj in folder:GetChildren() do
+                local part = obj:IsA("Model") and obj.PrimaryPart or obj
+                if part then createESP(obj, "Ore") end
+            end
+            folder.ChildAdded:Connect(function(obj)
+                task.wait()
+                local part = obj:IsA("Model") and obj.PrimaryPart or obj
+                if part and Settings.OreESP then createESP(obj, "Ore") end
+            end)
+        end
+    end    
+
+    if Settings.MobESP then
+        for _, mob in ipairs(getAllValidMobs()) do
+            local part = mob:IsA("Model") and mob.PrimaryPart or mob
+            if part then
+                createESP(mob, "Mob")
+            end
+        end
+    
+        workspace.DescendantAdded:Connect(function(obj)
+            task.wait(1)
+            if Settings.MobESP and isValidMob(obj) then
+                createESP(obj, "Mob")
+            end
         end)
-        pcall(funct…
+    end    
+end
+
+local function refreshAll()
+    for cat in pairs(ESPObjects) do removeESP(cat) end
+    loadESP()
+end
+
+ESPTab:CreateSection("Targets")
+
+ESPTab:CreateToggle({
+    Name = "Player ESP",
+    Flag = "PlayerESP",
+    CurrentValue = false,
+    Callback = function(v)
+        Settings.PlayerESP = v
+        if v then loadESP() else removeESP("Player") end
+    end
+})
+
+ESPTab:CreateToggle({
+    Name = "Train ESP",
+    Flag = "TrainESP",
+    CurrentValue = false,
+    Callback = function(v)
+        Settings.TrainESP = v
+        if v then loadESP() else removeESP("Train") end
+    end
+})
+
+ESPTab:CreateToggle({
+    Name = "Item ESP",
+    Flag = "ItemESP",
+    CurrentValue = false,
+    Callback = function(v)
+        Settings.ItemESP = v
+        if v then loadESP() else removeESP("Item") end
+    end
+})
+
+ESPTab:CreateToggle({
+    Name = "Mob ESP",
+    Flag = "MobESP",
+    CurrentValue = false,
+    Callback = function(v)
+        Settings.MobESP = v
+        if v then loadESP() else removeESP("Mob") end
+    end
+})
+
+ESPTab:CreateToggle({
+    Name = "Ore ESP",
+    Flag = "OreESP",
+    CurrentValue = false,
+    Callback = function(v)
+        Settings.OreESP = v
+        if v then loadESP() else removeESP("Ore") end
+    end
+})
+
+ESPTab:CreateSection("ESP Colors")
+
+ESPTab:CreateColorPicker({
+    Name = "Player ESP Color",
+    Flag = "PlayerESPColor",
+    Color = Settings.Colors.Player,
+    Callback = function(newCol)
+        Settings.Colors.Player = newCol
+        removeESP("Player")
+        if Settings.PlayerESP then loadESP() end
+    end
+})
+
+ESPTab:CreateColorPicker({
+    Name = "Train ESP Color",
+    Flag = "TrainESPColor",
+    Color = Settings.Colors.Train,
+    Callback = function(newCol)
+        Settings.Colors.Train = newCol
+        removeESP("Train")
+        if Settings.TrainESP then loadESP() end
+    end
+})
+
+ESPTab:CreateColorPicker({
+    Name = "Item ESP Color",
+    Flag = "ItemESPColor",
+    Color = Settings.Colors.Item,
+    Callback = function(newCol)
+        Settings.Colors.Item = newCol
+        removeESP("Item")
+        if Settings.ItemESP then loadESP() end
+    end
+})
+
+ESPTab:CreateColorPicker({
+    Name = "Mob ESP Color",
+    Flag = "MobESPColor",
+    Color = Settings.Colors.Mob,
+    Callback = function(newCol)
+        Settings.Colors.Mob = newCol
+        removeESP("Mob")
+        if Settings.MobESP then loadESP() end
+    end
+})
+
+ESPTab:CreateColorPicker({
+    Name = "Ore ESP Color",
+    Flag = "OreESPColor",
+    Color = Settings.Colors.Ore,
+    Callback = function(newCol)
+        Settings.Colors.Ore = newCol
+        removeESP("Ore")
+        if Settings.OreESP then loadESP() end
+    end
+})
+
+ESPTab:CreateSection("ESP Settings")
+
+ESPTab:CreateToggle({
+    Name = "Show Box",
+    Flag = "ESPShowBox",
+    CurrentValue = false,
+    Callback = function(v)
+        Settings.EnableBox = v
+        refreshAll()
+    end
+})
+
+ESPTab:CreateToggle({
+    Name = "Show Highlight",
+    Flag = "ESPShowHighlight",
+    CurrentValue = true,
+    Callback = function(v)
+        Settings.EnableHighlight = v
+        refreshAll()
+    end
+})
+
+ESPTab:CreateToggle({
+    Name = "Show Tracers",
+    Flag = "ESPShowTracers",
+    CurrentValue = false,
+    Callback = function(v)
+        Settings.EnableTracer = v
+        refreshAll()
+    end
+})
+
+ESPTab:CreateSection("ESP Other")
+
+ESPTab:CreateToggle({
+    Name = "Show Names",
+    Flag = "ESPShowNames",
+    CurrentValue = true,
+    Callback = function(v)
+        Settings.ShowNames = v
+        refreshAll()
+    end
+})
+
+ESPTab:CreateToggle({
+    Name = "Show Distance",
+    Flag = "ESPShowDistance",
+    CurrentValue = false,
+    Callback = function(v)
+        Settings.ShowDistance = v
+        refreshAll()
+    end
+})
+
+ESPTab:CreateToggle({
+    Name = "Show Health",
+    Flag = "ESPShowHealth",
+    CurrentValue = true,
+    Callback = function(v)
+        Settings.ShowHealth = v
+        refreshAll()
+    end
+})
+
+MiscTab:CreateSection("Other Toggles")
+
+local walkTrainConn
+MiscTab:CreateToggle({
+    Name = "Walk to Train",
+    CurrentValue = false,
+    Callback = function(state)
+        local player = Players.LocalPlayer
+        local char = player.Character or player.CharacterAdded:Wait()
+        local humanoid = char:WaitForChild("Humanoid")
+        local hrp = char:WaitForChild("HumanoidRootPart")
+
+        if state then
+            walkTrainConn = RunService.Heartbeat:Connect(function()
+                local train = workspace:FindFirstChild("Train")
+                if train and train.PrimaryPart and humanoid and hrp then
+                    local distance = (hrp.Position - train.PrimaryPart.Position).Magnitude
+                    if distance > 10 then
+                        humanoid:MoveTo(train.PrimaryPart.Position)
+                    else
+                        humanoid:MoveTo(hrp.Position) -- Stop moving
+                    end
+                end
+            end)
+        else
+            if walkTrainConn then
+                walkTrainConn:Disconnect()
+                walkTrainConn = nil
+            end
+        end
+    end
+})
+
+local flyForwardEnabled = false
+local flyConn
+
+MiscTab:CreateToggle({
+    Name = "Fly Forward (NoClip)",
+    Flag = "FlyLookNoClip",
+    CurrentValue = false,
+    Callback = function(state)
+        flyForwardEnabled = state
+
+        if flyConn then
+            flyConn:Disconnect()
+            flyConn = nil
+        end
+
+        if state then
+            flyConn = RunService.Heartbeat:Connect(function(dt)
+                local player = Players.LocalPlayer
+                local char = player.Character
+                if not char then return end
+
+                local humanoid = char:FindFirstChildOfClass("Humanoid")
+                local hrp = char:FindFirstChild("HumanoidRootPart")
+                if not humanoid or not hrp then return end
+
+                -- Disable collisions for all parts
+                for _, part in ipairs(char:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+
+                -- Move using camera direction
+                local camLook = workspace.CurrentCamera.CFrame.LookVector
+                local speed = humanoid.WalkSpeed
+                hrp.CFrame = hrp.CFrame + (camLook * speed * dt)
+            end)
+        end
+    end
+})
+
+MiscTab:CreateSection("Themes")
+
+--// AMBIENT CONTROL
+local ambientEnabled = false
+local customAmbientColor = Color3.fromRGB(128, 128, 128)
+local originalAmbient = Lighting.Ambient
+
+-- Apply or reset ambient
+local function updateAmbient()
+	if ambientEnabled then
+		Lighting.Ambient = customAmbientColor
+	else
+		Lighting.Ambient = originalAmbient
+	end
+end
+
+MiscTab:CreateToggle({
+	Name = "Custom Ambient",
+    Flag = "Ambient",
+	CurrentValue = false,
+	Callback = function(state)
+		ambientEnabled = state
+		updateAmbient()
+	end
+})
+
+MiscTab:CreateColorPicker({
+	Name = "Ambient Color",
+    Flag = "ambientColor",
+	Color = customAmbientColor,
+	Callback = function(newColor)
+		customAmbientColor = newColor
+		if ambientEnabled then updateAmbient() end
+	end
+})
+
+local Dropdown = MiscTab:CreateDropdown({
+    Name = "Select Gui Theme",
+    Flag = "guiTheme",
+    Options = {"Default", "AmberGlow", "Amethyst", "Bloom", "DarkBlue", "Green", "Light", "Ocean", "Serenity"},
+    CurrentOption = {"Default"}, -- The default selected option
+    MultipleOptions = false, -- Set to false since only one theme can be selected at a time
+    Flag = "ThemeDropdown",
+    Callback = function(Options)
+        -- Change the theme of the window
+        Window.ModifyTheme(Options[1]) -- Access the first (and only) selected option
+    end,
+ })
+
+ Rayfield:LoadConfiguration()
